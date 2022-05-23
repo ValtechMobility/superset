@@ -57,10 +57,7 @@ FROM my_catalog.my_schema.my_table
 """,
         tables=[table],
         columns=[
-            Column(
-                name="position",
-                expression="array_agg(array[longitude,latitude])",
-            ),
+            Column(name="position", expression="array_agg(array[longitude,latitude])",),
         ],
     )
     session.add(dataset)
@@ -150,10 +147,7 @@ FROM my_catalog.my_schema.my_table
 """,
         tables=[table],
         columns=[
-            Column(
-                name="position",
-                expression="array_agg(array[longitude,latitude])",
-            ),
+            Column(name="position", expression="array_agg(array[longitude,latitude])",),
         ],
     )
     session.add(dataset)
@@ -210,11 +204,7 @@ def test_dataset_attributes(app_context: None, session: Session) -> None:
         schema="my_schema",
         sql=None,
         params=json.dumps(
-            {
-                "remote_id": 64,
-                "database_name": "examples",
-                "import_time": 1606677834,
-            }
+            {"remote_id": 64, "database_name": "examples", "import_time": 1606677834,}
         ),
         perm=None,
         filter_select_enabled=1,
@@ -311,11 +301,7 @@ def test_create_physical_sqlatable(app_context: None, session: Session) -> None:
         schema="my_schema",
         sql=None,
         params=json.dumps(
-            {
-                "remote_id": 64,
-                "database_name": "examples",
-                "import_time": 1606677834,
-            }
+            {"remote_id": 64, "database_name": "examples", "import_time": 1606677834,}
         ),
         perm=None,
         filter_select_enabled=1,
@@ -590,11 +576,7 @@ SELECT
 FROM
   some_table""",
         params=json.dumps(
-            {
-                "remote_id": 64,
-                "database_name": "examples",
-                "import_time": 1606677834,
-            }
+            {"remote_id": 64, "database_name": "examples", "import_time": 1606677834,}
         ),
         perm=None,
         filter_select_enabled=1,

@@ -73,7 +73,6 @@ type SelectValue = {
 };
 
 interface AlertReportModalProps {
-  addSuccessToast: (msg: string) => void;
   addDangerToast: (msg: string) => void;
   alert?: AlertObject | null;
   isReport?: boolean;
@@ -403,7 +402,6 @@ const AlertReportModal: FunctionComponent<AlertReportModalProps> = ({
   show,
   alert = null,
   isReport = false,
-  addSuccessToast,
 }) => {
   const conf = useCommonConf();
   const allowedNotificationMethods: NotificationMethodOption[] =
@@ -557,8 +555,6 @@ const AlertReportModal: FunctionComponent<AlertReportModalProps> = ({
             return;
           }
 
-          addSuccessToast(t(`${data.type} updated`));
-
           if (onAdd) {
             onAdd();
           }
@@ -572,8 +568,6 @@ const AlertReportModal: FunctionComponent<AlertReportModalProps> = ({
         if (!response) {
           return;
         }
-
-        addSuccessToast(t(`${data.type} updated`));
 
         if (onAdd) {
           onAdd(response);
@@ -594,7 +588,7 @@ const AlertReportModal: FunctionComponent<AlertReportModalProps> = ({
           page_size: pageSize,
         });
         return SupersetClient.get({
-          endpoint: `/api/v1/report/related/created_by?q=${query}`,
+          endpoint: `/analytics/api/v1/report/related/created_by?q=${query}`,
         }).then(response => ({
           data: response.json.result.map(
             (item: { value: number; text: string }) => ({
@@ -647,7 +641,7 @@ const AlertReportModal: FunctionComponent<AlertReportModalProps> = ({
           page_size: pageSize,
         });
         return SupersetClient.get({
-          endpoint: `/api/v1/report/related/database?q=${query}`,
+          endpoint: `/analytics/api/v1/report/related/database?q=${query}`,
         }).then(response => {
           const list = response.json.result.map(
             (item: { value: number; text: string }) => ({
@@ -680,7 +674,7 @@ const AlertReportModal: FunctionComponent<AlertReportModalProps> = ({
           page_size: pageSize,
         });
         return SupersetClient.get({
-          endpoint: `/api/v1/report/related/dashboard?q=${query}`,
+          endpoint: `/analytics/api/v1/report/related/dashboard?q=${query}`,
         }).then(response => {
           const list = response.json.result.map(
             (item: { value: number; text: string }) => ({
@@ -754,7 +748,7 @@ const AlertReportModal: FunctionComponent<AlertReportModalProps> = ({
           page_size: pageSize,
         });
         return SupersetClient.get({
-          endpoint: `/api/v1/report/related/chart?q=${query}`,
+          endpoint: `/analytics/api/v1/report/related/chart?q=${query}`,
         }).then(response => {
           const list = response.json.result.map(
             (item: { value: number; text: string }) => ({
@@ -772,7 +766,7 @@ const AlertReportModal: FunctionComponent<AlertReportModalProps> = ({
 
   const getChartVisualizationType = (chart: SelectValue) =>
     SupersetClient.get({
-      endpoint: `/api/v1/chart/${chart.value}`,
+      endpoint: `/analytics/api/v1/chart/${chart.value}`,
     }).then(response => setChartVizType(response.json.result.viz_type));
 
   // Handle input/textarea updates

@@ -20,7 +20,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { t } from '@superset-ui/core';
+import { t, supersetTheme, ThemeProvider } from '@superset-ui/core';
 import throttle from 'lodash/throttle';
 import ToastContainer from 'src/components/MessageToasts/ToastContainer';
 import {
@@ -95,14 +95,16 @@ class App extends React.PureComponent {
 
   render() {
     if (this.state.hash && this.state.hash === '#search') {
-      return window.location.replace('/superset/sqllab/history/');
+      return window.location.replace('/analytics/superset/sqllab/history/');
     }
     return (
-      <div className="App SqlLab">
-        <QueryAutoRefresh />
-        <TabbedSqlEditors />
-        <ToastContainer />
-      </div>
+      <ThemeProvider theme={supersetTheme}>
+        <div className="App SqlLab">
+          <QueryAutoRefresh />
+          <TabbedSqlEditors />
+          <ToastContainer />
+        </div>
+      </ThemeProvider>
     );
   }
 }

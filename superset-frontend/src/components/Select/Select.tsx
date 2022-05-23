@@ -42,7 +42,7 @@ import Icons from 'src/components/Icons';
 import { getClientErrorObject } from 'src/utils/getClientErrorObject';
 import { SLOW_DEBOUNCE } from 'src/constants';
 import { rankedSearchCompare } from 'src/utils/rankedSearchCompare';
-import { getValue, hasOption, isObject } from './utils';
+import { getValue, hasOption } from './utils';
 
 const { Option } = AntdSelect;
 
@@ -385,20 +385,18 @@ const Select = (
 
   const hasCustomLabels = fullSelectOptions.some(opt => !!opt?.customLabel);
 
-  const handleOnSelect = (
-    selectedItem: string | number | AntdLabeledValue | undefined,
-  ) => {
+  const handleOnSelect = (selectedItem: string | number | AntdLabeledValue) => {
     if (isSingleMode) {
       setSelectValue(selectedItem);
     } else {
       setSelectValue(previousState => {
         const array = ensureIsArray(previousState);
-        const isLabeledValue = isObject(selectedItem);
-        const value = isLabeledValue ? selectedItem.value : selectedItem;
+        const isObject = typeof selectedItem === 'object';
+        const value = isObject ? selectedItem.value : selectedItem;
         // Tokenized values can contain duplicated values
         if (!hasOption(value, array)) {
           const result = [...array, selectedItem];
-          return isLabeledValue
+          return isObject
             ? (result as AntdLabeledValue[])
             : (result as (string | number)[]);
         }
@@ -408,11 +406,9 @@ const Select = (
     setInputValue('');
   };
 
-  const handleOnDeselect = (
-    value: string | number | AntdLabeledValue | undefined,
-  ) => {
+  const handleOnDeselect = (value: string | number | AntdLabeledValue) => {
     if (Array.isArray(selectValue)) {
-      if (typeof value === 'number' || typeof value === 'string' || !value) {
+      if (typeof value === 'number' || typeof value === 'string') {
         const array = selectValue as (string | number)[];
         setSelectValue(array.filter(element => element !== value));
       } else {

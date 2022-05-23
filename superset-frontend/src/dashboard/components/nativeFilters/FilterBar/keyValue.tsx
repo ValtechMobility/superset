@@ -21,10 +21,10 @@ import { DashboardPermalinkValue } from 'src/dashboard/types';
 
 const assembleEndpoint = (
   dashId: string | number,
-  key?: string | null,
+  key?: string,
   tabId?: string,
 ) => {
-  let endpoint = `api/v1/dashboard/${dashId}/filter_state`;
+  let endpoint = `analytics/api/v1/dashboard/${dashId}/filter_state`;
   if (key) {
     endpoint = endpoint.concat(`/${key}`);
   }
@@ -65,7 +65,7 @@ export const createFilterKey = (
       return null;
     });
 
-export const getFilterValue = (dashId: string | number, key?: string | null) =>
+export const getFilterValue = (dashId: string | number, key: string) =>
   SupersetClient.get({
     endpoint: assembleEndpoint(dashId, key),
   })
@@ -77,7 +77,7 @@ export const getFilterValue = (dashId: string | number, key?: string | null) =>
 
 export const getPermalinkValue = (key: string) =>
   SupersetClient.get({
-    endpoint: `/api/v1/dashboard/permalink/${key}`,
+    endpoint: `/analytics/api/v1/dashboard/permalink/${key}`,
   })
     .then(({ json }) => json as DashboardPermalinkValue)
     .catch(err => {

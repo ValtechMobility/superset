@@ -78,7 +78,6 @@ from superset.connectors.base.models import BaseColumn, BaseDatasource, BaseMetr
 from superset.connectors.sqla.utils import (
     get_physical_table_metadata,
     get_virtual_table_metadata,
-    load_or_create_tables,
     validate_adhoc_subquery,
 )
 from superset.datasets.models import Dataset as NewDataset
@@ -312,9 +311,7 @@ class TableColumn(Model, BaseColumn, CertificationMixin):
         return self.table
 
     def get_time_filter(
-        self,
-        start_dttm: DateTime,
-        end_dttm: DateTime,
+        self, start_dttm: DateTime, end_dttm: DateTime,
     ) -> ColumnElement:
         col = self.get_sqla_col(label="__time")
         l = []
@@ -335,7 +332,6 @@ class TableColumn(Model, BaseColumn, CertificationMixin):
 
         :param time_grain: Optional time grain, e.g. P1Y
         :param label: alias/label that column is expected to have
-        :param template_processor: template processor
         :return: A TimeExpression object wrapped in a Label if supported by db
         """
         label = label or utils.DTTM_ALIAS
@@ -489,27 +485,6 @@ sqlatable_user = Table(
 )
 
 
-def _process_sql_expression(
-    expression: Optional[str],
-    database_id: int,
-    schema: str,
-    template_processor: Optional[BaseTemplateProcessor],
-) -> Optional[str]:
-    if template_processor and expression:
-        expression = template_processor.process_template(expression)
-    if expression:
-        expression = validate_adhoc_subquery(
-            expression,
-            database_id,
-            schema,
-        )
-        try:
-            expression = sanitize_clause(expression)
-        except QueryClauseValidationException as ex:
-            raise QueryObjectValidationError(ex.message) from ex
-    return expression
-
-
 class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-methods
     """An ORM object for SqlAlchemy table references"""
 
@@ -610,7 +585,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
     def changed_by_url(self) -> str:
         if not self.changed_by:
             return ""
-        return f"/superset/profile/{self.changed_by.username}"
+        return f"/analytics/superset/profile/{self.changed_by.username}"
 
     @property
     def connection(self) -> str:
@@ -709,13 +684,10 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
         return self.database.sql_url + "?table_name=" + str(self.table_name)
 
     def external_metadata(self) -> List[Dict[str, str]]:
-        # todo(yongjie): create a pysical table column type in seprated PR
         if self.sql:
-            return get_virtual_table_metadata(dataset=self)  # type: ignore
+            return get_virtual_table_metadata(dataset=self)
         return get_physical_table_metadata(
-            database=self.database,
-            table_name=self.table_name,
-            schema_name=self.schema,
+            database=self.database, table_name=self.table_name, schema_name=self.schema,
         )
 
     @property
@@ -897,17 +869,13 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
         return sql
 
     def adhoc_metric_to_sqla(
-        self,
-        metric: AdhocMetric,
-        columns_by_name: Dict[str, TableColumn],
-        template_processor: Optional[BaseTemplateProcessor] = None,
+        self, metric: AdhocMetric, columns_by_name: Dict[str, TableColumn]
     ) -> ColumnElement:
         """
         Turn an adhoc metric into a sqlalchemy column.
 
         :param dict metric: Adhoc metric definition
         :param dict columns_by_name: Columns for the current table
-        :param template_processor: template_processor instance
         :returns: The metric defined as a sqlalchemy column
         :rtype: sqlalchemy.sql.column
         """
@@ -924,12 +892,13 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
                 sqla_column = column(column_name)
             sqla_metric = self.sqla_aggregations[metric["aggregate"]](sqla_column)
         elif expression_type == utils.AdhocMetricExpressionType.SQL:
-            expression = _process_sql_expression(
-                expression=metric["sqlExpression"],
-                database_id=self.database_id,
-                schema=self.schema,
-                template_processor=template_processor,
-            )
+            tp = self.get_template_processor()
+            expression = tp.process_template(cast(str, metric["sqlExpression"]))
+            validate_adhoc_subquery(expression)
+            try:
+                expression = sanitize_clause(expression)
+            except QueryClauseValidationException as ex:
+                raise QueryObjectValidationError(ex.message) from ex
             sqla_metric = literal_column(expression)
         else:
             raise QueryObjectValidationError("Adhoc metric expressionType is invalid")
@@ -950,14 +919,17 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
         :rtype: sqlalchemy.sql.column
         """
         label = utils.get_column_name(col)
-        expression = _process_sql_expression(
-            expression=col["sqlExpression"],
-            database_id=self.database_id,
-            schema=self.schema,
-            template_processor=template_processor,
-        )
-        sqla_column = literal_column(expression)
-        return self.make_sqla_column_compatible(sqla_column, label)
+        expression = col["sqlExpression"]
+        if template_processor and expression:
+            expression = template_processor.process_template(expression)
+        if expression:
+            validate_adhoc_subquery(expression)
+            try:
+                expression = sanitize_clause(expression)
+            except QueryClauseValidationException as ex:
+                raise QueryObjectValidationError(ex.message) from ex
+        sqla_metric = literal_column(expression)
+        return self.make_sqla_column_compatible(sqla_metric, label)
 
     def make_sqla_column_compatible(
         self, sqla_col: ColumnElement, label: Optional[str] = None
@@ -1005,9 +977,9 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             if is_alias_used_in_orderby(col):
                 col.name = f"{col.name}__"
 
-    def get_sqla_row_level_filters(
+    def _get_sqla_row_level_filters(
         self, template_processor: BaseTemplateProcessor
-    ) -> List[TextClause]:
+    ) -> List[str]:
         """
         Return the appropriate row level security filters for
         this table and the current user.
@@ -1015,6 +987,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
         :param BaseTemplateProcessor template_processor: The template
         processor to apply to the filters.
         :returns: A list of SQL clauses to be ANDed together.
+        :rtype: List[str]
         """
         all_filters: List[TextClause] = []
         filter_groups: Dict[Union[int, str], List[TextClause]] = defaultdict(list)
@@ -1040,10 +1013,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             return all_filters
         except TemplateError as ex:
             raise QueryObjectValidationError(
-                _(
-                    "Error in jinja expression in RLS filters: %(msg)s",
-                    msg=ex.message,
-                )
+                _("Error in jinja expression in RLS filters: %(msg)s", msg=ex.message,)
             ) from ex
 
     def text(self, clause: str) -> TextClause:
@@ -1141,13 +1111,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
         for metric in metrics:
             if utils.is_adhoc_metric(metric):
                 assert isinstance(metric, dict)
-                metrics_exprs.append(
-                    self.adhoc_metric_to_sqla(
-                        metric=metric,
-                        columns_by_name=columns_by_name,
-                        template_processor=template_processor,
-                    )
-                )
+                metrics_exprs.append(self.adhoc_metric_to_sqla(metric, columns_by_name))
             elif isinstance(metric, str) and metric in metrics_by_name:
                 metrics_exprs.append(metrics_by_name[metric].get_sqla_col())
             else:
@@ -1173,13 +1137,6 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             col: Union[AdhocMetric, ColumnElement] = orig_col
             if isinstance(col, dict):
                 col = cast(AdhocMetric, col)
-                if col.get("sqlExpression"):
-                    col["sqlExpression"] = _process_sql_expression(
-                        expression=col["sqlExpression"],
-                        database_id=self.database_id,
-                        schema=self.schema,
-                        template_processor=template_processor,
-                    )
                 if utils.is_adhoc_metric(col):
                     # add adhoc sort by column to columns_by_name if not exists
                     col = self.adhoc_metric_to_sqla(col, columns_by_name)
@@ -1229,11 +1186,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
                     elif selected in columns_by_name:
                         outer = columns_by_name[selected].get_sqla_col()
                     else:
-                        selected = validate_adhoc_subquery(
-                            selected,
-                            self.database_id,
-                            self.schema,
-                        )
+                        validate_adhoc_subquery(selected)
                         outer = literal_column(f"({selected})")
                         outer = self.make_sqla_column_compatible(outer, selected)
                 else:
@@ -1246,11 +1199,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
                 select_exprs.append(outer)
         elif columns:
             for selected in columns:
-                selected = validate_adhoc_subquery(
-                    selected,
-                    self.database_id,
-                    self.schema,
-                )
+                validate_adhoc_subquery(selected)
                 select_exprs.append(
                     columns_by_name[selected].get_sqla_col()
                     if selected in columns_by_name
@@ -1284,8 +1233,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             ):
                 time_filters.append(
                     columns_by_name[self.main_dttm_col].get_time_filter(
-                        from_dttm,
-                        to_dttm,
+                        from_dttm, to_dttm,
                     )
                 )
             time_filters.append(dttm_col.get_time_filter(from_dttm, to_dttm))
@@ -1415,7 +1363,8 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
                         raise QueryObjectValidationError(
                             _("Invalid filter operation type: %(op)s", op=op)
                         )
-        where_clause_and += self.get_sqla_row_level_filters(template_processor)
+        if is_feature_enabled("ROW_LEVEL_SECURITY"):
+            where_clause_and += self._get_sqla_row_level_filters(template_processor)
         if extras:
             where = extras.get("where")
             if where:
@@ -1462,6 +1411,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
                 and db_engine_spec.allows_hidden_cc_in_orderby
                 and col.name in [select_col.name for select_col in select_exprs]
             ):
+                validate_adhoc_subquery(str(col.expression))
                 col = literal_column(col.name)
             direction = asc if ascending else desc
             qry = qry.order_by(direction(col))
@@ -1494,8 +1444,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
                 if dttm_col and not db_engine_spec.time_groupby_inline:
                     inner_time_filter = [
                         dttm_col.get_time_filter(
-                            inner_from_dttm or from_dttm,
-                            inner_to_dttm or to_dttm,
+                            inner_from_dttm or from_dttm, inner_to_dttm or to_dttm,
                         )
                     ]
                 subq = subq.where(and_(*(where_clause_and + inner_time_filter)))
@@ -1524,9 +1473,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
                     orderby = [
                         (
                             self._get_series_orderby(
-                                series_limit_metric,
-                                metrics_by_name,
-                                columns_by_name,
+                                series_limit_metric, metrics_by_name, columns_by_name,
                             ),
                             not order_desc,
                         )
@@ -1602,10 +1549,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
         return ob
 
     def _normalize_prequery_result_type(
-        self,
-        row: pd.Series,
-        dimension: str,
-        columns_by_name: Dict[str, TableColumn],
+        self, row: pd.Series, dimension: str, columns_by_name: Dict[str, TableColumn],
     ) -> Union[str, int, float, bool, Text]:
         """
         Convert a prequery result type to its equivalent Python type.
@@ -1650,9 +1594,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             group = []
             for dimension in dimensions:
                 value = self._normalize_prequery_result_type(
-                    row,
-                    dimension,
-                    columns_by_name,
+                    row, dimension, columns_by_name,
                 )
 
                 group.append(groupby_exprs[dimension] == value)
@@ -1831,7 +1773,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             templatable_statements.append(extras["where"])
         if "having" in extras:
             templatable_statements.append(extras["having"])
-        if self.is_rls_supported:
+        if is_feature_enabled("ROW_LEVEL_SECURITY") and self.is_rls_supported:
             templatable_statements += [
                 f.clause for f in security_manager.get_rls_filters(self)
             ]
@@ -1991,9 +1933,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
 
     @staticmethod
     def after_insert(
-        mapper: Mapper,
-        connection: Connection,
-        target: "SqlaTable",
+        mapper: Mapper, connection: Connection, target: "SqlaTable",
     ) -> None:
         """
         Shadow write the dataset to new models.
@@ -2022,9 +1962,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
 
     @staticmethod
     def after_delete(  # pylint: disable=unused-argument
-        mapper: Mapper,
-        connection: Connection,
-        target: "SqlaTable",
+        mapper: Mapper, connection: Connection, target: "SqlaTable",
     ) -> None:
         """
         Shadow write the dataset to new models.
@@ -2047,9 +1985,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
 
     @staticmethod
     def after_update(  # pylint: disable=too-many-branches, too-many-locals, too-many-statements
-        mapper: Mapper,
-        connection: Connection,
-        target: "SqlaTable",
+        mapper: Mapper, connection: Connection, target: "SqlaTable",
     ) -> None:
         """
         Shadow write the dataset to new models.
@@ -2284,10 +2220,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             if column.is_active is False:
                 continue
 
-            try:
-                extra_json = json.loads(column.extra or "{}")
-            except json.decoder.JSONDecodeError:
-                extra_json = {}
+            extra_json = json.loads(column.extra or "{}")
             for attr in {"groupby", "filterable", "verbose_name", "python_date_format"}:
                 value = getattr(column, attr)
                 if value:
@@ -2314,10 +2247,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
 
         # create metrics
         for metric in dataset.metrics:
-            try:
-                extra_json = json.loads(metric.extra or "{}")
-            except json.decoder.JSONDecodeError:
-                extra_json = {}
+            extra_json = json.loads(metric.extra or "{}")
             for attr in {"verbose_name", "metric_type", "d3format"}:
                 value = getattr(metric, attr)
                 if value:
@@ -2348,7 +2278,8 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             )
 
         # physical dataset
-        if not dataset.sql:
+        tables = []
+        if dataset.sql is None:
             physical_columns = [column for column in columns if column.is_physical]
 
             # create table
@@ -2361,7 +2292,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
                 is_managed_externally=dataset.is_managed_externally,
                 external_url=dataset.external_url,
             )
-            tables = [table]
+            tables.append(table)
 
         # virtual dataset
         else:
@@ -2372,14 +2303,18 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             # find referenced tables
             parsed = ParsedQuery(dataset.sql)
             referenced_tables = parsed.tables
-            tables = load_or_create_tables(
-                session,
-                dataset.database_id,
-                dataset.schema,
-                referenced_tables,
-                conditional_quote,
-                engine,
+
+            # predicate for finding the referenced tables
+            predicate = or_(
+                *[
+                    and_(
+                        NewTable.schema == (table.schema or dataset.schema),
+                        NewTable.name == table.table,
+                    )
+                    for table in referenced_tables
+                ]
             )
+            tables = session.query(NewTable).filter(predicate).all()
 
         # create the new dataset
         new_dataset = NewDataset(
@@ -2388,7 +2323,7 @@ class SqlaTable(Model, BaseDatasource):  # pylint: disable=too-many-public-metho
             expression=dataset.sql or conditional_quote(dataset.table_name),
             tables=tables,
             columns=columns,
-            is_physical=not dataset.sql,
+            is_physical=dataset.sql is None,
             is_managed_externally=dataset.is_managed_externally,
             external_url=dataset.external_url,
         )

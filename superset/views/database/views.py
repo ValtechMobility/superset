@@ -245,7 +245,7 @@ class CsvToDatabaseView(SimpleFormView):
             schema=form.schema.data,
             table=form.name.data,
         )
-        return redirect("/tablemodelview/list/")
+        return redirect("/analytics/tablemodelview/list/")
 
 
 class ExcelToDatabaseView(SimpleFormView):
@@ -275,13 +275,11 @@ class ExcelToDatabaseView(SimpleFormView):
             flash(message, "danger")
             return redirect("/exceltodatabaseview/form")
 
-        uploaded_tmp_file_path = (
-            tempfile.NamedTemporaryFile(  # pylint: disable=consider-using-with
-                dir=app.config["UPLOAD_FOLDER"],
-                suffix=os.path.splitext(form.excel_file.data.filename)[1].lower(),
-                delete=False,
-            ).name
-        )
+        uploaded_tmp_file_path = tempfile.NamedTemporaryFile(  # pylint: disable=consider-using-with
+            dir=app.config["UPLOAD_FOLDER"],
+            suffix=os.path.splitext(form.excel_file.data.filename)[1].lower(),
+            delete=False,
+        ).name
 
         try:
             utils.ensure_path_exists(config["UPLOAD_FOLDER"])
@@ -382,7 +380,7 @@ class ExcelToDatabaseView(SimpleFormView):
             schema=form.schema.data,
             table=form.name.data,
         )
-        return redirect("/tablemodelview/list/")
+        return redirect("/analytics/tablemodelview/list/")
 
 
 class ColumnarToDatabaseView(SimpleFormView):
@@ -523,4 +521,4 @@ class ColumnarToDatabaseView(SimpleFormView):
             schema=form.schema.data,
             table=form.name.data,
         )
-        return redirect("/tablemodelview/list/")
+        return redirect("/analytics/tablemodelview/list/")

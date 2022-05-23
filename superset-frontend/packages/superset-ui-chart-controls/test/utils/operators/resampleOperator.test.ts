@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { QueryObject, SqlaFormData } from '@superset-ui/core';
+import { AdhocColumn, QueryObject, SqlaFormData } from '@superset-ui/core';
 import { resampleOperator } from '@superset-ui/chart-controls';
 
 const formData: SqlaFormData = {
@@ -74,6 +74,8 @@ test('should do resample on implicit time column', () => {
       method: 'ffill',
       rule: '1D',
       fill_value: null,
+      time_column: '__timestamp',
+      groupby_columns: [],
     },
   });
 });
@@ -93,8 +95,10 @@ test('should do resample on x-axis', () => {
     operation: 'resample',
     options: {
       fill_value: null,
+      groupby_columns: [],
       method: 'ffill',
       rule: '1D',
+      time_column: 'ds',
     },
   });
 });
@@ -111,6 +115,81 @@ test('should do zerofill resample', () => {
       method: 'asfreq',
       rule: '1D',
       fill_value: 0,
+      time_column: '__timestamp',
+      groupby_columns: [],
+    },
+  });
+});
+
+test('should append physical column to resample', () => {
+  expect(
+    resampleOperator(
+      { ...formData, resample_method: 'zerofill', resample_rule: '1D' },
+      { ...queryObject, columns: ['column1', 'column2'] },
+    ),
+  ).toEqual({
+    operation: 'resample',
+    options: {
+      method: 'asfreq',
+      rule: '1D',
+      fill_value: 0,
+      time_column: '__timestamp',
+      groupby_columns: ['column1', 'column2'],
+    },
+  });
+});
+
+test('should append label of adhoc column and physical column to resample', () => {
+  expect(
+    resampleOperator(
+      { ...formData, resample_method: 'zerofill', resample_rule: '1D' },
+      {
+        ...queryObject,
+        columns: [
+          {
+            hasCustomLabel: true,
+            label: 'concat_a_b',
+            expressionType: 'SQL',
+            sqlExpression: "'a' + 'b'",
+          } as AdhocColumn,
+          'column2',
+        ],
+      },
+    ),
+  ).toEqual({
+    operation: 'resample',
+    options: {
+      method: 'asfreq',
+      rule: '1D',
+      fill_value: 0,
+      time_column: '__timestamp',
+      groupby_columns: ['concat_a_b', 'column2'],
+    },
+  });
+});
+
+test('should append `undefined` if adhoc non-existing label', () => {
+  expect(
+    resampleOperator(
+      { ...formData, resample_method: 'zerofill', resample_rule: '1D' },
+      {
+        ...queryObject,
+        columns: [
+          {
+            sqlExpression: "'a' + 'b'",
+          } as AdhocColumn,
+          'column2',
+        ],
+      },
+    ),
+  ).toEqual({
+    operation: 'resample',
+    options: {
+      method: 'asfreq',
+      rule: '1D',
+      fill_value: 0,
+      time_column: '__timestamp',
+      groupby_columns: [undefined, 'column2'],
     },
   });
 });

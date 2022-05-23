@@ -888,9 +888,7 @@ class TestRolePermission(SupersetTestCase):
             ["AuthDBView", "login"],
             ["AuthDBView", "logout"],
             ["CurrentUserRestApi", "get_me"],
-            # TODO (embedded) remove Dashboard:embedded after uuids have been shipped
             ["Dashboard", "embedded"],
-            ["EmbeddedView", "embedded"],
             ["R", "index"],
             ["Superset", "log"],
             ["Superset", "theme"],

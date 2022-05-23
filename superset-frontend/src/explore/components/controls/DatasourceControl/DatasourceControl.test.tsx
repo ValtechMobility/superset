@@ -33,7 +33,6 @@ const createProps = () => ({
   default: null,
   description: null,
   value: '25__table',
-  form_data: {},
   datasource: {
     id: 25,
     database: {

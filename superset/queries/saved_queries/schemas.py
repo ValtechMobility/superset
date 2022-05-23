@@ -18,11 +18,7 @@ from marshmallow import fields, Schema
 from marshmallow.validate import Length
 
 openapi_spec_methods_override = {
-    "get": {
-        "get": {
-            "description": "Get a saved query",
-        }
-    },
+    "get": {"get": {"description": "Get a saved query",}},
     "get_list": {
         "get": {
             "description": "Get a list of saved queries, use Rison or JSON "

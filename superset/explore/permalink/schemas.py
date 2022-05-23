@@ -19,9 +19,7 @@ from marshmallow import fields, Schema
 
 class ExplorePermalinkPostSchema(Schema):
     formData = fields.Dict(
-        required=True,
-        allow_none=False,
-        description="Chart form data",
+        required=True, allow_none=False, description="Chart form data",
     )
     urlParams = fields.List(
         fields.Tuple(

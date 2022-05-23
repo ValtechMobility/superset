@@ -57,10 +57,10 @@ const DashboardList = lazy(
       /* webpackChunkName: "DashboardList" */ 'src/views/CRUD/dashboard/DashboardList'
     ),
 );
-const DashboardRoute = lazy(
+const DashboardPage = lazy(
   () =>
     import(
-      /* webpackChunkName: "DashboardRoute" */ 'src/dashboard/containers/DashboardRoute'
+      /* webpackChunkName: "DashboardPage" */ 'src/dashboard/containers/DashboardPage'
     ),
 );
 const DatabaseList = lazy(
@@ -103,66 +103,66 @@ type Routes = {
 
 export const routes: Routes = [
   {
-    path: '/superset/welcome/',
+    path: '/analytics/superset/welcome/',
     Component: Welcome,
   },
   {
-    path: '/dashboard/list/',
+    path: '/analytics/dashboard/list/',
     Component: DashboardList,
   },
   {
-    path: '/superset/dashboard/:idOrSlug/',
-    Component: DashboardRoute,
+    path: '/analytics/superset/dashboard/:idOrSlug/',
+    Component: DashboardPage,
   },
   {
-    path: '/chart/list/',
+    path: '/analytics/chart/list/',
     Component: ChartList,
   },
   {
-    path: '/tablemodelview/list/',
+    path: '/analytics/tablemodelview/list/',
     Component: DatasetList,
   },
   {
-    path: '/databaseview/list/',
+    path: '/analytics/databaseview/list/',
     Component: DatabaseList,
   },
   {
-    path: '/savedqueryview/list/',
+    path: '/analytics/savedqueryview/list/',
     Component: SavedQueryList,
   },
   {
-    path: '/csstemplatemodelview/list/',
+    path: '/analytics/csstemplatemodelview/list/',
     Component: CssTemplatesList,
   },
   {
-    path: '/annotationlayermodelview/list/',
+    path: '/analytics/annotationlayermodelview/list/',
     Component: AnnotationLayersList,
   },
   {
-    path: '/annotationmodelview/:annotationLayerId/annotation/',
+    path: '/analytics/annotationmodelview/:annotationLayerId/annotation/',
     Component: AnnotationList,
   },
   {
-    path: '/superset/sqllab/history/',
+    path: '/analytics/superset/sqllab/history/',
     Component: QueryList,
   },
   {
-    path: '/alert/list/',
+    path: '/analytics/alert/list/',
     Component: AlertList,
   },
   {
-    path: '/report/list/',
+    path: '/analytics/report/list/',
     Component: AlertList,
     props: {
       isReportEnabled: true,
     },
   },
   {
-    path: '/alert/:alertId/log/',
+    path: '/analytics/alert/:alertId/log/',
     Component: ExecutionLog,
   },
   {
-    path: '/report/:alertId/log/',
+    path: '/analytics/report/:alertId/log/',
     Component: ExecutionLog,
     props: {
       isReportEnabled: true,

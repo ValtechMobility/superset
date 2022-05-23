@@ -17,7 +17,6 @@
  * under the License.
  */
 import { ChartProps } from '@superset-ui/core';
-import { EchartsTreemapChartProps } from '../../src/Treemap/types';
 import transformProps from '../../src/Treemap/transformProps';
 
 describe('Treemap tranformProps', () => {
@@ -43,7 +42,7 @@ describe('Treemap tranformProps', () => {
   });
 
   it('should tranform chart props for viz', () => {
-    expect(transformProps(chartProps as EchartsTreemapChartProps)).toEqual(
+    expect(transformProps(chartProps)).toEqual(
       expect.objectContaining({
         width: 800,
         height: 600,

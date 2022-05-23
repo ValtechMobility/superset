@@ -227,8 +227,7 @@ class ReportScheduleDAO(BaseDAO):
 
     @staticmethod
     def find_last_success_log(
-        report_schedule: ReportSchedule,
-        session: Optional[Session] = None,
+        report_schedule: ReportSchedule, session: Optional[Session] = None,
     ) -> Optional[ReportExecutionLog]:
         """
         Finds last success execution log for a given report
@@ -246,8 +245,7 @@ class ReportScheduleDAO(BaseDAO):
 
     @staticmethod
     def find_last_entered_working_log(
-        report_schedule: ReportSchedule,
-        session: Optional[Session] = None,
+        report_schedule: ReportSchedule, session: Optional[Session] = None,
     ) -> Optional[ReportExecutionLog]:
         """
         Finds last success execution log for a given report
@@ -266,8 +264,7 @@ class ReportScheduleDAO(BaseDAO):
 
     @staticmethod
     def find_last_error_notification(
-        report_schedule: ReportSchedule,
-        session: Optional[Session] = None,
+        report_schedule: ReportSchedule, session: Optional[Session] = None,
     ) -> Optional[ReportExecutionLog]:
         """
         Finds last error email sent

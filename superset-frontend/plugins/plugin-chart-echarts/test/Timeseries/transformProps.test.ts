@@ -24,14 +24,12 @@ import {
   EventAnnotationLayer,
   FormulaAnnotationLayer,
   IntervalAnnotationLayer,
-  SqlaFormData,
   TimeseriesAnnotationLayer,
 } from '@superset-ui/core';
-import { EchartsTimeseriesChartProps } from '../../src/types';
 import transformProps from '../../src/Timeseries/transformProps';
 
 describe('EchartsTimeseries transformProps', () => {
-  const formData: SqlaFormData = {
+  const formData = {
     colorScheme: 'bnbColors',
     datasource: '3__table',
     granularity_sqla: 'ds',
@@ -56,7 +54,7 @@ describe('EchartsTimeseries transformProps', () => {
 
   it('should tranform chart props for viz', () => {
     const chartProps = new ChartProps(chartPropsConfig);
-    expect(transformProps(chartProps as EchartsTimeseriesChartProps)).toEqual(
+    expect(transformProps(chartProps)).toEqual(
       expect.objectContaining({
         width: 800,
         height: 600,
@@ -101,7 +99,7 @@ describe('EchartsTimeseries transformProps', () => {
         annotationLayers: [formula],
       },
     });
-    expect(transformProps(chartProps as EchartsTimeseriesChartProps)).toEqual(
+    expect(transformProps(chartProps)).toEqual(
       expect.objectContaining({
         width: 800,
         height: 600,
@@ -229,7 +227,7 @@ describe('EchartsTimeseries transformProps', () => {
         },
       ],
     });
-    expect(transformProps(chartProps as EchartsTimeseriesChartProps)).toEqual(
+    expect(transformProps(chartProps)).toEqual(
       expect.objectContaining({
         echartOptions: expect.objectContaining({
           legend: expect.objectContaining({
@@ -268,8 +266,7 @@ describe('Does transformProps transform series correctly', () => {
     name: string;
   };
 
-  const formData: SqlaFormData = {
-    viz_type: 'my_viz',
+  const formData = {
     colorScheme: 'bnbColors',
     datasource: '3__table',
     granularity_sqla: 'ds',
@@ -332,9 +329,8 @@ describe('Does transformProps transform series correctly', () => {
   it('should show labels when showValue is true', () => {
     const chartProps = new ChartProps(chartPropsConfig);
 
-    const transformedSeries = transformProps(
-      chartProps as EchartsTimeseriesChartProps,
-    ).echartOptions.series as seriesType[];
+    const transformedSeries = transformProps(chartProps).echartOptions
+      .series as seriesType[];
 
     transformedSeries.forEach(series => {
       expect(series.label.show).toBe(true);
@@ -349,9 +345,8 @@ describe('Does transformProps transform series correctly', () => {
 
     const chartProps = new ChartProps(updatedChartPropsConfig);
 
-    const transformedSeries = transformProps(
-      chartProps as EchartsTimeseriesChartProps,
-    ).echartOptions.series as seriesType[];
+    const transformedSeries = transformProps(chartProps).echartOptions
+      .series as seriesType[];
 
     transformedSeries.forEach(series => {
       expect(series.label.show).toBe(false);
@@ -366,9 +361,8 @@ describe('Does transformProps transform series correctly', () => {
 
     const chartProps = new ChartProps(updatedChartPropsConfig);
 
-    const transformedSeries = transformProps(
-      chartProps as EchartsTimeseriesChartProps,
-    ).echartOptions.series as seriesType[];
+    const transformedSeries = transformProps(chartProps).echartOptions
+      .series as seriesType[];
 
     const showValueIndexes: number[] = [];
 
@@ -406,9 +400,8 @@ describe('Does transformProps transform series correctly', () => {
   it('should show labels on values >= percentageThreshold if onlyTotal is false', () => {
     const chartProps = new ChartProps(chartPropsConfig);
 
-    const transformedSeries = transformProps(
-      chartProps as EchartsTimeseriesChartProps,
-    ).echartOptions.series as seriesType[];
+    const transformedSeries = transformProps(chartProps).echartOptions
+      .series as seriesType[];
 
     const expectedThresholds = totalStackedValues.map(
       total => ((formData.percentageThreshold || 0) / 100) * total,
@@ -437,9 +430,8 @@ describe('Does transformProps transform series correctly', () => {
 
     const chartProps = new ChartProps(updatedChartPropsConfig);
 
-    const transformedSeries = transformProps(
-      chartProps as EchartsTimeseriesChartProps,
-    ).echartOptions.series as seriesType[];
+    const transformedSeries = transformProps(chartProps).echartOptions
+      .series as seriesType[];
 
     transformedSeries.forEach((series, seriesIndex) => {
       expect(series.label.show).toBe(true);

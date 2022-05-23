@@ -23,7 +23,7 @@ describe('Visualization > Time TableViz', () => {
 
   beforeEach(() => {
     cy.login();
-    cy.intercept('POST', '/superset/explore_json/**').as('getJson');
+    cy.intercept('POST', '/analytics/superset/explore_json/**').as('getJson');
   });
 
   it('Test time series table multiple metrics last year total', () => {
@@ -47,7 +47,7 @@ describe('Visualization > Time TableViz', () => {
       waitAlias: '@getJson',
       querySubstring: NUM_METRIC.label,
     });
-    cy.get('[data-test="time-table"]').within(() => {
+    cy.get('.time-table').within(() => {
       cy.get('span').contains('Sum(num)');
       cy.get('span').contains('COUNT(*)');
     });
@@ -75,7 +75,7 @@ describe('Visualization > Time TableViz', () => {
       waitAlias: '@getJson',
       querySubstring: NUM_METRIC.label,
     });
-    cy.get('[data-test="time-table"]').within(() => {
+    cy.get('.time-table').within(() => {
       cy.get('td').contains('boy');
       cy.get('td').contains('girl');
     });
@@ -112,7 +112,7 @@ describe('Visualization > Time TableViz', () => {
       waitAlias: '@getJson',
       querySubstring: NUM_METRIC.label,
     });
-    cy.get('[data-test="time-table"]').within(() => {
+    cy.get('.time-table').within(() => {
       cy.get('th').contains('Current');
       cy.get('th').contains('Last Year');
       cy.get('th').contains('YoY');

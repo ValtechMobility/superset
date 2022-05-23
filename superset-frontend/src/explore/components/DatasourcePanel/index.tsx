@@ -17,7 +17,6 @@
  * under the License.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { css, styled, t } from '@superset-ui/core';
 import {
   ControlConfig,
   DatasourceMeta,
@@ -25,6 +24,7 @@ import {
 } from '@superset-ui/chart-controls';
 import { debounce } from 'lodash';
 import { matchSorter, rankings } from 'match-sorter';
+import { css, styled, t } from '@superset-ui/core';
 import Collapse from 'src/components/Collapse';
 import { Input } from 'src/components/Input';
 import { FAST_DEBOUNCE } from 'src/constants';
@@ -49,10 +49,6 @@ export interface Props {
   shouldForceUpdate?: number;
 }
 
-const enableExploreDnd = isFeatureEnabled(
-  FeatureFlag.ENABLE_EXPLORE_DRAG_AND_DROP,
-);
-
 const Button = styled.button`
   background: none;
   border: none;
@@ -67,7 +63,7 @@ const ButtonContainer = styled.div`
 
 const DatasourceContainer = styled.div`
   ${({ theme }) => css`
-    background-color: ${theme.colors.grayscale.light5};
+    background-color: ${theme.colors.grayscale.light4};
     position: relative;
     height: 100%;
     display: flex;
@@ -86,7 +82,7 @@ const DatasourceContainer = styled.div`
       color: ${theme.colors.grayscale.light1};
     }
     .form-control.input-md {
-      width: calc(100% - ${theme.gridUnit * 8}px);
+      width: calc(100% - ${theme.gridUnit * 4}px);
       height: ${theme.gridUnit * 8}px;
       margin: ${theme.gridUnit * 2}px auto;
     }
@@ -101,55 +97,26 @@ const DatasourceContainer = styled.div`
 `;
 
 const LabelWrapper = styled.div`
-  ${({ theme }) => css`
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: ${theme.typography.sizes.s}px;
-    background-color: ${theme.colors.grayscale.light4};
-    margin: ${theme.gridUnit * 2}px 0;
-    border-radius: 4px;
-    padding: 0 ${theme.gridUnit}px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-    &:first-of-type {
-      margin-top: 0;
+  & > span {
+    white-space: nowrap;
+  }
+
+  .option-label {
+    display: inline;
+  }
+
+  .metric-option {
+    & > svg {
+      min-width: ${({ theme }) => `${theme.gridUnit * 4}px`};
     }
-    &:last-of-type {
-      margin-bottom: 0;
+    & > .option-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-
-    ${enableExploreDnd &&
-    css`
-      padding: 0;
-      cursor: pointer;
-      &:hover {
-        background-color: ${theme.colors.grayscale.light3};
-      }
-    `}
-
-    & > span {
-      white-space: nowrap;
-    }
-
-    .option-label {
-      display: inline;
-    }
-
-    .metric-option {
-      & > svg {
-        min-width: ${theme.gridUnit * 4}px;
-      }
-      & > .option-label {
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  `}
-`;
-
-const SectionHeader = styled.span`
-  ${({ theme }) => css`
-    font-size: ${theme.typography.sizes.s}px;
-  `}
+  }
 `;
 
 const LabelContainer = (props: {
@@ -166,6 +133,10 @@ const LabelContainer = (props: {
     </LabelWrapper>
   );
 };
+
+const enableExploreDnd = isFeatureEnabled(
+  FeatureFlag.ENABLE_EXPLORE_DRAG_AND_DROP,
+);
 
 export default function DataSourcePanel({
   datasource,
@@ -302,12 +273,13 @@ export default function DataSourcePanel({
         />
         <div className="field-selections">
           <Collapse
+            bordered
             defaultActiveKey={['metrics', 'column']}
             expandIconPosition="right"
             ghost
           >
             <Collapse.Panel
-              header={<SectionHeader>{t('Metrics')}</SectionHeader>}
+              header={<span className="header">{t('Metrics')}</span>}
               key="metrics"
             >
               <div className="field-length">
@@ -343,7 +315,7 @@ export default function DataSourcePanel({
               )}
             </Collapse.Panel>
             <Collapse.Panel
-              header={<SectionHeader>{t('Columns')}</SectionHeader>}
+              header={<span className="header">{t('Columns')}</span>}
               key="column"
             >
               <div className="field-length">

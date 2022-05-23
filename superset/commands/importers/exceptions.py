@@ -26,8 +26,3 @@ class IncorrectVersionError(CommandException):
 class NoValidFilesFoundError(CommandException):
     status = 400
     message = "No valid import files were found"
-
-
-class IncorrectFormatError(CommandException):
-    status = 422
-    message = "File has the incorrect format"

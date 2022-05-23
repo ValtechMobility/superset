@@ -79,7 +79,7 @@ function PropertiesModal({
     async function fetchChartOwners() {
       try {
         const response = await SupersetClient.get({
-          endpoint: `/api/v1/chart/${slice.slice_id}`,
+          endpoint: `/analytics/api/v1/chart/${slice.slice_id}`,
         });
         const chart = response.json.result;
         setSelectedOwners(
@@ -105,7 +105,7 @@ function PropertiesModal({
           page_size: pageSize,
         });
         return SupersetClient.get({
-          endpoint: `/api/v1/chart/related/owners?q=${query}`,
+          endpoint: `/analytics/api/v1/chart/related/owners?q=${query}`,
         }).then(response => ({
           data: response.json.result.map(
             (item: { value: number; text: string }) => ({
@@ -150,7 +150,7 @@ function PropertiesModal({
     }
     try {
       const res = await SupersetClient.put({
-        endpoint: `/api/v1/chart/${slice.slice_id}`,
+        endpoint: `/analytics/api/v1/chart/${slice.slice_id}`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
@@ -204,14 +204,7 @@ function PropertiesModal({
             buttonSize="small"
             buttonStyle="primary"
             onClick={form.submit}
-            disabled={submitting || !name || slice.is_managed_externally}
-            tooltip={
-              slice.is_managed_externally
-                ? t(
-                    "This chart is managed externally, and can't be edited in Superset",
-                  )
-                : ''
-            }
+            disabled={submitting || !name}
             cta
           >
             {t('Save')}

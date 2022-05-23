@@ -19,7 +19,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { t, styled, withTheme } from '@superset-ui/core';
+import { t, styled, supersetTheme } from '@superset-ui/core';
 import { getUrlParam } from 'src/utils/urlUtils';
 
 import { AntdDropdown } from 'src/components';
@@ -59,8 +59,7 @@ const Styles = styled.div`
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid ${({ theme }) => theme.colors.grayscale.light2};
-    padding: ${({ theme }) => 4 * theme.gridUnit}px;
-    padding-right: ${({ theme }) => 2 * theme.gridUnit}px;
+    padding: ${({ theme }) => 2 * theme.gridUnit}px;
   }
   .error-alert {
     margin: ${({ theme }) => 2 * theme.gridUnit}px;
@@ -178,13 +177,13 @@ class DatasourceControl extends React.PureComponent {
         datasourceKey: `${datasource.id}__${datasource.type}`,
         sql: datasource.sql,
       };
-      postForm('/superset/sqllab/', payload);
+      postForm('/analytics/superset/sqllab/', payload);
     }
   }
 
   render() {
     const { showChangeDatasourceModal, showEditDatasourceModal } = this.state;
-    const { datasource, onChange, theme } = this.props;
+    const { datasource, onChange } = this.props;
     const isMissingDatasource = datasource.id == null;
     let isMissingParams = false;
     if (isMissingDatasource) {
@@ -236,7 +235,7 @@ class DatasourceControl extends React.PureComponent {
           )}
           {healthCheckMessage && (
             <Tooltip title={healthCheckMessage}>
-              <Icons.AlertSolid iconColor={theme.colors.warning.base} />
+              <Icons.AlertSolid iconColor={supersetTheme.colors.warning.base} />
             </Tooltip>
           )}
           {extra?.warning_markdown && (
@@ -326,4 +325,4 @@ class DatasourceControl extends React.PureComponent {
 DatasourceControl.propTypes = propTypes;
 DatasourceControl.defaultProps = defaultProps;
 
-export default withTheme(DatasourceControl);
+export default DatasourceControl;

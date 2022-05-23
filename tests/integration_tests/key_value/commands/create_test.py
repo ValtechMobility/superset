@@ -36,8 +36,12 @@ def test_create_id_entry(app_context: AppContext, admin: User) -> None:
     from superset.key_value.commands.create import CreateKeyValueCommand
     from superset.key_value.models import KeyValueEntry
 
-    key = CreateKeyValueCommand(actor=admin, resource=RESOURCE, value=VALUE).run()
-    entry = db.session.query(KeyValueEntry).filter_by(id=key.id).autoflush(False).one()
+    key = CreateKeyValueCommand(
+        actor=admin, resource=RESOURCE, value=VALUE, key_type="id",
+    ).run()
+    entry = (
+        db.session.query(KeyValueEntry).filter_by(id=int(key)).autoflush(False).one()
+    )
     assert pickle.loads(entry.value) == VALUE
     assert entry.created_by_fk == admin.id
     db.session.delete(entry)
@@ -48,9 +52,11 @@ def test_create_uuid_entry(app_context: AppContext, admin: User) -> None:
     from superset.key_value.commands.create import CreateKeyValueCommand
     from superset.key_value.models import KeyValueEntry
 
-    key = CreateKeyValueCommand(actor=admin, resource=RESOURCE, value=VALUE).run()
+    key = CreateKeyValueCommand(
+        actor=admin, resource=RESOURCE, value=VALUE, key_type="uuid",
+    ).run()
     entry = (
-        db.session.query(KeyValueEntry).filter_by(uuid=key.uuid).autoflush(False).one()
+        db.session.query(KeyValueEntry).filter_by(uuid=UUID(key)).autoflush(False).one()
     )
     assert pickle.loads(entry.value) == VALUE
     assert entry.created_by_fk == admin.id

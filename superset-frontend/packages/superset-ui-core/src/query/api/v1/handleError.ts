@@ -29,7 +29,7 @@ export type ErrorInput = string | Error | Response | SupersetApiErrorPayload;
  * @param error the catched error from SupersetClient.request(...)
  */
 export default async function handleError(error: ErrorInput): Promise<never> {
-  // already a Superset error
+  // already a Sueprset error
   if (error instanceof SupersetApiError) {
     throw error;
   }

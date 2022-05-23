@@ -100,7 +100,7 @@ const DatasourceModal: FunctionComponent<DatasourceModalProps> = ({
 
     setIsSaving(true);
     SupersetClient.post({
-      endpoint: '/datasource/save/',
+      endpoint: '/analytics/datasource/save/',
       postPayload: {
         data: {
           ...currentDatasource,
@@ -226,18 +226,7 @@ const DatasourceModal: FunctionComponent<DatasourceModalProps> = ({
             buttonStyle="primary"
             data-test="datasource-modal-save"
             onClick={onClickSave}
-            disabled={
-              isSaving ||
-              errors.length > 0 ||
-              currentDatasource.is_managed_externally
-            }
-            tooltip={
-              currentDatasource.is_managed_externally
-                ? t(
-                    "This dataset is managed externally, and can't be edited in Superset",
-                  )
-                : ''
-            }
+            disabled={isSaving || errors.length > 0}
           >
             {t('Save')}
           </Button>

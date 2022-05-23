@@ -53,8 +53,7 @@ export const DEFAULT_FORM_DATA: BoxPlotQueryFormData = {
   ...DEFAULT_TITLE_FORM_DATA,
 };
 
-export interface EchartsBoxPlotChartProps
-  extends ChartProps<BoxPlotQueryFormData> {
+export interface EchartsBoxPlotChartProps extends ChartProps {
   formData: BoxPlotQueryFormData;
   queriesData: ChartDataResponseResult[];
 }

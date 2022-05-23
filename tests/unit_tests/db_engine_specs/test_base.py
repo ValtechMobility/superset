@@ -77,10 +77,7 @@ select * from currency
             ),
             None,
         ),
-        (
-            "SELECT 1 as cnt",
-            None,
-        ),
+        ("SELECT 1 as cnt", None,),
         (
             dedent(
                 """

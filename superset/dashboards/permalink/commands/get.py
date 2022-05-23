@@ -27,21 +27,25 @@ from superset.dashboards.permalink.exceptions import DashboardPermalinkGetFailed
 from superset.dashboards.permalink.types import DashboardPermalinkValue
 from superset.key_value.commands.get import GetKeyValueCommand
 from superset.key_value.exceptions import KeyValueGetFailedError, KeyValueParseKeyError
-from superset.key_value.utils import decode_permalink_id
+from superset.key_value.types import KeyType
 
 logger = logging.getLogger(__name__)
 
 
 class GetDashboardPermalinkCommand(BaseDashboardPermalinkCommand):
-    def __init__(self, actor: User, key: str):
+    def __init__(
+        self, actor: User, key: str, key_type: KeyType,
+    ):
         self.actor = actor
         self.key = key
+        self.key_type = key_type
 
     def run(self) -> Optional[DashboardPermalinkValue]:
         self.validate()
         try:
-            key = decode_permalink_id(self.key, salt=self.salt)
-            command = GetKeyValueCommand(resource=self.resource, key=key)
+            command = GetKeyValueCommand(
+                resource=self.resource, key=self.key, key_type=self.key_type
+            )
             value: Optional[DashboardPermalinkValue] = command.run()
             if value:
                 DashboardDAO.get_by_id_or_slug(value["dashboardId"])

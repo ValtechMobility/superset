@@ -58,15 +58,6 @@ const EmptyStateContainer = styled.div`
     & .ant-empty-image svg {
       width: auto;
     }
-
-    & a,
-    & span[role='button'] {
-      color: inherit;
-      text-decoration: underline;
-      &:hover {
-        color: ${theme.colors.grayscale.base};
-      }
-    }
   `}
 `;
 
@@ -117,7 +108,9 @@ const ActionButton = styled(Button)`
 `;
 
 const getImage = (image: string | ReactNode) =>
-  typeof image === 'string' ? `/static/assets/images/${image}` : image;
+  typeof image === 'string'
+    ? `/analytics/static/assets/images/${image}`
+    : image;
 
 const getImageHeight = (size: EmptyStateSize) => {
   switch (size) {

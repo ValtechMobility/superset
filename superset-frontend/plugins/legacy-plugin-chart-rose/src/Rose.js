@@ -27,6 +27,7 @@ import {
   getNumberFormatter,
   CategoricalColorNamespace,
 } from '@superset-ui/core';
+import './Rose.css';
 
 const propTypes = {
   // Data is an object hashed by numeric value, perhaps timestamp
@@ -136,7 +137,6 @@ function Rose(element, props) {
   legendWrap.datum(legendData(datum)).call(legend);
 
   tooltip.headerFormatter(timeFormat).valueFormatter(format);
-  tooltip.classes('tooltip');
 
   // Compute max radius, which the largest value will occupy
   const roseHeight = height - legend.height();

@@ -55,10 +55,6 @@ export const URL_PARAMS = {
     name: 'show_filters',
     type: 'boolean',
   },
-  expandFilters: {
-    name: 'expand_filters',
-    type: 'boolean',
-  },
   formDataKey: {
     name: 'form_data_key',
     type: 'string',
@@ -102,8 +98,3 @@ export const FAST_DEBOUNCE = 250;
  * Slower debounce delay for inputs with expensive API calls.
  */
 export const SLOW_DEBOUNCE = 500;
-
-/**
- * Display null as `N/A`
- */
-export const NULL_DISPLAY = 'N/A';

@@ -17,14 +17,14 @@
 """rename_csv_to_file
 
 Revision ID: b92d69a6643c
-Revises: aea15018d53b
+Revises: 32646df09c64
 Create Date: 2021-09-19 14:42:20.130368
 
 """
 
 # revision identifiers, used by Alembic.
 revision = "b92d69a6643c"
-down_revision = "aea15018d53b"
+down_revision = "32646df09c64"
 
 import sqlalchemy as sa
 from alembic import op

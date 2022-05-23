@@ -24,7 +24,6 @@ import {
   TextMode as OrigTextMode,
 } from 'brace';
 import AceEditor, { IAceEditorProps } from 'react-ace';
-import { acequire } from 'ace-builds/src-noconflict/ace';
 import AsyncEsmComponent, {
   PlaceholderProps,
 } from 'src/components/AsyncEsmComponent';
@@ -56,7 +55,7 @@ export interface AceCompleterKeyword extends AceCompleterKeywordData {
 
 /**
  * Async loaders to import brace modules. Must manually create call `import(...)`
- * promises because webpack can only analyze async imports statically.
+ * promises because webpack can only analyze asycn imports statically.
  */
 const aceModuleLoaders = {
   'mode/sql': () => import('brace/mode/sql'),
@@ -69,7 +68,6 @@ const aceModuleLoaders = {
   'theme/textmate': () => import('brace/theme/textmate'),
   'theme/github': () => import('brace/theme/github'),
   'ext/language_tools': () => import('brace/ext/language_tools'),
-  'ext/searchbox': () => import('brace/ext/searchbox'),
 };
 
 export type AceModule = keyof typeof aceModuleLoaders;
@@ -102,6 +100,7 @@ export default function AsyncAceEditor(
   }: AsyncAceEditorOptions = {},
 ) {
   return AsyncEsmComponent(async () => {
+    const { default: ace } = await import('brace');
     const { default: ReactAceEditor } = await import('react-ace');
 
     await Promise.all(aceModules.map(x => aceModuleLoaders[x]()));
@@ -126,7 +125,7 @@ export default function AsyncAceEditor(
         ref,
       ) {
         if (keywords) {
-          const langTools = acequire('ace/ext/language_tools');
+          const langTools = ace.acequire('ace/ext/language_tools');
           const completer = {
             getCompletions: (
               editor: AceEditor,
@@ -165,11 +164,10 @@ export const SQLEditor = AsyncAceEditor([
   'mode/sql',
   'theme/github',
   'ext/language_tools',
-  'ext/searchbox',
 ]);
 
 export const FullSQLEditor = AsyncAceEditor(
-  ['mode/sql', 'theme/github', 'ext/language_tools', 'ext/searchbox'],
+  ['mode/sql', 'theme/github', 'ext/language_tools'],
   {
     // a custom placeholder in SQL lab for less jumpy re-renders
     placeholder: () => {

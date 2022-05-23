@@ -27,6 +27,7 @@ import {
 } from '@superset-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Global } from '@emotion/react';
+import { useParams } from 'react-router-dom';
 import { useToasts } from 'src/components/MessageToasts/withToasts';
 import Loading from 'src/components/Loading';
 import FilterBoxMigrationModal from 'src/dashboard/components/FilterBoxMigrationModal';
@@ -55,7 +56,6 @@ import { URL_PARAMS } from 'src/constants';
 import { getUrlParam } from 'src/utils/urlUtils';
 import { canUserEditDashboard } from 'src/dashboard/util/findPermission';
 import { getFilterSets } from '../actions/nativeFilters';
-import { setDatasetsStatus } from '../actions/dashboardState';
 import {
   getFilterValue,
   getPermalinkValue,
@@ -78,26 +78,20 @@ const DashboardContainer = React.lazy(
 
 const originalDocumentTitle = document.title;
 
-type PageProps = {
-  idOrSlug: string;
-};
-
-export const DashboardPage: FC<PageProps> = ({ idOrSlug }: PageProps) => {
+const DashboardPage: FC = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const user = useSelector<any, UserWithPermissionsAndRoles>(
     state => state.user,
   );
   const { addDangerToast } = useToasts();
+  const { idOrSlug } = useParams<{ idOrSlug: string }>();
   const { result: dashboard, error: dashboardApiError } =
     useDashboard(idOrSlug);
   const { result: charts, error: chartsApiError } =
     useDashboardCharts(idOrSlug);
-  const {
-    result: datasets,
-    error: datasetsApiError,
-    status,
-  } = useDashboardDatasets(idOrSlug);
+  const { result: datasets, error: datasetsApiError } =
+    useDashboardDatasets(idOrSlug);
   const isDashboardHydrated = useRef(false);
 
   const error = dashboardApiError || chartsApiError;
@@ -112,10 +106,6 @@ export const DashboardPage: FC<PageProps> = ({ idOrSlug }: PageProps) => {
   const [filterboxMigrationState, setFilterboxMigrationState] = useState(
     migrationStateParam || FILTER_BOX_MIGRATION_STATES.NOOP,
   );
-
-  useEffect(() => {
-    dispatch(setDatasetsStatus(status));
-  }, [dispatch, status]);
 
   useEffect(() => {
     // should convert filter_box to filter component?
@@ -231,7 +221,7 @@ export const DashboardPage: FC<PageProps> = ({ idOrSlug }: PageProps) => {
   }, [dashboard_title]);
 
   useEffect(() => {
-    if (typeof css === 'string') {
+    if (css) {
       // returning will clean up custom css
       // when dashboard unmounts or changes
       return injectCustomCss(css);

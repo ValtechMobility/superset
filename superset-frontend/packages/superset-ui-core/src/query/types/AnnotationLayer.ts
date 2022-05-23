@@ -162,10 +162,9 @@ export type RecordAnnotationResult = {
   records: DataRecord[];
 };
 
-export type TimeseriesAnnotationResult = {
-  key: string;
-  values: { x: string | number; y?: number }[];
-}[];
+export type TimeseriesAnnotationResult = [
+  { key: string; values: { x: string | number; y?: number }[] },
+];
 
 export type AnnotationResult =
   | RecordAnnotationResult

@@ -77,7 +77,7 @@ export function resetSlice() {
   return { type: RESET_SLICE };
 }
 
-const FAVESTAR_BASE_URL = '/superset/favstar/Dashboard';
+const FAVESTAR_BASE_URL = '/analytics/superset/favstar/Dashboard';
 export const TOGGLE_FAVE_STAR = 'TOGGLE_FAVE_STAR';
 export function toggleFaveStar(isStarred) {
   return { type: TOGGLE_FAVE_STAR, isStarred };
@@ -130,7 +130,7 @@ export function togglePublished(isPublished) {
 export function savePublished(id, isPublished) {
   return function savePublishedThunk(dispatch) {
     return SupersetClient.put({
-      endpoint: `/api/v1/dashboard/${id}`,
+      endpoint: `/analytics/api/v1/dashboard/${id}`,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         published: isPublished,
@@ -316,7 +316,7 @@ export function saveDashboardRequest(data, id, saveType) {
       window.history.pushState(
         { event: 'dashboard_properties_changed' },
         '',
-        `/superset/dashboard/${slug || id}/`,
+        `/analytics/superset/dashboard/${slug || id}/`,
       );
 
       dispatch(addSuccessToast(t('This dashboard was saved successfully.')));
@@ -361,7 +361,7 @@ export function saveDashboardRequest(data, id, saveType) {
       };
 
       return SupersetClient.put({
-        endpoint: `/api/v1/dashboard/${id}`,
+        endpoint: `/analytics/api/v1/dashboard/${id}`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedDashboard),
       })
@@ -379,7 +379,7 @@ export function saveDashboardRequest(data, id, saveType) {
       ...(cleanedData?.metadata || {}),
     };
     return SupersetClient.post({
-      endpoint: `/superset/copy_dash/${id}/`,
+      endpoint: `/analytics/superset/copy_dash/${id}/`,
       postPayload: {
         data: {
           ...finalCopyData,
@@ -610,13 +610,5 @@ export function maxUndoHistoryToast() {
         `You have used all ${historyLength} undo slots and will not be able to fully undo subsequent actions. You may save your current state to reset the history.`,
       ),
     );
-  };
-}
-
-export const SET_DATASETS_STATUS = 'SET_DATASETS_STATUS';
-export function setDatasetsStatus(status) {
-  return {
-    type: SET_DATASETS_STATUS,
-    status,
   };
 }

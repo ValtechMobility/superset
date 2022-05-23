@@ -51,7 +51,6 @@ import { TIME_RANGE } from 'src/visualizations/FilterBox/FilterBox';
 import { URL_PARAMS } from 'src/constants';
 import { getUrlParam } from 'src/utils/urlUtils';
 import { FILTER_BOX_MIGRATION_STATES } from 'src/explore/constants';
-import { ResourceStatus } from 'src/hooks/apiResources/apiResources';
 import { FeatureFlag, isFeatureEnabled } from '../../featureFlags';
 import extractUrlParams from '../util/extractUrlParams';
 import getNativeFilterConfig from '../util/filterboxMigrationHelper';
@@ -401,7 +400,6 @@ export const hydrateDashboard =
           isFiltersRefreshing: false,
           activeTabs: dashboardState?.activeTabs || [],
           filterboxMigrationState,
-          datasetsStatus: ResourceStatus.LOADING,
         },
         dashboardLayout,
       },

@@ -152,9 +152,3 @@ export type DashboardPermalinkValue = {
     hash: string;
   };
 };
-
-export type EmbeddedDashboard = {
-  uuid: string;
-  dashboard_id: string;
-  allowed_domains: string[];
-};

@@ -75,7 +75,6 @@ type DashboardInfo = {
   slug: string;
   certifiedBy: string;
   certificationDetails: string;
-  isManagedExternally: boolean;
 };
 
 const PropertiesModal = ({
@@ -127,7 +126,7 @@ const PropertiesModal = ({
         page_size: pageSize,
       });
       return SupersetClient.get({
-        endpoint: `/api/v1/dashboard/related/${accessType}?q=${query}`,
+        endpoint: `/analytics/api/v1/dashboard/related/${accessType}?q=${query}`,
       }).then(response => ({
         data: response.json.result.map(
           (item: { value: number; text: string }) => ({
@@ -152,7 +151,6 @@ const PropertiesModal = ({
         owners,
         roles,
         metadata,
-        is_managed_externally,
       } = dashboardData;
       const dashboardInfo = {
         id,
@@ -160,7 +158,6 @@ const PropertiesModal = ({
         slug: slug || '',
         certifiedBy: certified_by || '',
         certificationDetails: certification_details || '',
-        isManagedExternally: is_managed_externally || false,
       };
 
       form.setFieldsValue(dashboardInfo);
@@ -189,7 +186,7 @@ const PropertiesModal = ({
     // At some point when we have a more consistent frontend
     // datamodel, the dashboard could probably just be passed as a prop.
     SupersetClient.get({
-      endpoint: `/api/v1/dashboard/${dashboardId}`,
+      endpoint: `/analytics/api/v1/dashboard/${dashboardId}`,
     }).then(response => {
       const dashboard = response.json.result;
       const jsonMetadataObj = dashboard.json_metadata?.length
@@ -339,7 +336,7 @@ const PropertiesModal = ({
       onHide();
     } else {
       SupersetClient.put({
-        endpoint: `/api/v1/dashboard/${dashboardId}`,
+        endpoint: `/analytics/api/v1/dashboard/${dashboardId}`,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           dashboard_title: title,
@@ -518,14 +515,6 @@ const PropertiesModal = ({
             buttonStyle="primary"
             className="m-r-5"
             cta
-            disabled={dashboardInfo?.isManagedExternally}
-            tooltip={
-              dashboardInfo?.isManagedExternally
-                ? t(
-                    "This dashboard is managed externally, and can't be edited in Superset",
-                  )
-                : ''
-            }
           >
             {saveLabel}
           </Button>

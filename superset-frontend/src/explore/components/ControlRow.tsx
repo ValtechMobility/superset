@@ -16,34 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useCallback } from 'react';
+import React from 'react';
 
 const NUM_COLUMNS = 12;
 
 type Control = React.ReactElement | null;
 
 export default function ControlRow({ controls }: { controls: Control[] }) {
-  const isHiddenControl = useCallback(
-    (control: Control) =>
-      control?.props.type === 'HiddenControl' ||
-      control?.props.isVisible === false,
-    [],
-  );
-  // Invisible control should not be counted
+  // ColorMapControl renders null and should not be counted
   // in the columns number
   const countableControls = controls.filter(
-    control => !isHiddenControl(control),
+    control => !['ColorMapControl'].includes(control?.props.type),
   );
-  const colSize = countableControls.length
-    ? NUM_COLUMNS / countableControls.length
-    : NUM_COLUMNS;
+  const colSize = NUM_COLUMNS / countableControls.length;
   return (
     <div className="row">
       {controls.map((control, i) => (
         <div
           className={`col-lg-${colSize} col-xs-12`}
           style={{
-            display: isHiddenControl(control) ? 'none' : 'block',
+            display: control?.props.type === 'HiddenControl' ? 'none' : 'block',
           }}
           key={i}
         >

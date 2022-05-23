@@ -14,42 +14,48 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-from typing import Optional, Union
+from typing import Optional, Tuple, Union
 
-import pandas as pd
-from flask_babel import gettext as _
+from pandas import DataFrame
 
-from superset.exceptions import InvalidPostProcessingError
-from superset.utils.pandas_postprocessing.utils import RESAMPLE_METHOD
+from superset.utils.pandas_postprocessing.utils import validate_column_args
 
 
-def resample(
-    df: pd.DataFrame,
+@validate_column_args("groupby_columns")
+def resample(  # pylint: disable=too-many-arguments
+    df: DataFrame,
     rule: str,
     method: str,
+    time_column: str,
+    groupby_columns: Optional[Tuple[Optional[str], ...]] = None,
     fill_value: Optional[Union[float, int]] = None,
-) -> pd.DataFrame:
+) -> DataFrame:
     """
     support upsampling in resample
 
     :param df: DataFrame to resample.
     :param rule: The offset string representing target conversion.
     :param method: How to fill the NaN value after resample.
+    :param time_column: existing columns in DataFrame.
+    :param groupby_columns: columns except time_column in dataframe
     :param fill_value: What values do fill missing.
     :return: DataFrame after resample
-    :raises InvalidPostProcessingError: If the request in incorrect
+    :raises QueryObjectValidationError: If the request in incorrect
     """
-    if not isinstance(df.index, pd.DatetimeIndex):
-        raise InvalidPostProcessingError(_("Resample operation requires DatetimeIndex"))
-    if method not in RESAMPLE_METHOD:
-        raise InvalidPostProcessingError(
-            _("Resample method should in ") + ", ".join(RESAMPLE_METHOD) + "."
-        )
 
-    if method == "asfreq" and fill_value is not None:
-        _df = df.resample(rule).asfreq(fill_value=fill_value)
-    elif method == "linear":
-        _df = df.resample(rule).interpolate()
+    def _upsampling(_df: DataFrame) -> DataFrame:
+        _df = _df.set_index(time_column)
+        if method == "asfreq" and fill_value is not None:
+            return _df.resample(rule).asfreq(fill_value=fill_value)
+        return getattr(_df.resample(rule), method)()
+
+    if groupby_columns:
+        df = (
+            df.set_index(keys=list(groupby_columns))
+            .groupby(by=list(groupby_columns))
+            .apply(_upsampling)
+        )
+        df = df.reset_index().set_index(time_column).sort_index()
     else:
-        _df = getattr(df.resample(rule), method)()
-    return _df
+        df = _upsampling(df)
+    return df.reset_index()

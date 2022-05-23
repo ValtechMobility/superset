@@ -16,13 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { FC } from 'react';
-import { useParams } from 'react-router-dom';
-import { DashboardPage } from './DashboardPage';
+@import '../assets/stylesheets/less/variables.less';
 
-const DashboardRoute: FC = () => {
-  const { idOrSlug } = useParams<{ idOrSlug: string }>();
-  return <DashboardPage idOrSlug={idOrSlug} />;
-};
+.tab-pane {
+  min-height: 400px;
+  background: @lightest;
+  border: 1px solid @gray-light;
+  border-top: 0px;
+}
 
-export default DashboardRoute;
+.label {
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}

@@ -20,7 +20,7 @@ from flask_babel import gettext as _
 from pandas import DataFrame
 
 from superset.constants import NULL_STRING, PandasAxis
-from superset.exceptions import InvalidPostProcessingError
+from superset.exceptions import QueryObjectValidationError
 from superset.utils.pandas_postprocessing.utils import (
     _flatten_column_after_pivot,
     _get_aggregate_funcs,
@@ -64,14 +64,14 @@ def pivot(  # pylint: disable=too-many-arguments,too-many-locals
     :param flatten_columns: Convert column names to strings
     :param reset_index: Convert index to column
     :return: A pivot table
-    :raises InvalidPostProcessingError: If the request in incorrect
+    :raises QueryObjectValidationError: If the request in incorrect
     """
     if not index:
-        raise InvalidPostProcessingError(
+        raise QueryObjectValidationError(
             _("Pivot operation requires at least one index")
         )
     if not aggregates:
-        raise InvalidPostProcessingError(
+        raise QueryObjectValidationError(
             _("Pivot operation must include at least one aggregate")
         )
 

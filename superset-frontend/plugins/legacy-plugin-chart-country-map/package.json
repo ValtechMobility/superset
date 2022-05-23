@@ -2,6 +2,9 @@
   "name": "@superset-ui/legacy-plugin-chart-country-map",
   "version": "0.18.25",
   "description": "Superset Legacy Chart - Country Map",
+  "sideEffects": [
+    "*.css"
+  ],
   "main": "lib/index.js",
   "module": "esm/index.js",
   "files": [
@@ -31,7 +34,6 @@
   },
   "peerDependencies": {
     "@superset-ui/chart-controls": "*",
-    "@superset-ui/core": "*",
-    "react": "^16.13.1"
+    "@superset-ui/core": "*"
   }
 }

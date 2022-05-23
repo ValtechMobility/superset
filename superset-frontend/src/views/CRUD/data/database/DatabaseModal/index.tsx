@@ -89,9 +89,6 @@ const engineSpecificAlertMapping = {
 };
 
 const errorAlertMapping = {
-  GENERIC_DB_ENGINE_ERROR: {
-    message: t('Generic database engine error'),
-  },
   CONNECTION_MISSING_PARAMETERS_ERROR: {
     message: t('Missing Required Fields'),
     description: t('Please complete all required fields.'),
@@ -351,7 +348,6 @@ function dbReducer(
         } as DatabaseObject['extra_json'];
 
         deserializeExtraJSON = {
-          ...deserializeExtraJSON,
           ...JSON.parse(action.payload.extra || ''),
           metadata_params: JSON.stringify(extra_json?.metadata_params),
           engine_params: JSON.stringify(extra_json?.engine_params),
@@ -820,24 +816,12 @@ const DatabaseModal: FunctionComponent<DatabaseModalProps> = ({
     return [];
   };
 
-  const renderEditModalFooter = (db: Partial<DatabaseObject> | null) => (
+  const renderEditModalFooter = () => (
     <>
       <StyledFooterButton key="close" onClick={onClose}>
         {t('Close')}
       </StyledFooterButton>
-      <StyledFooterButton
-        key="submit"
-        buttonStyle="primary"
-        onClick={onSave}
-        disabled={db?.is_managed_externally}
-        tooltip={
-          db?.is_managed_externally
-            ? t(
-                "This database is managed externally, and can't be edited in Superset",
-              )
-            : ''
-        }
-      >
+      <StyledFooterButton key="submit" buttonStyle="primary" onClick={onSave}>
         {t('Finish')}
       </StyledFooterButton>
     </>
@@ -932,7 +916,6 @@ const DatabaseModal: FunctionComponent<DatabaseModalProps> = ({
           }
           description={
             errorAlertMapping[validationErrors?.error_type]?.description ||
-            validationErrors?.description ||
             JSON.stringify(validationErrors)
           }
           showIcon
@@ -1049,7 +1032,7 @@ const DatabaseModal: FunctionComponent<DatabaseModalProps> = ({
       title={
         <h4>{isEditMode ? t('Edit database') : t('Connect a database')}</h4>
       }
-      footer={isEditMode ? renderEditModalFooter(db) : renderModalFooter()}
+      footer={isEditMode ? renderEditModalFooter() : renderModalFooter()}
     >
       <StyledStickyHeader>
         <TabHeader>

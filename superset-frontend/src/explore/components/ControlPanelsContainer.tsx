@@ -283,17 +283,16 @@ export const ControlPanelsContainer = (props: ControlPanelsContainerProps) => {
       validationErrors?: any[];
     };
 
-    const isVisible = visibility
-      ? visibility.call(config, props, controlData)
-      : undefined;
-
+    // if visibility check says the config is not visible, don't render it
+    if (visibility && !visibility.call(config, props, controlData)) {
+      return null;
+    }
     return (
       <Control
         key={`control-${name}`}
         name={name}
         validationErrors={validationErrors}
         actions={props.actions}
-        isVisible={isVisible}
         {...restProps}
       />
     );

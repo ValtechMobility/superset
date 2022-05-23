@@ -214,9 +214,7 @@ def _delete_old_permissions(
 
 
 def migrate_roles(
-    session: Session,
-    pvm_key_map: PvmMigrationMapType,
-    commit: bool = False,
+    session: Session, pvm_key_map: PvmMigrationMapType, commit: bool = False,
 ) -> None:
     """
     Migrates all existing roles that have the permissions to be migrated

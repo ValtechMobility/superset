@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -14,13 +13,10 @@
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitationsxw
+ * specific language governing permissions and limitations
  * under the License.
  */
-import { PostProcessingFlatten } from '@superset-ui/core';
-import { PostProcessingFactory } from './types';
+import { reactify } from '@superset-ui/core';
+import Component from './Partition';
 
-export const flattenOperator: PostProcessingFactory<PostProcessingFlatten> = (
-  formData,
-  queryObject,
-) => ({ operation: 'flatten' });
+export default reactify(Component);

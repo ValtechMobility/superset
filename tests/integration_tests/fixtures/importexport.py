@@ -449,7 +449,7 @@ chart_config: Dict[str, Any] = {
     "dataset_uuid": "10808100-158b-42c4-842e-f32b99d88dfb",
 }
 
-dashboard_config: Dict[str, Any] = {
+dashboard_config = {
     "dashboard_title": "Test dash",
     "description": None,
     "css": "",
@@ -492,9 +492,7 @@ dashboard_config: Dict[str, Any] = {
     },
     "metadata": {
         "timed_refresh_immune_slices": [83],
-        "filter_scopes": {
-            "83": {"region": {"scope": ["ROOT_ID"], "immune": [83]}},
-        },
+        "filter_scopes": {"83": {"region": {"scope": ["ROOT_ID"], "immune": [83]}},},
         "expanded_slices": {"83": True},
         "refresh_frequency": 0,
         "default_filters": "{}",

@@ -17,7 +17,7 @@
  * under the License.
  */
 import React from 'react';
-import { t, styled, useTheme } from '@superset-ui/core';
+import { t, styled, supersetTheme } from '@superset-ui/core';
 
 import { Menu } from 'src/components/Menu';
 import Button, { ButtonProps } from 'src/components/Button';
@@ -93,8 +93,6 @@ const RunQueryActionButton = ({
   runQuery,
   stopQuery,
 }: Props) => {
-  const theme = useTheme();
-
   const shouldShowStopBtn =
     !!queryState && ['running', 'pending'].indexOf(queryState) > -1;
 
@@ -125,8 +123,8 @@ const RunQueryActionButton = ({
                 <Icons.CaretDown
                   iconColor={
                     isDisabled
-                      ? theme.colors.grayscale.base
-                      : theme.colors.grayscale.light5
+                      ? supersetTheme.colors.grayscale.base
+                      : supersetTheme.colors.grayscale.light5
                   }
                   name="caret-down"
                 />

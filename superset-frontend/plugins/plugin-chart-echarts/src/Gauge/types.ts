@@ -32,7 +32,7 @@ export type AxisTickLineStyle = {
 export type EchartsGaugeFormData = QueryFormData & {
   colorScheme?: string;
   groupby: QueryFormColumn[];
-  metric?: string;
+  metric?: object;
   rowLimit: number;
   minVal: number;
   maxVal: number;
@@ -78,8 +78,7 @@ export const DEFAULT_FORM_DATA: Partial<EchartsGaugeFormData> = {
   emitFilter: false,
 };
 
-export interface EchartsGaugeChartProps
-  extends ChartProps<EchartsGaugeFormData> {
+export interface EchartsGaugeChartProps extends ChartProps {
   formData: EchartsGaugeFormData;
   queriesData: ChartDataResponseResult[];
 }

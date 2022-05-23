@@ -32,7 +32,6 @@ interface QueryHistoryProps {
     removeQuery: Function;
   };
   displayLimit: number;
-  latestQueryId: string | undefined;
 }
 
 const StyledEmptyStateWrapper = styled.div`
@@ -46,12 +45,7 @@ const StyledEmptyStateWrapper = styled.div`
   }
 `;
 
-const QueryHistory = ({
-  queries,
-  actions,
-  displayLimit,
-  latestQueryId,
-}: QueryHistoryProps) =>
+const QueryHistory = ({ queries, actions, displayLimit }: QueryHistoryProps) =>
   queries.length > 0 ? (
     <QueryTable
       columns={[
@@ -67,7 +61,6 @@ const QueryHistory = ({
       queries={queries}
       actions={actions}
       displayLimit={displayLimit}
-      latestQueryId={latestQueryId}
     />
   ) : (
     <StyledEmptyStateWrapper>

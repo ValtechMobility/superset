@@ -23,7 +23,6 @@ import { ExtensibleFunction } from '../models';
 import { ColorsLookup } from './types';
 import stringifyAndTrim from './stringifyAndTrim';
 import getSharedLabelColor from './SharedLabelColorSingleton';
-import { getAnalogousColors } from './utils';
 
 // Use type augmentation to correct the fact that
 // an instance of CategoricalScale is also a function
@@ -32,8 +31,6 @@ interface CategoricalColorScale {
 }
 
 class CategoricalColorScale extends ExtensibleFunction {
-  originColors: string[];
-
   colors: string[];
 
   scale: ScaleOrdinal<{ toString(): string }, string>;
@@ -41,8 +38,6 @@ class CategoricalColorScale extends ExtensibleFunction {
   parentForcedColors?: ColorsLookup;
 
   forcedColors: ColorsLookup;
-
-  multiple: number;
 
   /**
    * Constructor
@@ -53,13 +48,11 @@ class CategoricalColorScale extends ExtensibleFunction {
   constructor(colors: string[], parentForcedColors?: ColorsLookup) {
     super((value: string, sliceId?: number) => this.getColor(value, sliceId));
 
-    this.originColors = colors;
     this.colors = colors;
     this.scale = scaleOrdinal<{ toString(): string }, string>();
     this.scale.range(colors);
     this.parentForcedColors = parentForcedColors;
     this.forcedColors = {};
-    this.multiple = 0;
   }
 
   getColor(value?: string, sliceId?: number) {
@@ -77,15 +70,6 @@ class CategoricalColorScale extends ExtensibleFunction {
     if (forcedColor) {
       sharedLabelColor.addSlice(cleanedValue, forcedColor, sliceId);
       return forcedColor;
-    }
-
-    const multiple = Math.floor(
-      this.domain().length / this.originColors.length,
-    );
-    if (multiple > this.multiple) {
-      this.multiple = multiple;
-      const newRange = getAnalogousColors(this.originColors, multiple);
-      this.range(this.originColors.concat(newRange));
     }
 
     const color = this.scale(cleanedValue);

@@ -152,11 +152,6 @@ class Dashboard(Model, AuditMixinNullable, ImportExportMixin):
     is_managed_externally = Column(Boolean, nullable=False, default=False)
     external_url = Column(Text, nullable=True)
     roles = relationship(security_manager.role_model, secondary=DashboardRoles)
-    embedded = relationship(
-        "EmbeddedDashboard",
-        back_populates="dashboard",
-        cascade="all, delete-orphan",
-    )
     _filter_sets = relationship(
         "FilterSet", back_populates="dashboard", cascade="all, delete"
     )
@@ -168,14 +163,13 @@ class Dashboard(Model, AuditMixinNullable, ImportExportMixin):
         "css",
         "slug",
     ]
-    extra_import_fields = ["is_managed_externally", "external_url"]
 
     def __repr__(self) -> str:
         return f"Dashboard<{self.id or self.slug}>"
 
     @property
     def url(self) -> str:
-        return f"/superset/dashboard/{self.slug or self.id}/"
+        return f"/analytics/superset/dashboard/{self.slug or self.id}/"
 
     @property
     def datasources(self) -> Set[BaseDatasource]:
@@ -253,7 +247,7 @@ class Dashboard(Model, AuditMixinNullable, ImportExportMixin):
         Returns a thumbnail URL with a HEX digest. We want to avoid browser cache
         if the dashboard has changed
         """
-        return f"/api/v1/dashboard/{self.id}/thumbnail/{self.digest}/"
+        return f"/analytics/api/v1/dashboard/{self.id}/thumbnail/{self.digest}/"
 
     @property
     def changed_by_name(self) -> str:
@@ -265,7 +259,7 @@ class Dashboard(Model, AuditMixinNullable, ImportExportMixin):
     def changed_by_url(self) -> str:
         if not self.changed_by:
             return ""
-        return f"/superset/profile/{self.changed_by.username}"
+        return f"/analytics/superset/profile/{self.changed_by.username}"
 
     @property
     def data(self) -> Dict[str, Any]:
@@ -284,7 +278,6 @@ class Dashboard(Model, AuditMixinNullable, ImportExportMixin):
             "slices": [slc.data for slc in self.slices],
             "position_json": positions,
             "last_modified_time": self.changed_on.replace(microsecond=0).timestamp(),
-            "is_managed_externally": self.is_managed_externally,
         }
 
     @cache_manager.cache.memoize(
@@ -349,8 +342,7 @@ class Dashboard(Model, AuditMixinNullable, ImportExportMixin):
     @debounce(0.1)
     def clear_cache_for_datasource(cls, datasource_id: int) -> None:
         filter_query = select(
-            [dashboard_slices.c.dashboard_id],
-            distinct=True,
+            [dashboard_slices.c.dashboard_id], distinct=True,
         ).select_from(
             join(
                 dashboard_slices,

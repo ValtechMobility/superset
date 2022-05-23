@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-declare module '*.svg' {
-  const content: any;
-  export default content;
+.Control {
+  padding-bottom: 4px;
 }

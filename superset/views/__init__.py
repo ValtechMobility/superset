@@ -27,6 +27,7 @@ from . import (
     dynamic_plugins,
     health,
     redirects,
+    schedules,
     sql_lab,
     tags,
 )

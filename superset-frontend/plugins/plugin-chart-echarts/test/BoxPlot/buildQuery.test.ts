@@ -16,17 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import {
-  isPostProcessingBoxplot,
-  PostProcessingBoxplot,
-} from '@superset-ui/core';
-import { DEFAULT_TITLE_FORM_DATA } from '../../src/types';
+import { isPostProcessingBoxplot } from '@superset-ui/core';
 import buildQuery from '../../src/BoxPlot/buildQuery';
 import { BoxPlotQueryFormData } from '../../src/BoxPlot/types';
 
 describe('BoxPlot buildQuery', () => {
   const formData: BoxPlotQueryFormData = {
-    ...DEFAULT_TITLE_FORM_DATA,
     emitFilter: false,
     columns: [],
     datasource: '5__table',
@@ -47,7 +42,7 @@ describe('BoxPlot buildQuery', () => {
     expect(query.series_columns).toEqual(['bar']);
     const [rule] = query.post_processing || [];
     expect(isPostProcessingBoxplot(rule)).toEqual(true);
-    expect((rule as PostProcessingBoxplot)?.options?.groupby).toEqual(['bar']);
+    expect(rule.options.groupby).toEqual(['bar']);
   });
 
   it('should build non-timeseries query object when columns is defined', () => {
@@ -58,6 +53,6 @@ describe('BoxPlot buildQuery', () => {
     expect(query.series_columns).toEqual(['bar']);
     const [rule] = query.post_processing || [];
     expect(isPostProcessingBoxplot(rule)).toEqual(true);
-    expect((rule as PostProcessingBoxplot)?.options?.groupby).toEqual(['bar']);
+    expect(rule.options.groupby).toEqual(['bar']);
   });
 });

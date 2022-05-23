@@ -84,7 +84,7 @@ export const Styles = styled.div`
     }
 
     table.pvtTable tr th.active {
-      background-color: ${theme.colors.primary.light3};
+      background-color: #d9dbe4;
     }
 
     table.pvtTable .pvtTotalLabel {
@@ -97,7 +97,7 @@ export const Styles = styled.div`
     }
 
     table.pvtTable tbody tr td {
-      color: ${theme.colors.primary.dark2};
+      color: #2a3f5f;
       padding: ${theme.gridUnit}px;
       background-color: ${theme.colors.grayscale.light5};
       border-top: 1px solid ${theme.colors.grayscale.light2};
@@ -133,7 +133,7 @@ export const Styles = styled.div`
     }
 
     .hoverable:hover {
-      background-color: ${theme.colors.primary.light4};
+      background-color: #eceef2;
       cursor: pointer;
     }
   `}

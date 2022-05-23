@@ -17,13 +17,14 @@
  * under the License.
  */
 import React from 'react';
+import { shallow } from 'enzyme';
 import { styledMount as mount } from 'spec/helpers/theming';
 import FilterBox from 'src/visualizations/FilterBox/FilterBox';
 import SelectControl from 'src/explore/components/controls/SelectControl';
 
 describe('FilterBox', () => {
   it('should only add defined non-predefined options to filtersChoices', () => {
-    const wrapper = mount(
+    const wrapper = shallow(
       <FilterBox
         chartId={1001}
         datasource={{ id: 1 }}
@@ -47,7 +48,7 @@ describe('FilterBox', () => {
         origSelectedValues={{}}
       />,
     );
-    const inst = wrapper.find('FilterBox').instance();
+    const inst = wrapper.instance();
     // choose a predefined value
     inst.setState({ selectedValues: { name: ['John'] } });
     expect(inst.props.filtersChoices.name.length).toEqual(2);

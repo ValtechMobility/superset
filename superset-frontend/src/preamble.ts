@@ -37,9 +37,6 @@ export let bootstrapData: {
   user?: User | undefined;
   common?: any;
   config?: any;
-  embedded?: {
-    dashboard_id: string;
-  };
 } = {};
 // Configure translation
 if (typeof window !== 'undefined') {
@@ -78,7 +75,7 @@ export const theme = merge(
 
 const getMe = makeApi<void, User>({
   method: 'GET',
-  endpoint: '/api/v1/me/',
+  endpoint: '/analytics/api/v1/me/',
 });
 
 /**

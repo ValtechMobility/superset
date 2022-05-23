@@ -42,8 +42,7 @@ class DatabaseDAO(BaseDAO):
     @staticmethod
     def validate_update_uniqueness(database_id: int, database_name: str) -> bool:
         database_query = db.session.query(Database).filter(
-            Database.database_name == database_name,
-            Database.id != database_id,
+            Database.database_name == database_name, Database.id != database_id,
         )
         return not db.session.query(database_query.exists()).scalar()
 
@@ -68,8 +67,7 @@ class DatabaseDAO(BaseDAO):
 
     @classmethod
     def get_related_objects(cls, database_id: int) -> Dict[str, Any]:
-        database: Any = cls.find_by_id(database_id)
-        datasets = database.tables
+        datasets = cls.find_by_id(database_id).tables
         dataset_ids = [dataset.id for dataset in datasets]
 
         charts = (

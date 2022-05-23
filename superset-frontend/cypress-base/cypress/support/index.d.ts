@@ -47,20 +47,6 @@ declare namespace Cypress {
       querySubstring?: string | RegExp;
       chartSelector?: JQuery.Selector;
     }): cy;
-
-    /**
-     * Get
-     */
-    getDashboards(): cy;
-    getCharts(): cy;
-
-    /**
-     * Delete
-     */
-    deleteDashboard(id: number): cy;
-    deleteDashboardByName(name: string): cy;
-    deleteChartByName(name: string): cy;
-    deleteChart(id: number): cy;
   }
 }
 

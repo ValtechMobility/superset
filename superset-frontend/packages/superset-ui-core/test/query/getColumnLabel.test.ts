@@ -28,7 +28,6 @@ describe('getColumnLabel', () => {
       getColumnLabel({
         sqlExpression: "case when 1 then 'a' else 'b' end",
         label: 'my col',
-        expressionType: 'SQL',
       }),
     ).toEqual('my col');
   });
@@ -37,7 +36,6 @@ describe('getColumnLabel', () => {
     expect(
       getColumnLabel({
         sqlExpression: "case when 1 then 'a' else 'b' end",
-        expressionType: 'SQL',
       }),
     ).toEqual("case when 1 then 'a' else 'b' end");
   });

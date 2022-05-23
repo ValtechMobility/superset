@@ -17,7 +17,7 @@
  * under the License.
  */
 import React from 'react';
-import RowCountLabel from '.';
+import RowCountLabel from './RowCountLabel';
 
 export default {
   title: 'RowCountLabel',

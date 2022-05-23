@@ -17,22 +17,20 @@
 import logging
 from datetime import datetime
 
-from sqlalchemy import and_
 from sqlalchemy.exc import SQLAlchemyError
 
 from superset import db
 from superset.commands.base import BaseCommand
 from superset.key_value.exceptions import KeyValueDeleteFailedError
 from superset.key_value.models import KeyValueEntry
-from superset.key_value.types import KeyValueResource
 
 logger = logging.getLogger(__name__)
 
 
 class DeleteExpiredKeyValueCommand(BaseCommand):
-    resource: KeyValueResource
+    resource: str
 
-    def __init__(self, resource: KeyValueResource):
+    def __init__(self, resource: str):
         """
         Delete all expired key-value pairs
 
@@ -52,15 +50,11 @@ class DeleteExpiredKeyValueCommand(BaseCommand):
     def validate(self) -> None:
         pass
 
-    def delete_expired(self) -> None:
+    @staticmethod
+    def delete_expired() -> None:
         (
             db.session.query(KeyValueEntry)
-            .filter(
-                and_(
-                    KeyValueEntry.resource == self.resource.value,
-                    KeyValueEntry.expires_on <= datetime.now(),
-                )
-            )
+            .filter(KeyValueEntry.expires_on <= datetime.now())
             .delete()
         )
         db.session.commit()

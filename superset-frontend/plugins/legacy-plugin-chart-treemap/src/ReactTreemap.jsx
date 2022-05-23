@@ -18,34 +18,39 @@
  */
 import React from 'react';
 import { reactify, styled } from '@superset-ui/core';
-import Component from './Treemap';
+import PropTypes from 'prop-types';
+import Component from './ForceDirected';
 
 const ReactComponent = reactify(Component);
 
-const Treemap = ({ className, ...otherProps }) => (
+const ForceDirected = ({ className, ...otherProps }) => (
   <div className={className}>
     <ReactComponent {...otherProps} />
   </div>
 );
 
-export default styled(Treemap)`
-  ${({ theme }) => `
-    .superset-legacy-chart-treemap text {
-      font-size: ${theme.typography.sizes.s}px;
+ForceDirected.propTypes = {
+  className: PropTypes.string.isRequired,
+};
+
+export default styled(ForceDirected)`
+  .superset-legacy-chart-force-directed {
+    path.link {
+      fill: none;
+      stroke: #000;
+      stroke-width: 1.5px;
+    }
+    circle {
+      fill: #ccc;
+      stroke: #000;
+      stroke-width: 1.5px;
+      stroke-opacity: 1;
+      opacity: 0.75;
+    }
+    text {
+      fill: #000;
+      font: 10px sans-serif;
       pointer-events: none;
     }
-
-    .superset-legacy-chart-treemap tspan:last-child {
-      font-size: ${theme.typography.sizes.xs}px;
-      fill-opacity: 0.8;
-    }
-
-    .superset-legacy-chart-treemap .node rect {
-      shape-rendering: crispEdges;
-    }
-
-    .superset-legacy-chart-treemap .node--hover rect {
-      stroke: ${theme.colors.grayscale.dark2};
-    }
-  `}
+  }
 `;

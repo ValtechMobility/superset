@@ -107,5 +107,6 @@ try:
         def gauge(self, key: str, value: float) -> None:
             self.client.gauge(key, value)
 
+
 except Exception:  # pylint: disable=broad-except
     pass

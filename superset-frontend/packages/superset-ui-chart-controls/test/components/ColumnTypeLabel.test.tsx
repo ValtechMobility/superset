@@ -17,8 +17,7 @@
  * under the License.
  */
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
 import { GenericDataType } from '@superset-ui/core';
 
 import { ColumnTypeLabel, ColumnTypeLabelProps } from '../../src';
@@ -30,8 +29,9 @@ describe('ColumnOption', () => {
 
   const props = { ...defaultProps };
 
-  function renderColumnTypeLabel(overrides: Partial<ColumnTypeLabelProps>) {
-    render(<ColumnTypeLabel {...props} {...overrides} />);
+  function getWrapper(overrides: Partial<ColumnTypeLabelProps>) {
+    const wrapper = shallow(<ColumnTypeLabel {...props} {...overrides} />);
+    return wrapper;
   }
 
   it('is a valid element', () => {
@@ -40,27 +40,40 @@ describe('ColumnOption', () => {
     );
   });
   it('string type shows ABC icon', () => {
-    renderColumnTypeLabel({ type: GenericDataType.STRING });
-    expect(screen.getByLabelText('string type icon')).toBeVisible();
+    const lbl = getWrapper({ type: GenericDataType.STRING }).find(
+      '.type-label',
+    );
+    expect(lbl).toHaveLength(1);
+    expect(lbl.first().text()).toBe('ABC');
   });
   it('int type shows # icon', () => {
-    renderColumnTypeLabel({ type: GenericDataType.NUMERIC });
-    expect(screen.getByLabelText('numeric type icon')).toBeVisible();
+    const lbl = getWrapper({ type: GenericDataType.NUMERIC }).find(
+      '.type-label',
+    );
+    expect(lbl).toHaveLength(1);
+    expect(lbl.first().text()).toBe('#');
   });
-  it('bool type shows 1|0 icon', () => {
-    renderColumnTypeLabel({ type: GenericDataType.BOOLEAN });
-    expect(screen.getByLabelText('boolean type icon')).toBeVisible();
+  it('bool type shows T/F icon', () => {
+    const lbl = getWrapper({ type: GenericDataType.BOOLEAN }).find(
+      '.type-label',
+    );
+    expect(lbl).toHaveLength(1);
+    expect(lbl.first().text()).toBe('T/F');
   });
   it('expression type shows function icon', () => {
-    renderColumnTypeLabel({ type: 'expression' });
-    expect(screen.getByLabelText('function type icon')).toBeVisible();
+    const lbl = getWrapper({ type: 'expression' }).find('.type-label');
+    expect(lbl).toHaveLength(1);
+    expect(lbl.first().text()).toBe('ƒ');
   });
   it('unknown type shows question mark', () => {
-    renderColumnTypeLabel({ type: undefined });
-    expect(screen.getByLabelText('unknown type icon')).toBeVisible();
+    const lbl = getWrapper({ type: undefined }).find('.type-label');
+    expect(lbl).toHaveLength(1);
+    expect(lbl.first().text()).toBe('?');
   });
   it('datetime type displays', () => {
-    renderColumnTypeLabel({ type: GenericDataType.TEMPORAL });
-    expect(screen.getByLabelText('temporal type icon')).toBeVisible();
+    const lbl = getWrapper({ type: GenericDataType.TEMPORAL }).find(
+      '.fa-clock-o',
+    );
+    expect(lbl).toHaveLength(1);
   });
 });

@@ -48,11 +48,7 @@ dashboard_v2 = {
         {
             "filterType": "filter_select",
             "cascadingFilters": True,
-            "defaultDataMask": {
-                "filterState": {
-                    "value": ["Albania", "Algeria"],
-                },
-            },
+            "defaultDataMask": {"filterState": {"value": ["Albania", "Algeria"],},},
         }
     ],
     "filter_sets_configuration": [
@@ -62,9 +58,7 @@ dashboard_v2 = {
                     "filterType": "filter_select",
                     "cascadingFilters": True,
                     "defaultDataMask": {
-                        "filterState": {
-                            "value": ["Albania", "Algeria"],
-                        },
+                        "filterState": {"value": ["Albania", "Algeria"],},
                     },
                 },
             },

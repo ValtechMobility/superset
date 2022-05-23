@@ -17,7 +17,7 @@
  * under the License.
  */
 import { styled, SupersetClient, t } from '@superset-ui/core';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import rison from 'rison';
 import { isFeatureEnabled, FeatureFlag } from 'src/featureFlags';
@@ -95,11 +95,7 @@ const Actions = styled.div`
 `;
 
 function DashboardList(props: DashboardListProps) {
-  const {
-    addDangerToast,
-    addSuccessToast,
-    user: { userId },
-  } = props;
+  const { addDangerToast, addSuccessToast } = props;
 
   const {
     state: {
@@ -147,6 +143,7 @@ function DashboardList(props: DashboardListProps) {
     addSuccessToast(t('Dashboard imported'));
   };
 
+  const { userId } = props.user;
   // TODO: Fix usage of localStorage keying on the user id
   const userKey = dangerouslyGetItemDoNotUse(userId?.toString(), null);
 
@@ -163,7 +160,7 @@ function DashboardList(props: DashboardListProps) {
 
   function handleDashboardEdit(edits: Dashboard) {
     return SupersetClient.get({
-      endpoint: `/api/v1/dashboard/${edits.id}`,
+      endpoint: `/analytics/api/v1/dashboard/${edits.id}`,
     }).then(
       ({ json = {} }) => {
         setDashboards(
@@ -217,7 +214,7 @@ function DashboardList(props: DashboardListProps) {
 
   function handleBulkDashboardDelete(dashboardsToDelete: Dashboard[]) {
     return SupersetClient.delete({
-      endpoint: `/api/v1/dashboard/?q=${rison.encode(
+      endpoint: `/analytics/api/v1/dashboard/?q=${rison.encode(
         dashboardsToDelete.map(({ id }) => id),
       )}`,
     }).then(
@@ -235,25 +232,27 @@ function DashboardList(props: DashboardListProps) {
 
   const columns = useMemo(
     () => [
-      {
-        Cell: ({
-          row: {
-            original: { id },
-          },
-        }: any) =>
-          userId && (
-            <FaveStar
-              itemId={id}
-              saveFaveStar={saveFavoriteStatus}
-              isStarred={favoriteStatus[id]}
-            />
-          ),
-        Header: '',
-        id: 'id',
-        disableSortBy: true,
-        size: 'xs',
-        hidden: !userId,
-      },
+      ...(props.user.userId
+        ? [
+            {
+              Cell: ({
+                row: {
+                  original: { id },
+                },
+              }: any) => (
+                <FaveStar
+                  itemId={id}
+                  saveFaveStar={saveFavoriteStatus}
+                  isStarred={favoriteStatus[id]}
+                />
+              ),
+              Header: '',
+              id: 'id',
+              disableSortBy: true,
+              size: 'xs',
+            },
+          ]
+        : []),
       {
         Cell: ({
           row: {
@@ -423,15 +422,10 @@ function DashboardList(props: DashboardListProps) {
       },
     ],
     [
-      userId,
       canEdit,
       canDelete,
       canExport,
-      saveFavoriteStatus,
-      favoriteStatus,
-      refreshData,
-      addSuccessToast,
-      addDangerToast,
+      ...(props.user.userId ? [favoriteStatus] : []),
     ],
   );
 
@@ -506,7 +500,7 @@ function DashboardList(props: DashboardListProps) {
           { label: t('Draft'), value: false },
         ],
       },
-      ...(userId ? [favoritesFilter] : []),
+      ...(props.user.userId ? [favoritesFilter] : []),
       {
         Header: t('Certified'),
         id: 'id',
@@ -550,8 +544,8 @@ function DashboardList(props: DashboardListProps) {
     },
   ];
 
-  const renderCard = useCallback(
-    (dashboard: Dashboard) => (
+  function renderCard(dashboard: Dashboard) {
+    return (
       <DashboardCard
         dashboard={dashboard}
         hasPerm={hasPerm}
@@ -562,7 +556,6 @@ function DashboardList(props: DashboardListProps) {
             ? userKey.thumbnails
             : isFeatureEnabled(FeatureFlag.THUMBNAILS)
         }
-        userId={userId}
         loading={loading}
         addDangerToast={addDangerToast}
         addSuccessToast={addSuccessToast}
@@ -571,20 +564,8 @@ function DashboardList(props: DashboardListProps) {
         favoriteStatus={favoriteStatus[dashboard.id]}
         handleBulkDashboardExport={handleBulkDashboardExport}
       />
-    ),
-    [
-      addDangerToast,
-      addSuccessToast,
-      bulkSelectEnabled,
-      favoriteStatus,
-      hasPerm,
-      loading,
-      userId,
-      refreshData,
-      saveFavoriteStatus,
-      userKey,
-    ],
-  );
+    );
+  }
 
   const subMenuButtons: SubMenuProps['buttons'] = [];
   if (canDelete || canExport) {
@@ -604,7 +585,7 @@ function DashboardList(props: DashboardListProps) {
       ),
       buttonStyle: 'primary',
       onClick: () => {
-        window.location.assign('/dashboard/new');
+        window.location.assign('/analytics/dashboard/new');
       },
     });
 

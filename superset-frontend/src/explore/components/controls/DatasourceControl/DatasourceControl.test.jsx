@@ -19,8 +19,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import configureStore from 'redux-mock-store';
-import { mount, shallow } from 'enzyme';
-import { supersetTheme, ThemeProvider } from '@superset-ui/core';
+import { shallow } from 'enzyme';
 import { Menu } from 'src/components/Menu';
 import {
   DatasourceModal,
@@ -61,10 +60,8 @@ describe('DatasourceControl', () => {
       ...defaultProps,
       ...overrideProps,
     };
-    return mount(<DatasourceControl {...props} />, {
+    return shallow(<DatasourceControl {...props} />, {
       context: { store },
-      wrappingComponent: ThemeProvider,
-      wrappingComponentProps: { theme: supersetTheme },
     });
   }
 
@@ -83,7 +80,7 @@ describe('DatasourceControl', () => {
     expect(wrapper.find('[data-test="datasource-menu"]')).toExist();
     let menuWrapper = shallow(
       <div>
-        {wrapper.find('[data-test="datasource-menu"]').first().prop('overlay')}
+        {wrapper.find('[data-test="datasource-menu"]').prop('overlay')}
       </div>,
     );
     expect(menuWrapper.find(Menu.Item)).toHaveLength(3);
@@ -94,7 +91,7 @@ describe('DatasourceControl', () => {
     expect(wrapper.find('[data-test="datasource-menu"]')).toExist();
     menuWrapper = shallow(
       <div>
-        {wrapper.find('[data-test="datasource-menu"]').first().prop('overlay')}
+        {wrapper.find('[data-test="datasource-menu"]').prop('overlay')}
       </div>,
     );
     expect(menuWrapper.find(Menu.Item)).toHaveLength(2);
@@ -116,7 +113,7 @@ describe('DatasourceControl', () => {
     expect(wrapper.find('[data-test="datasource-menu"]')).toExist();
     menuWrapper = shallow(
       <div>
-        {wrapper.find('[data-test="datasource-menu"]').first().prop('overlay')}
+        {wrapper.find('[data-test="datasource-menu"]').prop('overlay')}
       </div>,
     );
     expect(menuWrapper.find(Menu.Item)).toHaveLength(2);

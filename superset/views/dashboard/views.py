@@ -84,7 +84,7 @@ class DashboardModelView(
                 mimetype="application/text",
             )
         return self.render_template(
-            "superset/export_dashboards.html", dashboards_url="/dashboard/list"
+            "superset/export_dashboards.html", dashboards_url="/analytics/dashboard/list"
         )
 
     def pre_add(self, item: "DashboardModelView") -> None:
@@ -130,7 +130,7 @@ class Dashboard(BaseSupersetView):
         )
         db.session.add(new_dashboard)
         db.session.commit()
-        return redirect(f"/superset/dashboard/{new_dashboard.id}/?edit=true")
+        return redirect(f"/analytics/superset/dashboard/{new_dashboard.id}/?edit=true")
 
     @expose("/<dashboard_id_or_slug>/embedded")
     @event_logger.log_this_with_extra_payload
@@ -155,13 +155,11 @@ class Dashboard(BaseSupersetView):
         login_manager.reload_user(AnonymousUserMixin())
 
         add_extra_log_payload(
-            dashboard_id=dashboard_id_or_slug,
-            dashboard_version="v2",
+            dashboard_id=dashboard_id_or_slug, dashboard_version="v2",
         )
 
         bootstrap_data = {
             "common": common_bootstrap_payload(),
-            "embedded": {"dashboard_id": dashboard_id_or_slug},
         }
 
         return self.render_template(

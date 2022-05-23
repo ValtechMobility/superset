@@ -140,8 +140,7 @@ def test_get_column_names():
         "My Adhoc Column",
     ]
     assert get_column_names(
-        [STR_COLUMN, SQL_ADHOC_COLUMN],
-        {"my_column": "My Column"},
+        [STR_COLUMN, SQL_ADHOC_COLUMN], {"my_column": "My Column"},
     ) == ["My Column", "My Adhoc Column"]
 
 

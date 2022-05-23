@@ -26,6 +26,7 @@ import {
   getTimeFormatter,
   CategoricalColorNamespace,
 } from '@superset-ui/core';
+import './Partition.css';
 
 // Compute dx, dy, x, y for each node and
 // return an array of nodes in breadth-first order
@@ -267,12 +268,13 @@ function Icicle(element, props) {
       if (useRichTooltip) {
         const nodes = getAncestors(d);
         nodes.reverse().forEach(n => {
+          const atNode = n.depth === d.depth;
           t += '<tbody>';
           t +=
             '<tr>' +
             '<td>' +
             '<div ' +
-            `style='border: 2px solid transparent;` +
+            `style='border: 2px solid ${atNode ? 'black' : 'transparent'};` +
             `background-color: ${n.color};'` +
             '></div>' +
             '</td>' +

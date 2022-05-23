@@ -24,5 +24,4 @@ export type ChartObject = {
   cache_timeout?: number;
   datasource_id?: number;
   datasource_type?: number;
-  is_managed_externally: boolean;
 };

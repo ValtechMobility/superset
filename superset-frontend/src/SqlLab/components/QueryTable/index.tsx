@@ -54,11 +54,10 @@ interface QueryTableProps {
   onUserClicked?: Function;
   onDbClicked?: Function;
   displayLimit: number;
-  latestQueryId?: string | undefined;
 }
 
 const openQuery = (id: number) => {
-  const url = `/superset/sqllab?queryId=${id}`;
+  const url = `/analytics/superset/sqllab?queryId=${id}`;
   window.open(url);
 };
 
@@ -69,7 +68,6 @@ const QueryTable = ({
   onUserClicked = () => undefined,
   onDbClicked = () => undefined,
   displayLimit,
-  latestQueryId,
 }: QueryTableProps) => {
   const theme = useTheme();
 
@@ -283,23 +281,21 @@ const QueryTable = ({
               )}
               placement="top"
             >
-              <Icons.Edit iconSize="xl" />
+              <Icons.Edit iconSize="s" />
             </StyledTooltip>
             <StyledTooltip
               onClick={() => openQueryInNewTab(query)}
               tooltip={t('Run query in a new tab')}
               placement="top"
             >
-              <Icons.PlusCircleOutlined iconSize="xl" css={verticalAlign} />
+              <Icons.PlusCircleOutlined iconSize="xs" css={verticalAlign} />
             </StyledTooltip>
-            {q.id !== latestQueryId && (
-              <StyledTooltip
-                tooltip={t('Remove query from log')}
-                onClick={() => removeQuery(query)}
-              >
-                <Icons.Trash iconSize="xl" />
-              </StyledTooltip>
-            )}
+            <StyledTooltip
+              tooltip={t('Remove query from log')}
+              onClick={() => removeQuery(query)}
+            >
+              <Icons.Trash iconSize="xs" />
+            </StyledTooltip>
           </div>
         );
         return q;

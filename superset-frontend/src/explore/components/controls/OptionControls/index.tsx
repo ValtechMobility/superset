@@ -56,6 +56,7 @@ export const Label = styled.div`
     padding-left: ${theme.gridUnit}px;
     svg {
       margin-right: ${theme.gridUnit}px;
+      margin-left: ${theme.gridUnit}px;
     }
     .type-label {
       margin-right: ${theme.gridUnit * 2}px;
@@ -305,7 +306,7 @@ export const OptionControlLabel = ({
         <Icons.XSmall iconColor={theme.colors.grayscale.light1} />
       </CloseContainer>
       <Label data-test="control-label">
-        {isFunction && <Icons.FieldDerived />}
+        {isFunction && <Icons.FunctionX viewBox="0 0 16 11" iconSize="l" />}
         {getLabelContent()}
       </Label>
       {isExtra && (

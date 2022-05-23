@@ -133,7 +133,7 @@ const RightMenu = ({
     },
     {
       label: t('SQL query'),
-      url: '/superset/sqllab?new=true',
+      url: '/analytics/superset/sqllab?new=true',
       icon: 'fa-fw fa-search',
       perm: 'can_sqllab',
       view: 'Superset',
@@ -147,7 +147,7 @@ const RightMenu = ({
     },
     {
       label: t('Dashboard'),
-      url: '/dashboard/new',
+      url: '/analytics/dashboard/new',
       icon: 'fa-fw fa-dashboard',
       perm: 'can_write',
       view: 'Dashboard',
@@ -203,7 +203,7 @@ const RightMenu = ({
                       typeof item !== 'string' && item.name && item.perm ? (
                         <Fragment key={item.name}>
                           {idx === 2 && <Menu.Divider />}
-                          <Menu.Item key={item.name}>
+                          <Menu.Item>
                             {item.url ? (
                               <a href={item.url}> {item.label} </a>
                             ) : (

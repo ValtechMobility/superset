@@ -221,24 +221,24 @@ export const queries = [
     results: {
       columns: [
         {
-          is_dttm: true,
+          is_date: true,
           name: 'ds',
           type: 'STRING',
         },
         {
-          is_dttm: false,
+          is_date: false,
           name: 'gender',
           type: 'STRING',
         },
       ],
       selected_columns: [
         {
-          is_dttm: true,
+          is_date: true,
           name: 'ds',
           type: 'STRING',
         },
         {
-          is_dttm: false,
+          is_date: false,
           name: 'gender',
           type: 'STRING',
         },
@@ -313,24 +313,24 @@ export const queryWithNoQueryLimit = {
   results: {
     columns: [
       {
-        is_dttm: true,
+        is_date: true,
         name: 'ds',
         type: 'STRING',
       },
       {
-        is_dttm: false,
+        is_date: false,
         name: 'gender',
         type: 'STRING',
       },
     ],
     selected_columns: [
       {
-        is_dttm: true,
+        is_date: true,
         name: 'ds',
         type: 'STRING',
       },
       {
-        is_dttm: false,
+        is_date: false,
         name: 'gender',
         type: 'STRING',
       },
@@ -350,57 +350,57 @@ export const queryWithBadColumns = {
     data: queries[0].results?.data,
     selected_columns: [
       {
-        is_dttm: true,
+        is_date: true,
         name: 'COUNT(*)',
         type: 'STRING',
       },
       {
-        is_dttm: false,
+        is_date: false,
         name: 'this_col_is_ok',
         type: 'STRING',
       },
       {
-        is_dttm: false,
+        is_date: false,
         name: 'a',
         type: 'STRING',
       },
       {
-        is_dttm: false,
+        is_date: false,
         name: '1',
         type: 'STRING',
       },
       {
-        is_dttm: false,
+        is_date: false,
         name: '123',
         type: 'STRING',
       },
       {
-        is_dttm: false,
+        is_date: false,
         name: 'CASE WHEN 1=1 THEN 1 ELSE 0 END',
         type: 'STRING',
       },
       {
-        is_dttm: true,
+        is_date: true,
         name: '_TIMESTAMP',
         type: 'TIMESTAMP',
       },
       {
-        is_dttm: true,
+        is_date: true,
         name: '__TIME',
         type: 'TIMESTAMP',
       },
       {
-        is_dttm: false,
+        is_date: false,
         name: 'my_dupe_col__2',
         type: 'STRING',
       },
       {
-        is_dttm: true,
+        is_date: true,
         name: '__timestamp',
         type: 'TIMESTAMP',
       },
       {
-        is_dttm: true,
+        is_date: true,
         name: '__TIMESTAMP',
         type: 'TIMESTAMP',
       },

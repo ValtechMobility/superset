@@ -16,7 +16,7 @@
 # under the License.
 import pytest
 
-from superset.exceptions import InvalidPostProcessingError
+from superset.exceptions import QueryObjectValidationError
 from superset.utils.pandas_postprocessing import diff
 from tests.unit_tests.fixtures.dataframes import timeseries_df, timeseries_df2
 from tests.unit_tests.pandas_postprocessing.utils import series_to_list
@@ -39,10 +39,9 @@ def test_diff():
     assert series_to_list(post_df["y1"]) == [-1.0, -1.0, -1.0, None]
 
     # invalid column reference
-    with pytest.raises(InvalidPostProcessingError):
+    with pytest.raises(QueryObjectValidationError):
         diff(
-            df=timeseries_df,
-            columns={"abc": "abc"},
+            df=timeseries_df, columns={"abc": "abc"},
         )
 
     # diff by columns

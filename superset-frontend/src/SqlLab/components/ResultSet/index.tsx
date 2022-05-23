@@ -278,11 +278,7 @@ export default class ResultSet extends React.PureComponent<
       dbId,
       datasetToOverwrite.datasetId,
       sql,
-      results.selected_columns.map(d => ({
-        column_name: d.name,
-        type: d.type,
-        is_dttm: d.is_dttm,
-      })),
+      results.selected_columns.map(d => ({ column_name: d.name })),
       datasetToOverwrite.owners.map((o: DatasetOwner) => o.id),
       true,
     );
@@ -417,7 +413,7 @@ export default class ResultSet extends React.PureComponent<
 
       const response = await makeApi({
         method: 'GET',
-        endpoint: '/api/v1/dataset',
+        endpoint: '/analytics/api/v1/dataset',
       })(`q=${queryParams}`);
 
       return response.result.map(
@@ -540,7 +536,7 @@ export default class ResultSet extends React.PureComponent<
             {this.props.csv && (
               <Button
                 buttonSize="small"
-                href={`/superset/csv/${this.props.query.id}`}
+                href={`/analytics/superset/csv/${this.props.query.id}`}
               >
                 <i className="fa fa-file-text-o" /> {t('Download to CSV')}
               </Button>

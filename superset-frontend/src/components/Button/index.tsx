@@ -229,19 +229,10 @@ export default function Button(props: ButtonProps) {
         id={`${kebabCase(tooltip)}-tooltip`}
         title={tooltip}
       >
-        {/* wrap the button in a span so that the tooltip shows up
-        when the button is disabled. */}
+        {/* this ternary wraps the button in a span so that the tooltip shows up
+        when the button is disabled.  */}
         {disabled ? (
-          <span
-            css={{
-              cursor: 'not-allowed',
-              '& > .superset-button': {
-                marginLeft: theme.gridUnit * 2,
-              },
-            }}
-          >
-            {button}
-          </span>
+          <span css={{ cursor: 'not-allowed' }}>{button}</span>
         ) : (
           button
         )}

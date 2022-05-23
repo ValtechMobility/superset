@@ -31,7 +31,6 @@ const mockedProps = {
     removeQuery: NOOP,
   },
   displayLimit: 1000,
-  latestQueryId: 'yhMUZCGb',
 };
 
 const setup = (overrides = {}) => (

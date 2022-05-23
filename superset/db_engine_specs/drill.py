@@ -21,7 +21,6 @@ from urllib import parse
 from sqlalchemy.engine.url import URL
 
 from superset.db_engine_specs.base import BaseEngineSpec
-from superset.db_engine_specs.exceptions import SupersetDBAPIProgrammingError
 from superset.utils import core as utils
 
 
@@ -85,9 +84,7 @@ class DrillEngineSpec(BaseEngineSpec):
         if impersonate_user and username is not None:
             if url.drivername == "drill+odbc":
                 url.query["DelegationUID"] = username
-            elif url.drivername in ["drill+sadrill", "drill+jdbc"]:
+            elif url.drivername == "drill+jdbc":
                 url.query["impersonation_target"] = username
             else:
-                raise SupersetDBAPIProgrammingError(
-                    f"impersonation is not supported for {url.drivername}"
-                )
+                url.username = username

@@ -29,7 +29,6 @@ import ErrorBoundary from 'src/components/ErrorBoundary';
 import { Logger, LOG_ACTIONS_RENDER_CHART } from 'src/logger/LogUtils';
 import { URL_PARAMS } from 'src/constants';
 import { getUrlParam } from 'src/utils/urlUtils';
-import { ResourceStatus } from 'src/hooks/apiResources/apiResources';
 import ChartRenderer from './ChartRenderer';
 import { ChartErrorMessage } from './ChartErrorMessage';
 
@@ -73,7 +72,6 @@ const propTypes = {
   onFilterMenuClose: PropTypes.func,
   ownState: PropTypes.object,
   postTransformProps: PropTypes.func,
-  datasetsStatus: PropTypes.oneOf(['loading', 'error', 'complete']),
 };
 
 const BLANK = {};
@@ -209,7 +207,6 @@ class Chart extends React.PureComponent {
       datasource,
       dashboardId,
       height,
-      datasetsStatus,
     } = this.props;
 
     const error = queryResponse?.errors?.[0];
@@ -219,8 +216,7 @@ class Chart extends React.PureComponent {
     if (
       chartAlert !== undefined &&
       chartAlert !== NONEXISTENT_DATASET &&
-      datasource === PLACEHOLDER_DATASOURCE &&
-      datasetsStatus !== ResourceStatus.ERROR
+      datasource === PLACEHOLDER_DATASOURCE
     ) {
       return (
         <Styles

@@ -26,6 +26,7 @@ import {
   CategoricalColorNamespace,
 } from '@superset-ui/core';
 import countries, { countryOptions } from './countries';
+import './CountryMap.css';
 
 const propTypes = {
   data: PropTypes.arrayOf(

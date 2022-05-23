@@ -44,9 +44,7 @@ class ExternalMetadataSchema(Schema):
     # pylint: disable=no-self-use,unused-argument
     @post_load
     def normalize(
-        self,
-        data: ExternalMetadataParams,
-        **kwargs: Any,
+        self, data: ExternalMetadataParams, **kwargs: Any,
     ) -> ExternalMetadataParams:
         return ExternalMetadataParams(
             datasource_type=data["datasource_type"],

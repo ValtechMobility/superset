@@ -128,6 +128,7 @@ try:
             self.name = name
             self.post_aggregator = post_aggregator
 
+
 except NameError:
     pass
 
@@ -593,7 +594,7 @@ class DruidDatasource(Model, BaseDatasource):
 
     @renders("datasource_name")
     def datasource_link(self) -> str:
-        url = f"/superset/explore/{self.type}/{self.id}/"
+        url = f"/analytics/superset/explore/{self.type}/{self.id}/"
         name = escape(self.datasource_name)
         return Markup(f'<a href="{url}">{name}</a>')
 

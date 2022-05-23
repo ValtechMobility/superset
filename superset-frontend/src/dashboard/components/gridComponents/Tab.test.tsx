@@ -23,7 +23,6 @@ import { render, screen } from 'spec/helpers/testing-library';
 import DashboardComponent from 'src/dashboard/containers/DashboardComponent';
 import EditableTitle from 'src/components/EditableTitle';
 import DragDroppable from 'src/dashboard/components/dnd/DragDroppable';
-import { setEditMode } from 'src/dashboard/actions/dashboardState';
 
 import Tab from './Tab';
 
@@ -55,13 +54,8 @@ jest.mock('src/dashboard/components/dnd/DragDroppable', () =>
     );
   }),
 );
-jest.mock('src/dashboard/actions/dashboardState', () => ({
-  setEditMode: jest.fn(() => ({
-    type: 'SET_EDIT_MODE',
-  })),
-}));
 
-const createProps = () => ({
+const creteProps = () => ({
   id: 'TAB-YT6eNksV-',
   parentId: 'TABS-L-d9eyOE-b',
   depth: 2,
@@ -104,7 +98,7 @@ beforeEach(() => {
 });
 
 test('Render tab (no content)', () => {
-  const props = createProps();
+  const props = creteProps();
   props.renderType = 'RENDER_TAB';
   render(<Tab {...props} />, { useRedux: true, useDnd: true });
   expect(screen.getByText('🚀 Aspiring Developers')).toBeInTheDocument();
@@ -113,7 +107,7 @@ test('Render tab (no content)', () => {
 });
 
 test('Render tab (no content) editMode:true', () => {
-  const props = createProps();
+  const props = creteProps();
   props.editMode = true;
   props.renderType = 'RENDER_TAB';
   render(<Tab {...props} />, { useRedux: true, useDnd: true });
@@ -123,7 +117,7 @@ test('Render tab (no content) editMode:true', () => {
 });
 
 test('Edit table title', () => {
-  const props = createProps();
+  const props = creteProps();
   props.editMode = true;
   props.renderType = 'RENDER_TAB';
   render(<Tab {...props} />, { useRedux: true, useDnd: true });
@@ -137,7 +131,7 @@ test('Edit table title', () => {
 });
 
 test('Render tab (with content)', () => {
-  const props = createProps();
+  const props = creteProps();
   props.isFocused = true;
   render(<Tab {...props} />, { useRedux: true, useDnd: true });
   expect(DashboardComponent).toBeCalledTimes(2);
@@ -180,39 +174,8 @@ test('Render tab (with content)', () => {
   expect(DragDroppable).toBeCalledTimes(0);
 });
 
-test('Render tab content with no children', () => {
-  const props = createProps();
-  props.component.children = [];
-  render(<Tab {...props} />, {
-    useRedux: true,
-    useDnd: true,
-  });
-  expect(
-    screen.getByText('There are no components added to this tab'),
-  ).toBeVisible();
-  expect(screen.getByAltText('empty')).toBeVisible();
-  expect(screen.queryByText('edit mode')).not.toBeInTheDocument();
-});
-
-test('Render tab content with no children, canEdit: true', () => {
-  const props = createProps();
-  props.component.children = [];
-  render(<Tab {...props} />, {
-    useRedux: true,
-    useDnd: true,
-    initialState: {
-      dashboardInfo: {
-        dash_edit_perm: true,
-      },
-    },
-  });
-  expect(screen.getByText('edit mode')).toBeVisible();
-  userEvent.click(screen.getByRole('button', { name: 'edit mode' }));
-  expect(setEditMode).toHaveBeenCalled();
-});
-
 test('Render tab (with content) editMode:true', () => {
-  const props = createProps();
+  const props = creteProps();
   props.isFocused = true;
   props.editMode = true;
   render(<Tab {...props} />, { useRedux: true, useDnd: true });
@@ -257,7 +220,7 @@ test('Render tab (with content) editMode:true', () => {
 });
 
 test('Should call "handleDrop" and "handleTopDropTargetDrop"', () => {
-  const props = createProps();
+  const props = creteProps();
   props.isFocused = true;
   props.editMode = true;
   render(<Tab {...props} />, { useRedux: true, useDnd: true });
@@ -269,30 +232,4 @@ test('Should call "handleDrop" and "handleTopDropTargetDrop"', () => {
   userEvent.click(screen.getAllByRole('button')[1]);
   expect(props.onDropOnTab).toBeCalledTimes(1);
   expect(props.handleComponentDrop).toBeCalledTimes(2);
-});
-
-test('Render tab content with no children, editMode: true, canEdit: true', () => {
-  const props = createProps();
-  props.editMode = true;
-  // props.canEdit = true;
-  props.component.children = [];
-  render(<Tab {...props} />, {
-    useRedux: true,
-    useDnd: true,
-    initialState: {
-      dashboardInfo: {
-        dash_edit_perm: true,
-      },
-    },
-  });
-  expect(
-    screen.getByText('Drag and drop components to this tab'),
-  ).toBeVisible();
-  expect(screen.getByAltText('empty')).toBeVisible();
-  expect(
-    screen.getByRole('link', { name: 'create a new chart' }),
-  ).toBeVisible();
-  expect(
-    screen.getByRole('link', { name: 'create a new chart' }),
-  ).toHaveAttribute('href', '/chart/add');
 });

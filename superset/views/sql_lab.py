@@ -14,8 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-import logging
-
 import simplejson as json
 from flask import g, redirect, request, Response
 from flask_appbuilder import expose
@@ -31,8 +29,6 @@ from superset.superset_typing import FlaskResponse
 from superset.utils import core as utils
 
 from .base import BaseSupersetView, DeleteMixin, json_success, SupersetModelView
-
-logger = logging.getLogger(__name__)
 
 
 class SavedQueryView(SupersetModelView, DeleteMixin):
@@ -322,7 +318,4 @@ class SqlLab(BaseSupersetView):
     @has_access
     def my_queries(self) -> FlaskResponse:  # pylint: disable=no-self-use
         """Assigns a list of found users to the given role."""
-        logger.warning(
-            "This endpoint is deprecated and will be removed in the next major release"
-        )
-        return redirect("/savedqueryview/list/?_flt_0_user={}".format(g.user.get_id()))
+        return redirect("/analytics/savedqueryview/list/?_flt_0_user={}".format(g.user.get_id()))

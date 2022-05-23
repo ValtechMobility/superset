@@ -16,18 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { ChartProps, SqlaFormData } from '@superset-ui/core';
+import { ChartProps } from '@superset-ui/core';
 import transformProps from '../../src/Gauge/transformProps';
-import { EchartsGaugeChartProps } from '../../src/Gauge/types';
+import { DEFAULT_GAUGE_SERIES_OPTION } from '../../src/Gauge/constants';
 
 describe('Echarts Gauge transformProps', () => {
-  const baseFormData: SqlaFormData = {
+  const baseFormData = {
     datasource: '26__table',
-    viz_type: 'gauge_chart',
+    vizType: 'gauge_chart',
     metric: 'count',
     adhocFilters: [],
     rowLimit: 10,
-    minVal: 0,
+    minVal: '0',
     maxVal: 100,
     startAngle: 225,
     endAngle: -45,
@@ -46,7 +46,7 @@ describe('Echarts Gauge transformProps', () => {
   };
 
   it('should transform chart props for no group by column', () => {
-    const formData: SqlaFormData = { ...baseFormData, groupby: [] };
+    const formData = { ...baseFormData, groupby: [] };
     const queriesData = [
       {
         colnames: ['count'],
@@ -66,7 +66,7 @@ describe('Echarts Gauge transformProps', () => {
     };
 
     const chartProps = new ChartProps(chartPropsConfig);
-    expect(transformProps(chartProps as EchartsGaugeChartProps)).toEqual(
+    expect(transformProps(chartProps)).toEqual(
       expect.objectContaining({
         width: 800,
         height: 600,
@@ -98,10 +98,7 @@ describe('Echarts Gauge transformProps', () => {
   });
 
   it('should transform chart props for single group by column', () => {
-    const formData: SqlaFormData = {
-      ...baseFormData,
-      groupby: ['year'],
-    };
+    const formData = { ...baseFormData, groupby: ['year'] };
     const queriesData = [
       {
         colnames: ['year', 'count'],
@@ -126,7 +123,7 @@ describe('Echarts Gauge transformProps', () => {
     };
 
     const chartProps = new ChartProps(chartPropsConfig);
-    expect(transformProps(chartProps as EchartsGaugeChartProps)).toEqual(
+    expect(transformProps(chartProps)).toEqual(
       expect.objectContaining({
         width: 800,
         height: 600,
@@ -173,10 +170,7 @@ describe('Echarts Gauge transformProps', () => {
   });
 
   it('should transform chart props for multiple group by columns', () => {
-    const formData: SqlaFormData = {
-      ...baseFormData,
-      groupby: ['year', 'platform'],
-    };
+    const formData = { ...baseFormData, groupby: ['year', 'platform'] };
     const queriesData = [
       {
         colnames: ['year', 'platform', 'count'],
@@ -203,7 +197,7 @@ describe('Echarts Gauge transformProps', () => {
     };
 
     const chartProps = new ChartProps(chartPropsConfig);
-    expect(transformProps(chartProps as EchartsGaugeChartProps)).toEqual(
+    expect(transformProps(chartProps)).toEqual(
       expect.objectContaining({
         width: 800,
         height: 600,
@@ -250,7 +244,7 @@ describe('Echarts Gauge transformProps', () => {
   });
 
   it('should transform chart props for intervals', () => {
-    const formData: SqlaFormData = {
+    const formData = {
       ...baseFormData,
       groupby: ['year', 'platform'],
       intervals: '50,100',
@@ -282,7 +276,7 @@ describe('Echarts Gauge transformProps', () => {
     };
 
     const chartProps = new ChartProps(chartPropsConfig);
-    expect(transformProps(chartProps as EchartsGaugeChartProps)).toEqual(
+    expect(transformProps(chartProps)).toEqual(
       expect.objectContaining({
         width: 800,
         height: 600,

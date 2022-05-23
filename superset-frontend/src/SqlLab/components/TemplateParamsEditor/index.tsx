@@ -74,6 +74,7 @@ function TemplateParamsEditor({
         syntax.
       </p>
       <StyledConfigEditor
+        keywords={[]}
         mode={language}
         minLines={25}
         maxLines={50}

@@ -45,10 +45,7 @@ from flask.ctx import AppContext
     ],
 )
 def test_convert_dttm(
-    app_context: AppContext,
-    target_type: str,
-    dttm: datetime,
-    result: Optional[str],
+    app_context: AppContext, target_type: str, dttm: datetime, result: Optional[str],
 ) -> None:
     from superset.db_engine_specs.trino import TrinoEngineSpec
 

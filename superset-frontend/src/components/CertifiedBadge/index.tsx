@@ -17,7 +17,7 @@
  * under the License.
  */
 import React from 'react';
-import { t, useTheme } from '@superset-ui/core';
+import { t, supersetTheme } from '@superset-ui/core';
 import Icons, { IconType } from 'src/components/Icons';
 import { Tooltip } from 'src/components/Tooltip';
 
@@ -32,8 +32,6 @@ function CertifiedBadge({
   details,
   size = 'l',
 }: CertifiedBadgeProps) {
-  const theme = useTheme();
-
   return (
     <Tooltip
       id="certified-details-tooltip"
@@ -48,7 +46,10 @@ function CertifiedBadge({
         </>
       }
     >
-      <Icons.Certified iconColor={theme.colors.primary.base} iconSize={size} />
+      <Icons.Certified
+        iconColor={supersetTheme.colors.primary.base}
+        iconSize={size}
+      />
     </Tooltip>
   );
 }

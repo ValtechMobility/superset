@@ -26,7 +26,6 @@ import {
   getChartBuildQueryRegistry,
   getChartMetadataRegistry,
 } from '@superset-ui/core';
-import { omit } from 'lodash';
 import { availableDomains } from 'src/utils/hostNamesConfig';
 import { safeStringify } from 'src/utils/safeStringify';
 import { URL_PARAMS } from 'src/constants';
@@ -84,9 +83,9 @@ export function getURIDirectory(endpointType = 'base') {
       endpointType,
     )
   ) {
-    return '/superset/explore_json/';
+    return '/analytics/superset/explore_json/';
   }
-  return '/superset/explore/';
+  return '/analytics/superset/explore/';
 }
 
 export function mountExploreUrl(endpointType, extraSearch = {}, force = false) {
@@ -216,7 +215,7 @@ export const buildV1ChartDataPayload = ({
           ...baseQueryObject,
         },
       ]));
-  const payload = buildQuery(
+  return buildQuery(
     {
       ...formData,
       force,
@@ -230,13 +229,6 @@ export const buildV1ChartDataPayload = ({
       },
     },
   );
-  if (resultType === 'samples') {
-    // remove row limit and offset to fall back to defaults
-    payload.queries = payload.queries.map(query =>
-      omit(query, ['row_limit', 'row_offset']),
-    );
-  }
-  return payload;
 };
 
 export const getLegacyEndpointType = ({ resultType, resultFormat }) =>
@@ -285,7 +277,7 @@ export const exportChart = ({
     });
     payload = formData;
   } else {
-    url = '/api/v1/chart/data';
+    url = '/analytics/api/v1/chart/data';
     payload = buildV1ChartDataPayload({
       formData,
       force,

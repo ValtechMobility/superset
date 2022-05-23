@@ -89,7 +89,7 @@ export function useListViewResource<D extends object = any>(
   useEffect(() => {
     if (!infoEnable) return;
     SupersetClient.get({
-      endpoint: `/api/v1/${resource}/_info?q=${rison.encode({
+      endpoint: `/analytics/api/v1/${resource}/_info?q=${rison.encode({
         keys: ['permissions'],
       })}`,
     }).then(
@@ -156,7 +156,7 @@ export function useListViewResource<D extends object = any>(
       });
 
       return SupersetClient.get({
-        endpoint: `/api/v1/${resource}/?q=${queryParams}`,
+        endpoint: `/analytics/api/v1/${resource}/?q=${queryParams}`,
       })
         .then(
           ({ json = {} }) => {
@@ -240,7 +240,7 @@ export function useSingleViewResource<D extends object = any>(
       });
 
       return SupersetClient.get({
-        endpoint: `/api/v1/${resourceName}/${resourceID}`,
+        endpoint: `/analytics/api/v1/${resourceName}/${resourceID}`,
       })
         .then(
           ({ json = {} }) => {
@@ -279,7 +279,7 @@ export function useSingleViewResource<D extends object = any>(
       });
 
       return SupersetClient.post({
-        endpoint: `/api/v1/${resourceName}/`,
+        endpoint: `/analytics/api/v1/${resourceName}/`,
         body: JSON.stringify(resource),
         headers: { 'Content-Type': 'application/json' },
       })
@@ -323,7 +323,7 @@ export function useSingleViewResource<D extends object = any>(
       });
 
       return SupersetClient.put({
-        endpoint: `/api/v1/${resourceName}/${resourceID}`,
+        endpoint: `/analytics/api/v1/${resourceName}/${resourceID}`,
         body: JSON.stringify(resource),
         headers: { 'Content-Type': 'application/json' },
       })
@@ -426,7 +426,7 @@ export function useImportResource(
       }
 
       return SupersetClient.post({
-        endpoint: `/api/v1/${resourceName}/import/`,
+        endpoint: `/analytics/api/v1/${resourceName}/import/`,
         body: formData,
         headers: { Accept: 'application/json' },
       })
@@ -448,10 +448,7 @@ export function useImportResource(
                 t(
                   'An error occurred while importing %s: %s',
                   resourceLabel,
-                  [
-                    ...error.errors.map(payload => payload.message),
-                    t('Please re-export your file and try importing again'),
-                  ].join('\n'),
+                  error.errors.map(payload => payload.message).join('\n'),
                 ),
               );
             } else {
@@ -489,12 +486,12 @@ const favoriteApis = {
   chart: makeApi<Array<string | number>, FavoriteStatusResponse>({
     requestType: 'rison',
     method: 'GET',
-    endpoint: '/api/v1/chart/favorite_status/',
+    endpoint: '/analytics/api/v1/chart/favorite_status/',
   }),
   dashboard: makeApi<Array<string | number>, FavoriteStatusResponse>({
     requestType: 'rison',
     method: 'GET',
-    endpoint: '/api/v1/dashboard/favorite_status/',
+    endpoint: '/analytics/api/v1/dashboard/favorite_status/',
   }),
 };
 
@@ -532,7 +529,7 @@ export function useFavoriteStatus(
     (id: number, isStarred: boolean) => {
       const urlSuffix = isStarred ? 'unselect' : 'select';
       SupersetClient.get({
-        endpoint: `/superset/favstar/${
+        endpoint: `/analytics/superset/favstar/${
           type === 'chart' ? FavStarClassName.CHART : FavStarClassName.DASHBOARD
         }/${id}/${urlSuffix}/`,
       }).then(
@@ -569,7 +566,6 @@ export const useChartEditModal = (
       cache_timeout: chart.cache_timeout,
       certified_by: chart.certified_by,
       certification_details: chart.certification_details,
-      is_managed_externally: chart.is_managed_externally,
     });
   }
 
@@ -599,7 +595,7 @@ export const copyQueryLink = (
   addSuccessToast: (arg0: string) => void,
 ) => {
   copyTextToClipboard(
-    `${window.location.origin}/superset/sqllab?savedQueryId=${id}`,
+    `${window.location.origin}/analytics/superset/sqllab?savedQueryId=${id}`,
   )
     .then(() => {
       addSuccessToast(t('Link Copied!'));
@@ -621,7 +617,7 @@ export const testDatabaseConnection = (
   addSuccessToast: (arg0: string) => void,
 ) => {
   SupersetClient.post({
-    endpoint: 'api/v1/database/test_connection',
+    endpoint: 'analytics/api/v1/database/test_connection',
     body: JSON.stringify(connection),
     headers: { 'Content-Type': 'application/json' },
   }).then(
@@ -639,7 +635,7 @@ export function useAvailableDatabases() {
 
   const getAvailable = useCallback(() => {
     SupersetClient.get({
-      endpoint: `/api/v1/database/available/`,
+      endpoint: `/analytics/api/v1/database/available/`,
     }).then(({ json }) => {
       setAvailableDbs(json);
     });
@@ -655,7 +651,7 @@ export function useDatabaseValidation() {
   const getValidation = useCallback(
     (database: Partial<DatabaseObject> | null, onCreate = false) =>
       SupersetClient.post({
-        endpoint: '/api/v1/database/validate_parameters',
+        endpoint: '/analytics/api/v1/database/validate_parameters',
         body: JSON.stringify(database),
         headers: { 'Content-Type': 'application/json' },
       })
@@ -692,10 +688,6 @@ export function useDatabaseValidation() {
                           url: string;
                           idx: number;
                         };
-                        issue_codes?: {
-                          code?: number;
-                          message?: string;
-                        }[];
                       };
                       message: string;
                     },
@@ -751,14 +743,6 @@ export function useDatabaseValidation() {
                         ),
                       };
                     }
-                    if (extra.issue_codes?.length) {
-                      return {
-                        ...obj,
-                        error_type,
-                        description: message || extra.issue_codes[0]?.message,
-                      };
-                    }
-
                     return obj;
                   },
                   {},

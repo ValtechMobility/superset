@@ -17,51 +17,20 @@
  * under the License.
  */
 import React from 'react';
-import { render, screen } from 'spec/helpers/testing-library';
+import { render } from 'spec/helpers/testing-library';
 import ControlSetRow from 'src/explore/components/ControlRow';
 
-const MockControl = (props: {
-  children: React.ReactElement;
-  type?: string;
-  isVisible?: boolean;
-}) => <div>{props.children}</div>;
 describe('ControlSetRow', () => {
   it('renders a single row with one element', () => {
-    render(<ControlSetRow controls={[<p>My Control 1</p>]} />);
-    expect(screen.getAllByText('My Control 1').length).toBe(1);
+    const { getAllByText } = render(
+      <ControlSetRow controls={[<p>My Control 1</p>]} />,
+    );
+    expect(getAllByText('My Control 1').length).toBe(1);
   });
   it('renders a single row with two elements', () => {
-    render(
+    const { getAllByText } = render(
       <ControlSetRow controls={[<p>My Control 1</p>, <p>My Control 2</p>]} />,
     );
-    expect(screen.getAllByText(/My Control/)).toHaveLength(2);
-  });
-
-  it('renders a single row with one elements if is HiddenControl', () => {
-    render(
-      <ControlSetRow
-        controls={[
-          <p>My Control 1</p>,
-          <MockControl type="HiddenControl">
-            <p>My Control 2</p>
-          </MockControl>,
-        ]}
-      />,
-    );
-    expect(screen.getAllByText(/My Control/)).toHaveLength(2);
-  });
-
-  it('renders a single row with one elements if is invisible', () => {
-    render(
-      <ControlSetRow
-        controls={[
-          <p>My Control 1</p>,
-          <MockControl isVisible={false}>
-            <p>My Control 2</p>
-          </MockControl>,
-        ]}
-      />,
-    );
-    expect(screen.getAllByText(/My Control/)).toHaveLength(2);
+    expect(getAllByText(/My Control/)).toHaveLength(2);
   });
 });

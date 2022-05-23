@@ -139,14 +139,8 @@ class TestBigQueryDbEngineSpec(TestDbEngineSpec):
         self.assertEqual(result, {})
 
         index_metadata = [
-            {
-                "name": "clustering",
-                "column_names": ["c_col1", "c_col2", "c_col3"],
-            },
-            {
-                "name": "partition",
-                "column_names": ["p_col1", "p_col2", "p_col3"],
-            },
+            {"name": "clustering", "column_names": ["c_col1", "c_col2", "c_col3"],},
+            {"name": "partition", "column_names": ["p_col1", "p_col2", "p_col3"],},
         ]
         expected_result = {
             "partitions": {"cols": [["p_col1", "p_col2", "p_col3"]]},
@@ -253,12 +247,7 @@ class TestBigQueryDbEngineSpec(TestDbEngineSpec):
                 level=ErrorLevel.ERROR,
                 extra={
                     "engine_name": "Google BigQuery",
-                    "issue_codes": [
-                        {
-                            "code": 1017,
-                            "message": "",
-                        }
-                    ],
+                    "issue_codes": [{"code": 1017, "message": "",}],
                 },
             )
         ]

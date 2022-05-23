@@ -113,7 +113,7 @@ function DashboardTable({
 
   const handleDashboardEdit = (edits: Dashboard) =>
     SupersetClient.get({
-      endpoint: `/api/v1/dashboard/${edits.id}`,
+      endpoint: `/analytics/api/v1/dashboard/${edits.id}`,
     }).then(
       ({ json = {} }) => {
         setDashboards(
@@ -221,7 +221,7 @@ function DashboardTable({
             ),
             buttonStyle: 'tertiary',
             onClick: () => {
-              window.location.assign('/dashboard/new');
+              window.location.assign('/analytics/dashboard/new');
             },
           },
           {
@@ -230,10 +230,10 @@ function DashboardTable({
             onClick: () => {
               const target =
                 dashboardFilter === 'Favorite'
-                  ? `/dashboard/list/?filters=(favorite:(label:${t(
+                  ? `/analytics/dashboard/list/?filters=(favorite:(label:${t(
                       'Yes',
                     )},value:!t))`
-                  : '/dashboard/list/';
+                  : '/analytics/dashboard/list/';
               history.push(target);
             },
           },

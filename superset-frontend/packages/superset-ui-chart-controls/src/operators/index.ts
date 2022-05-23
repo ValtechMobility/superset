@@ -26,5 +26,4 @@ export { resampleOperator } from './resampleOperator';
 export { contributionOperator } from './contributionOperator';
 export { prophetOperator } from './prophetOperator';
 export { boxplotOperator } from './boxplotOperator';
-export { flattenOperator } from './flattenOperator';
 export * from './utils';

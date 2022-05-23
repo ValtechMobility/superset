@@ -22,15 +22,7 @@ import { debounce } from 'lodash';
 import { max as d3Max } from 'd3-array';
 import { AsyncCreatableSelect, CreatableSelect } from 'src/components/Select';
 import Button from 'src/components/Button';
-import {
-  css,
-  styled,
-  t,
-  SupersetClient,
-  ensureIsArray,
-  withTheme,
-} from '@superset-ui/core';
-import { Global } from '@emotion/react';
+import { t, SupersetClient, ensureIsArray } from '@superset-ui/core';
 
 import {
   BOOL_FALSE_DISPLAY,
@@ -50,6 +42,8 @@ import {
   TIME_FILTER_LABELS,
   TIME_FILTER_MAP,
 } from 'src/explore/constants';
+
+import './FilterBox.less';
 
 // a shortcut to a map key, used by many components
 export const TIME_RANGE = TIME_FILTER_MAP.time_range;
@@ -96,32 +90,6 @@ const defaultProps = {
   showDruidTimeOrigin: false,
   instantFiltering: false,
 };
-
-const StyledFilterContainer = styled.div`
-  ${({ theme }) => `
-    display: flex;
-    flex-direction: column;
-    margin-bottom: ${theme.gridUnit * 2 + 2}px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    label {
-      display: flex;
-      font-weight: ${theme.typography.weights.bold};
-    }
-
-    .filter-badge-container {
-      width: 30px;
-      padding-right: ${theme.gridUnit * 2 + 2}px;
-    }
-
-    .filter-badge-container + div {
-      width: 100%;
-    }
-  `}
-`;
 
 class FilterBox extends React.PureComponent {
   constructor(props) {
@@ -441,51 +409,32 @@ class FilterBox extends React.PureComponent {
     return filtersFields.map(filterConfig => {
       const { label, key } = filterConfig;
       return (
-        <StyledFilterContainer key={key} className="filter-container">
+        <div key={key} className="m-b-5 filter-container">
           <FormLabel htmlFor={`LABEL-${key}`}>{label}</FormLabel>
           {this.renderSelect(filterConfig)}
-        </StyledFilterContainer>
+        </div>
       );
     });
   }
 
   render() {
     const { instantFiltering, width, height } = this.props;
-    const { zIndex, gridUnit } = this.props.theme;
     return (
-      <>
-        <Global
-          styles={css`
-            .dashboard .filter_box .slice_container > div:not(.alert) {
-              padding-top: 0;
-            }
-
-            .filter_box {
-              padding: ${gridUnit * 2 + 2}px 0;
-              overflow: visible !important;
-
-              &:hover {
-                z-index: ${zIndex.max};
-              }
-            }
-          `}
-        />
-        <div style={{ width, height, overflow: 'auto' }}>
-          {this.renderDateFilter()}
-          {this.renderDatasourceFilters()}
-          {this.renderFilters()}
-          {!instantFiltering && (
-            <Button
-              buttonSize="small"
-              buttonStyle="primary"
-              onClick={this.clickApply.bind(this)}
-              disabled={!this.state.hasChanged}
-            >
-              {t('Apply')}
-            </Button>
-          )}
-        </div>
-      </>
+      <div style={{ width, height, overflow: 'auto' }}>
+        {this.renderDateFilter()}
+        {this.renderDatasourceFilters()}
+        {this.renderFilters()}
+        {!instantFiltering && (
+          <Button
+            buttonSize="small"
+            buttonStyle="primary"
+            onClick={this.clickApply.bind(this)}
+            disabled={!this.state.hasChanged}
+          >
+            {t('Apply')}
+          </Button>
+        )}
+      </div>
     );
   }
 }
@@ -493,4 +442,4 @@ class FilterBox extends React.PureComponent {
 FilterBox.propTypes = propTypes;
 FilterBox.defaultProps = defaultProps;
 
-export default withTheme(FilterBox);
+export default FilterBox;

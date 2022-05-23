@@ -16,6 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M10 8H11V10H13V8H14V10H16V11H14V13H16V14H14V16H13V14H11V16H10V14H8V13H10V11H8V10H10V8ZM13 13V11H11V13H13Z" fill="currentColor"/>
-</svg>
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [0.18.0](https://github.com/apache-superset/superset-ui/compare/v0.17.87...v0.18.0) (2021-08-30)
+
+**Note:** Version bump only for package @superset-ui/legacy-plugin-chart-force-directed

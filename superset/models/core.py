@@ -43,9 +43,9 @@ from sqlalchemy import (
     Table,
     Text,
 )
-from sqlalchemy.engine import Connection, Dialect, Engine
+from sqlalchemy.engine import Connection, Dialect, Engine, url
 from sqlalchemy.engine.reflection import Inspector
-from sqlalchemy.engine.url import URL
+from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.exc import ArgumentError
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
@@ -54,7 +54,6 @@ from sqlalchemy.schema import UniqueConstraint
 from sqlalchemy.sql import expression, Select
 
 from superset import app, db_engine_specs, is_feature_enabled
-from superset.databases.utils import make_url_safe
 from superset.db_engine_specs.base import TimeGrain
 from superset.extensions import cache_manager, encrypted_field_factory, security_manager
 from superset.models.helpers import AuditMixinNullable, ImportExportMixin
@@ -166,7 +165,7 @@ class Database(
         "allow_file_upload",
         "extra",
     ]
-    extra_import_fields = ["password", "is_managed_externally", "external_url"]
+    extra_import_fields = ["password"]
     export_children = ["tables"]
 
     def __repr__(self) -> str:
@@ -243,16 +242,16 @@ class Database(
 
     @property
     def url_object(self) -> URL:
-        return make_url_safe(self.sqlalchemy_uri_decrypted)
+        return make_url(self.sqlalchemy_uri_decrypted)
 
     @property
     def backend(self) -> str:
-        sqlalchemy_url = make_url_safe(self.sqlalchemy_uri_decrypted)
-        return sqlalchemy_url.get_backend_name()
+        sqlalchemy_url = make_url(self.sqlalchemy_uri_decrypted)
+        return sqlalchemy_url.get_backend_name()  # pylint: disable=no-member
 
     @property
     def parameters(self) -> Dict[str, Any]:
-        uri = make_url_safe(self.sqlalchemy_uri_decrypted)
+        uri = make_url(self.sqlalchemy_uri_decrypted)
         encrypted_extra = self.get_encrypted_extra()
         try:
             # pylint: disable=useless-suppression
@@ -304,7 +303,7 @@ class Database(
     def get_password_masked_url_from_uri(  # pylint: disable=invalid-name
         cls, uri: str
     ) -> URL:
-        sqlalchemy_url = make_url_safe(uri)
+        sqlalchemy_url = make_url(uri)
         return cls.get_password_masked_url(sqlalchemy_url)
 
     @classmethod
@@ -315,7 +314,7 @@ class Database(
         return url_copy
 
     def set_sqlalchemy_uri(self, uri: str) -> None:
-        conn = make_url_safe(uri.strip())
+        conn = sqla.engine.url.make_url(uri.strip())
         if conn.password != PASSWORD_MASK and not custom_password_store:
             # do not over-write the password with the password mask
             self.password = conn.password
@@ -323,9 +322,7 @@ class Database(
         self.sqlalchemy_uri = str(conn)  # hides the password
 
     def get_effective_user(
-        self,
-        object_url: URL,
-        user_name: Optional[str] = None,
+        self, object_url: URL, user_name: Optional[str] = None,
     ) -> Optional[str]:
         """
         Get the effective user, especially during impersonation.
@@ -362,7 +359,7 @@ class Database(
         source: Optional[utils.QuerySource] = None,
     ) -> Engine:
         extra = self.get_extra()
-        sqlalchemy_url = make_url_safe(self.sqlalchemy_uri_decrypted)
+        sqlalchemy_url = make_url(self.sqlalchemy_uri_decrypted)
         self.db_engine_spec.adjust_database_uri(sqlalchemy_url, schema)
         effective_username = self.get_effective_user(sqlalchemy_url, user_name)
         # If using MySQL or Presto for example, will set url.username
@@ -392,11 +389,11 @@ class Database(
 
         if DB_CONNECTION_MUTATOR:
             if not source and request and request.referrer:
-                if "/superset/dashboard/" in request.referrer:
+                if "/analytics/superset/dashboard/" in request.referrer:
                     source = utils.QuerySource.DASHBOARD
-                elif "/superset/explore/" in request.referrer:
+                elif "/analytics/superset/explore/" in request.referrer:
                     source = utils.QuerySource.CHART
-                elif "/superset/sqllab/" in request.referrer:
+                elif "/analytics/superset/sqllab/" in request.referrer:
                     source = utils.QuerySource.SQL_LAB
 
             sqlalchemy_url, params = DB_CONNECTION_MUTATOR(
@@ -724,7 +721,7 @@ class Database(
     @property
     def sqlalchemy_uri_decrypted(self) -> str:
         try:
-            conn = make_url_safe(self.sqlalchemy_uri)
+            conn = sqla.engine.url.make_url(self.sqlalchemy_uri)
         except (ArgumentError, ValueError):
             # if the URI is invalid, ignore and return a placeholder url
             # (so users see 500 less often)
@@ -737,7 +734,7 @@ class Database(
 
     @property
     def sql_url(self) -> str:
-        return f"/superset/sql/{self.id}/"
+        return f"/analytics/superset/sql/{self.id}/"
 
     @hybrid_property
     def perm(self) -> str:
@@ -784,7 +781,7 @@ class Database(
 
     @memoized
     def get_dialect(self) -> Dialect:
-        sqla_url = make_url_safe(self.sqlalchemy_uri_decrypted)
+        sqla_url = url.make_url(self.sqlalchemy_uri_decrypted)
         return sqla_url.get_dialect()()
 
 

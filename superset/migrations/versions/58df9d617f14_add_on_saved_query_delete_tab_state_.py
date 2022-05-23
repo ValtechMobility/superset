@@ -62,8 +62,5 @@ def downgrade():
         )
 
         batch_op.create_foreign_key(
-            "saved_query_id",
-            "saved_query",
-            ["saved_query_id"],
-            ["id"],
+            "saved_query_id", "saved_query", ["saved_query_id"], ["id"],
         )

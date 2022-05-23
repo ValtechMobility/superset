@@ -203,9 +203,7 @@ class ReportSchedulePostSchema(Schema):
         default=ReportDataFormat.VISUALIZATION,
         validate=validate.OneOf(choices=tuple(key.value for key in ReportDataFormat)),
     )
-    extra = fields.Dict(
-        default=None,
-    )
+    extra = fields.Dict(default=None,)
     force_screenshot = fields.Boolean(default=False)
 
     @validates_schema

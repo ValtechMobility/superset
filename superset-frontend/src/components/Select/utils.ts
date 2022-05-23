@@ -25,14 +25,6 @@ import {
   GroupedOptionsType,
 } from 'react-select';
 
-export function isObject(value: unknown): value is Record<string, unknown> {
-  return (
-    value !== null &&
-    typeof value === 'object' &&
-    Array.isArray(value) === false
-  );
-}
-
 /**
  * Find Option value that matches a possibly string value.
  *
@@ -71,7 +63,7 @@ export function findValue<OptionType extends OptionTypeBase>(
 export function getValue(
   option: string | number | { value: string | number | null } | null,
 ) {
-  return isObject(option) ? option.value : option;
+  return option && typeof option === 'object' ? option.value : option;
 }
 
 type LabeledValue<V> = { label?: ReactNode; value?: V };
@@ -86,7 +78,7 @@ export function hasOption<V>(
     optionsArray.find(
       x =>
         x === value ||
-        (isObject(x) &&
+        (typeof x === 'object' &&
           (('value' in x && x.value === value) ||
             (checkLabel && 'label' in x && x.label === value))),
     ) !== undefined

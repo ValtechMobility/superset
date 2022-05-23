@@ -16,16 +16,14 @@
 # under the License.
 import json
 import pickle
-from typing import Any, Dict, Iterator
-from uuid import uuid3
+from typing import Any, Dict
+from uuid import UUID
 
 import pytest
 from sqlalchemy.orm import Session
 
 from superset import db
 from superset.key_value.models import KeyValueEntry
-from superset.key_value.types import KeyValueResource
-from superset.key_value.utils import decode_permalink_id, encode_permalink_key
 from superset.models.slice import Slice
 from tests.integration_tests.base_tests import login
 from tests.integration_tests.fixtures.client import client
@@ -53,23 +51,7 @@ def form_data(chart) -> Dict[str, Any]:
     }
 
 
-@pytest.fixture
-def permalink_salt() -> Iterator[str]:
-    from superset.key_value.shared_entries import get_permalink_salt, get_uuid_namespace
-    from superset.key_value.types import SharedKey
-
-    key = SharedKey.EXPLORE_PERMALINK_SALT
-    salt = get_permalink_salt(key)
-    yield salt
-    namespace = get_uuid_namespace(salt)
-    db.session.query(KeyValueEntry).filter_by(
-        resource=KeyValueResource.APP,
-        uuid=uuid3(namespace, key),
-    )
-    db.session.commit()
-
-
-def test_post(client, form_data: Dict[str, Any], permalink_salt: str):
+def test_post(client, form_data):
     login(client, "admin")
     resp = client.post(f"api/v1/explore/permalink", json={"formData": form_data})
     assert resp.status_code == 201
@@ -77,8 +59,7 @@ def test_post(client, form_data: Dict[str, Any], permalink_salt: str):
     key = data["key"]
     url = data["url"]
     assert key in url
-    id_ = decode_permalink_id(key, permalink_salt)
-    db.session.query(KeyValueEntry).filter_by(id=id_).delete()
+    db.session.query(KeyValueEntry).filter_by(uuid=key).delete()
     db.session.commit()
 
 
@@ -88,18 +69,21 @@ def test_post_access_denied(client, form_data):
     assert resp.status_code == 404
 
 
-def test_get_missing_chart(client, chart, permalink_salt: str) -> None:
+def test_get_missing_chart(client, chart):
     from superset.key_value.models import KeyValueEntry
 
-    chart_id = 1234
+    key = 1234
+    uuid_key = "e2ea9d19-7988-4862-aa69-c3a1a7628cb9"
     entry = KeyValueEntry(
-        resource=KeyValueResource.EXPLORE_PERMALINK,
+        id=int(key),
+        uuid=UUID("e2ea9d19-7988-4862-aa69-c3a1a7628cb9"),
+        resource="explore_permalink",
         value=pickle.dumps(
             {
-                "chartId": chart_id,
+                "chartId": key,
                 "datasetId": chart.datasource.id,
                 "formData": {
-                    "slice_id": chart_id,
+                    "slice_id": key,
                     "datasource": f"{chart.datasource.id}__{chart.datasource.type}",
                 },
             }
@@ -107,21 +91,20 @@ def test_get_missing_chart(client, chart, permalink_salt: str) -> None:
     )
     db.session.add(entry)
     db.session.commit()
-    key = encode_permalink_key(entry.id, permalink_salt)
     login(client, "admin")
-    resp = client.get(f"api/v1/explore/permalink/{key}")
+    resp = client.get(f"api/v1/explore/permalink/{uuid_key}")
     assert resp.status_code == 404
     db.session.delete(entry)
     db.session.commit()
 
 
-def test_post_invalid_schema(client) -> None:
+def test_post_invalid_schema(client):
     login(client, "admin")
     resp = client.post(f"api/v1/explore/permalink", json={"abc": 123})
     assert resp.status_code == 400
 
 
-def test_get(client, form_data: Dict[str, Any], permalink_salt: str) -> None:
+def test_get(client, form_data):
     login(client, "admin")
     resp = client.post(f"api/v1/explore/permalink", json={"formData": form_data})
     data = json.loads(resp.data.decode("utf-8"))
@@ -130,6 +113,5 @@ def test_get(client, form_data: Dict[str, Any], permalink_salt: str) -> None:
     assert resp.status_code == 200
     result = json.loads(resp.data.decode("utf-8"))
     assert result["state"]["formData"] == form_data
-    id_ = decode_permalink_id(key, permalink_salt)
-    db.session.query(KeyValueEntry).filter_by(id=id_).delete()
+    db.session.query(KeyValueEntry).filter_by(uuid=key).delete()
     db.session.commit()

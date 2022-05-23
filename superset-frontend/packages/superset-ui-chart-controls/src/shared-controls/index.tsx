@@ -34,7 +34,6 @@
  * control interface.
  */
 import React from 'react';
-import { isEmpty } from 'lodash';
 import {
   FeatureFlag,
   t,
@@ -44,7 +43,7 @@ import {
   SequentialScheme,
   legacyValidateInteger,
   validateNonEmpty,
-  ComparisionType,
+  JsonArray,
 } from '@superset-ui/core';
 
 import {
@@ -352,7 +351,7 @@ const order_desc: SharedControlConfig<'CheckboxControl'> = {
   visibility: ({ controls }) =>
     Boolean(
       controls?.timeseries_limit_metric.value &&
-        !isEmpty(controls?.timeseries_limit_metric.value),
+        (controls?.timeseries_limit_metric.value as JsonArray).length,
     ),
 };
 
@@ -456,12 +455,16 @@ const y_axis_format: SharedControlConfig<'SelectControl', SelectDefaultOption> =
     filterOption: ({ data: option }, search) =>
       option.label.includes(search) || option.value.includes(search),
     mapStateToProps: state => {
-      const isPercentage =
-        state.controls?.comparison_type?.value === ComparisionType.Percentage;
+      const showWarning =
+        state.controls?.comparison_type?.value === 'percentage';
       return {
-        choices: isPercentage
-          ? D3_FORMAT_OPTIONS.filter(option => option[0].includes('%'))
-          : D3_FORMAT_OPTIONS,
+        warning: showWarning
+          ? t(
+              'When `Calculation type` is set to "Percentage change", the Y ' +
+                'Axis Format is forced to `.1%`',
+            )
+          : null,
+        disabled: showWarning,
       };
     },
   };

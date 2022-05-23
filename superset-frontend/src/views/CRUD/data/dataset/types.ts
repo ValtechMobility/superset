@@ -59,5 +59,4 @@ export type DatasetObject = {
   columns: ColumnObject[];
   metrics: MetricObject[];
   extra?: string;
-  is_managed_externally: boolean;
 };

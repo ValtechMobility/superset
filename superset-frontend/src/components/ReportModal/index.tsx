@@ -26,11 +26,11 @@ import React, {
 } from 'react';
 import { t, SupersetTheme } from '@superset-ui/core';
 import { getClientErrorObject } from 'src/utils/getClientErrorObject';
-import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { addReport, editReport } from 'src/reports/actions/reports';
 import { AlertObject } from 'src/views/CRUD/alert/types';
 
-import Alert from 'src/components/Alert';
 import TimezoneSelector from 'src/components/TimezoneSelector';
 import LabeledErrorBoundInput from 'src/components/Form/LabeledErrorBoundInput';
 import Icons from 'src/components/Icons';
@@ -38,7 +38,6 @@ import withToasts from 'src/components/MessageToasts/withToasts';
 import { CronError } from 'src/components/CronPicker';
 import { RadioChangeEvent } from 'src/components';
 import {
-  antDErrorAlertStyles,
   StyledModal,
   StyledTopSection,
   StyledBottomSection,
@@ -74,7 +73,7 @@ export interface ReportObject {
   working_timeout: number;
   creation_method: string;
   force_screenshot: boolean;
-  error: string;
+  error?: string;
 }
 
 interface ChartObject {
@@ -84,7 +83,6 @@ interface ChartObject {
   chartUpdateEndTime: number;
   chartUpdateStartTime: number;
   latestQueryFormData: object;
-  sliceFormData: Record<string, any>;
   queryController: { abort: () => {} };
   queriesResponse: object;
   triggerQuery: boolean;
@@ -92,15 +90,16 @@ interface ChartObject {
 }
 
 interface ReportProps {
+  addReport: (report?: ReportObject) => {};
   onHide: () => {};
   onReportAdd: (report?: ReportObject) => {};
-  addDangerToast: (msg: string) => void;
   show: boolean;
   userId: number;
   userEmail: string;
   dashboardId?: number;
   chart?: ChartObject;
   creationMethod: string;
+  props: any;
 }
 
 interface ReportPayloadType {
@@ -129,7 +128,9 @@ type ReportActionType =
     }
   | {
       type: ActionType.error;
-      payload: { name: string[] };
+      payload: {
+        name: string[];
+      };
     };
 
 const TEXT_BASED_VISUALIZATION_TYPES = [
@@ -144,10 +145,6 @@ const NOTIFICATION_FORMATS = {
   PNG: 'PNG',
   CSV: 'CSV',
 };
-
-const defaultErrorMsg = t(
-  'We were unable to create your report. Please try again.',
-);
 
 const reportReducer = (
   state: Partial<ReportObject> | null,
@@ -174,7 +171,7 @@ const reportReducer = (
     case ActionType.error:
       return {
         ...state,
-        error: action.payload?.name[0] || defaultErrorMsg,
+        error: action.payload.name[0],
       };
     default:
       return state;
@@ -187,8 +184,8 @@ const ReportModal: FunctionComponent<ReportProps> = ({
   show = false,
   ...props
 }) => {
-  const vizType = props.chart?.sliceFormData?.viz_type;
-  const isChart = !!props.chart;
+  const vizType = props.props.chart?.sliceFormData?.viz_type;
+  const isChart = !!props.props.chart;
   const defaultNotificationFormat =
     isChart && TEXT_BASED_VISUALIZATION_TYPES.includes(vizType)
       ? NOTIFICATION_FORMATS.TEXT
@@ -224,19 +221,19 @@ const ReportModal: FunctionComponent<ReportProps> = ({
     // Create new Report
     const newReportValues: Partial<ReportObject> = {
       crontab: currentReport?.crontab,
-      dashboard: props.dashboardId,
-      chart: props.chart?.id,
+      dashboard: props.props.dashboardId,
+      chart: props.props.chart?.id,
       description: currentReport?.description,
       name: currentReport?.name,
-      owners: [props.userId],
+      owners: [props.props.userId],
       recipients: [
         {
-          recipient_config_json: { target: props.userEmail },
+          recipient_config_json: { target: props.props.userEmail },
           type: 'Email',
         },
       ],
       type: 'Report',
-      creation_method: props.creationMethod,
+      creation_method: props.props.creationMethod,
       active: true,
       report_format: currentReport?.report_format || defaultNotificationFormat,
       timezone: currentReport?.timezone,
@@ -253,8 +250,9 @@ const ReportModal: FunctionComponent<ReportProps> = ({
         await dispatch(addReport(newReportValues as ReportObject));
         onHide();
       } catch (e) {
-        const { message } = await getClientErrorObject(e);
-        onReducerChange(ActionType.error, message);
+        const parsedError = await getClientErrorObject(e);
+        const errorMessage = parsedError.message;
+        onReducerChange(ActionType.error, errorMessage);
       }
     }
 
@@ -317,15 +315,6 @@ const ReportModal: FunctionComponent<ReportProps> = ({
     </>
   );
 
-  const errorAlert = () => (
-    <Alert
-      type="error"
-      css={(theme: SupersetTheme) => antDErrorAlertStyles(theme)}
-      message={t('Report Creation Error')}
-      description={currentReport?.error}
-    />
-  );
-
   return (
     <StyledModal
       show={show}
@@ -349,9 +338,11 @@ const ReportModal: FunctionComponent<ReportProps> = ({
                 value: target.value,
               }),
           }}
+          errorMessage={currentReport?.error || ''}
           label="Report Name"
           data-test="report-name-test"
         />
+
         <LabeledErrorBoundInput
           id="description"
           name="description"
@@ -363,6 +354,7 @@ const ReportModal: FunctionComponent<ReportProps> = ({
                 value: target.value,
               }),
           }}
+          errorMessage=""
           label={t('Description')}
           placeholder={t(
             'Include a description that will be sent with your report',
@@ -409,9 +401,11 @@ const ReportModal: FunctionComponent<ReportProps> = ({
         />
         {isChart && renderMessageContentSection}
       </StyledBottomSection>
-      {currentReport?.error && errorAlert()}
     </StyledModal>
   );
 };
 
-export default withToasts(ReportModal);
+const mapDispatchToProps = (dispatch: any) =>
+  bindActionCreators({ addReport, editReport }, dispatch);
+
+export default connect(null, mapDispatchToProps)(withToasts(ReportModal));

@@ -44,7 +44,7 @@ interface DashboardCardProps {
   saveFavoriteStatus: (id: number, isStarred: boolean) => void;
   favoriteStatus: boolean;
   dashboardFilter?: string;
-  userId?: string | number;
+  userId?: number;
   showThumbnails?: boolean;
   handleBulkDashboardExport: (dashboardsToExport: Dashboard[]) => void;
 }
@@ -161,7 +161,7 @@ function DashboardCard({
         url={bulkSelectEnabled ? undefined : dashboard.url}
         linkComponent={Link}
         imgURL={dashboard.thumbnail_url}
-        imgFallbackURL="/static/assets/images/dashboard-card-fallback.svg"
+        imgFallbackURL="/analytics/static/assets/images/dashboard-card-fallback.svg"
         description={t('Modified %s', dashboard.changed_on_delta_humanized)}
         coverLeft={<FacePile users={dashboard.owners || []} />}
         actions={
@@ -171,13 +171,11 @@ function DashboardCard({
               e.preventDefault();
             }}
           >
-            {userId && (
-              <FaveStar
-                itemId={dashboard.id}
-                saveFaveStar={saveFavoriteStatus}
-                isStarred={favoriteStatus}
-              />
-            )}
+            <FaveStar
+              itemId={dashboard.id}
+              saveFaveStar={saveFavoriteStatus}
+              isStarred={favoriteStatus}
+            />
             <AntdDropdown overlay={menu}>
               <Icons.MoreVert iconColor={theme.colors.grayscale.base} />
             </AntdDropdown>

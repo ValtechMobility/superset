@@ -27,8 +27,7 @@ class ProgrammingError(Exception):
 
 
 def test_validate_parameters_simple(
-    mocker: MockFixture,
-    app_context: AppContext,
+    mocker: MockFixture, app_context: AppContext,
 ) -> None:
     from superset.db_engine_specs.gsheets import (
         GSheetsEngineSpec,
@@ -44,8 +43,7 @@ def test_validate_parameters_simple(
 
 
 def test_validate_parameters_catalog(
-    mocker: MockFixture,
-    app_context: AppContext,
+    mocker: MockFixture, app_context: AppContext,
 ) -> None:
     from superset.db_engine_specs.gsheets import (
         GSheetsEngineSpec,
@@ -80,10 +78,7 @@ def test_validate_parameters_catalog(
             error_type=SupersetErrorType.TABLE_DOES_NOT_EXIST_ERROR,
             level=ErrorLevel.WARNING,
             extra={
-                "catalog": {
-                    "idx": 0,
-                    "url": True,
-                },
+                "catalog": {"idx": 0, "url": True,},
                 "issue_codes": [
                     {
                         "code": 1003,
@@ -101,10 +96,7 @@ def test_validate_parameters_catalog(
             error_type=SupersetErrorType.TABLE_DOES_NOT_EXIST_ERROR,
             level=ErrorLevel.WARNING,
             extra={
-                "catalog": {
-                    "idx": 2,
-                    "url": True,
-                },
+                "catalog": {"idx": 2, "url": True,},
                 "issue_codes": [
                     {
                         "code": 1003,
@@ -120,15 +112,12 @@ def test_validate_parameters_catalog(
     ]
 
     create_engine.assert_called_with(
-        "gsheets://",
-        service_account_info={},
-        subject="admin@example.com",
+        "gsheets://", service_account_info={}, subject="admin@example.com",
     )
 
 
 def test_validate_parameters_catalog_and_credentials(
-    mocker: MockFixture,
-    app_context: AppContext,
+    mocker: MockFixture, app_context: AppContext,
 ) -> None:
     from superset.db_engine_specs.gsheets import (
         GSheetsEngineSpec,
@@ -162,10 +151,7 @@ def test_validate_parameters_catalog_and_credentials(
             error_type=SupersetErrorType.TABLE_DOES_NOT_EXIST_ERROR,
             level=ErrorLevel.WARNING,
             extra={
-                "catalog": {
-                    "idx": 2,
-                    "url": True,
-                },
+                "catalog": {"idx": 2, "url": True,},
                 "issue_codes": [
                     {
                         "code": 1003,
@@ -181,7 +167,5 @@ def test_validate_parameters_catalog_and_credentials(
     ]
 
     create_engine.assert_called_with(
-        "gsheets://",
-        service_account_info={},
-        subject="admin@example.com",
+        "gsheets://", service_account_info={}, subject="admin@example.com",
     )

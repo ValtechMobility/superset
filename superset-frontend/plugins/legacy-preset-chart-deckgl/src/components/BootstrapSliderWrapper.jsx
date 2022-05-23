@@ -19,23 +19,12 @@
 import React from 'react';
 import ReactBootstrapSlider from 'react-bootstrap-slider';
 import 'bootstrap-slider/dist/css/bootstrap-slider.min.css';
-import { styled } from '@superset-ui/core';
-
-const StyledSlider = styled.div`
-  ${({ theme }) => `
-    .slider-selection {
-      background: ${theme.colors.grayscale.light2};
-    }
-    .slider-handle {
-      background: ${theme.colors.grayscale.light1};
-    }
-  `}
-`;
+import './BootstrapSliderWrapper.css';
 
 export default function BootstrapSliderWrapper(props) {
   return (
-    <StyledSlider>
+    <span className="BootstrapSliderWrapper">
       <ReactBootstrapSlider {...props} />
-    </StyledSlider>
+    </span>
   );
 }

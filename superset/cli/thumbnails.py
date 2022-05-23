@@ -44,11 +44,7 @@ logger = logging.getLogger(__name__)
     help="Only process dashboards",
 )
 @click.option(
-    "--charts_only",
-    "-c",
-    is_flag=True,
-    default=False,
-    help="Only process charts",
+    "--charts_only", "-c", is_flag=True, default=False, help="Only process charts",
 )
 @click.option(
     "--force",

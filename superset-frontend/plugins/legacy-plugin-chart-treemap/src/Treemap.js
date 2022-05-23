@@ -29,6 +29,7 @@ import {
   getNumberFormatter,
   CategoricalColorNamespace,
 } from '@superset-ui/core';
+import './Treemap.css';
 
 // Declare PropTypes for recursive data structures
 // https://github.com/facebook/react/issues/5676

@@ -96,11 +96,14 @@ const createProps = () => ({
 test('Cancelling changes to the properties should reset previous properties', () => {
   const props = createProps();
   render(<ExploreHeader {...props} />, { useRedux: true });
+
+  const openModal = screen.getByRole('button', {
+    name: 'Edit chart properties',
+  });
   const newChartName = 'New chart name';
   const prevChartName = props.slice_name;
 
-  userEvent.click(screen.getByLabelText('Menu actions trigger'));
-  userEvent.click(screen.getByText('Edit chart properties'));
+  userEvent.click(openModal);
 
   const nameInput = screen.getByRole('textbox', { name: 'Name' });
 
@@ -111,8 +114,7 @@ test('Cancelling changes to the properties should reset previous properties', ()
 
   userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
-  userEvent.click(screen.getByLabelText('Menu actions trigger'));
-  userEvent.click(screen.getByText('Edit chart properties'));
+  userEvent.click(openModal);
 
   expect(screen.getByDisplayValue(prevChartName)).toBeInTheDocument();
 });
