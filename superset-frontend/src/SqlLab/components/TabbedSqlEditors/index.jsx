@@ -75,7 +75,7 @@ const userOS = detectOS();
 class TabbedSqlEditors extends React.PureComponent {
   constructor(props) {
     super(props);
-    const sqlLabUrl = '/superset/sqllab';
+    const sqlLabUrl = `${process.env.APP_PREFIX}/superset/sqllab`;
     this.state = {
       sqlLabUrl,
     };
@@ -321,6 +321,7 @@ class TabbedSqlEditors extends React.PureComponent {
     );
   }
 }
+
 TabbedSqlEditors.propTypes = propTypes;
 TabbedSqlEditors.defaultProps = defaultProps;
 
@@ -340,6 +341,7 @@ function mapStateToProps({ sqlLab, common }) {
     scheduleQueryWarning: common.conf.SQLLAB_SCHEDULE_WARNING_MESSAGE,
   };
 }
+
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(Actions, dispatch),

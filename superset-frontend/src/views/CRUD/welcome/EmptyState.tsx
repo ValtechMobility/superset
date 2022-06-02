@@ -79,14 +79,14 @@ export default function EmptyState({
   otherTabTitle,
 }: EmptyStateProps) {
   const mineRedirects: Redirects = {
-    [WelcomeTable.Charts]: '/chart/add',
-    [WelcomeTable.Dashboards]: '/dashboard/new',
-    [WelcomeTable.SavedQueries]: '/superset/sqllab?new=true',
+    [WelcomeTable.Charts]: `${process.env.APP_PREFIX}/chart/add`,
+    [WelcomeTable.Dashboards]: `${process.env.APP_PREFIX}/dashboard/new`,
+    [WelcomeTable.SavedQueries]: `${process.env.APP_PREFIX}/superset/sqllab?new=true`,
   };
   const favRedirects: Redirects = {
-    [WelcomeTable.Charts]: '/chart/list',
-    [WelcomeTable.Dashboards]: '/dashboard/list/',
-    [WelcomeTable.SavedQueries]: '/savedqueryview/list/',
+    [WelcomeTable.Charts]: `${process.env.APP_PREFIX}/chart/list`,
+    [WelcomeTable.Dashboards]: `${process.env.APP_PREFIX}/dashboard/list/`,
+    [WelcomeTable.SavedQueries]: `${process.env.APP_PREFIX}/savedqueryview/list/`,
   };
   const tableIcon: Record<WelcomeTable, string> = {
     [WelcomeTable.Charts]: 'empty-charts.svg',
@@ -131,7 +131,7 @@ export default function EmptyState({
     return (
       <EmptyContainer>
         <Empty
-          image={`/static/assets/images/${tableIcon[tableName]}`}
+          image={`${process.env.APP_PREFIX}/static/assets/images/${tableIcon[tableName]}`}
           description={
             tableName === WelcomeTable.Recents || tab === TableTab.Other
               ? recent
@@ -164,7 +164,7 @@ export default function EmptyState({
   return (
     <EmptyContainer>
       <Empty
-        image="/static/assets/images/star-circle.svg"
+        image={`${process.env.APP_PREFIX}/static/assets/images/star-circle.svg`}
         description={
           <span className="no-favorites">
             {t("You don't have any favorites yet!")}

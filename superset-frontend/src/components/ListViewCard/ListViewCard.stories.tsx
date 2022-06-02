@@ -18,7 +18,7 @@
  */
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import { boolean, text } from '@storybook/addon-knobs';
+import { boolean, text, withKnobs } from '@storybook/addon-knobs';
 import { AntdDropdown } from 'src/components';
 import { Menu } from 'src/components/Menu';
 import Icons from 'src/components/Icons';
@@ -34,7 +34,7 @@ export const SupersetListViewCard = () => (
   <ListViewCard
     title="Superset Card Title"
     loading={boolean('loading', false)}
-    url="/superset/dashboard/births/"
+    url={`${process.env.APP_PREFIX}/superset/dashboard/births/`}
     imgURL={text(
       'imgURL',
       'https://images.unsplash.com/photo-1658163724548-29ef00812a54?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80',

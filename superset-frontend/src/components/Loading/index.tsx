@@ -27,6 +27,7 @@ export type PositionOption =
   | 'inline'
   | 'inline-centered'
   | 'normal';
+
 export interface Props {
   position?: PositionOption;
   className?: string;

@@ -19,8 +19,14 @@
 import { FORM_DATA_DEFAULTS, NUM_METRIC } from './shared.helper';
 
 describe('Visualization > Time TableViz', () => {
+  const VIZ_DEFAULTS = { ...FORM_DATA_DEFAULTS, viz_type: 'time_table' };
+
   beforeEach(() => {
-    cy.intercept('POST', '/superset/explore_json/**').as('getJson');
+    cy.login();
+    cy.intercept(
+      'POST',
+      `${process.env.APP_PREFIX}/superset/explore_json/**`,
+    ).as('getJson');
   });
 
   const VIZ_DEFAULTS = { ...FORM_DATA_DEFAULTS, viz_type: 'time_table' };

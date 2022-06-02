@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Split from 'react-split';
 import {
@@ -35,8 +35,8 @@ import ChartContainer from 'src/components/Chart/ChartContainer';
 import { FeatureFlag, isFeatureEnabled } from 'src/featureFlags';
 import {
   getItem,
-  setItem,
   LocalStorageKeys,
+  setItem,
 } from 'src/utils/localStorageHelpers';
 import Alert from 'src/components/Alert';
 import { SaveDatasetModal } from 'src/SqlLab/components/SaveDatasetModal';

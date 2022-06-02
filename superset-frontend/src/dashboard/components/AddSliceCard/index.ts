@@ -17,6 +17,8 @@
  * under the License.
  */
 
+export const CHART_LIST = `${process.env.APP_PREFIX}/chart/list/`;
+
 import AddSliceCard from './AddSliceCard';
 
 export default AddSliceCard;

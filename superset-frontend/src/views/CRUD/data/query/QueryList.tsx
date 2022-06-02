@@ -37,8 +37,8 @@ import SubMenu, { SubMenuProps } from 'src/views/components/SubMenu';
 import Popover from 'src/components/Popover';
 import { commonMenuData } from 'src/views/CRUD/data/common';
 import ListView, {
-  Filters,
   FilterOperator,
+  Filters,
   ListViewProps,
 } from 'src/components/ListView';
 import { Tooltip } from 'src/components/Tooltip';

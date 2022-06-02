@@ -21,6 +21,7 @@ set -e
 apt update
 apt install -y chromium
 
+export APP_PREFIX="/analytics"
 cd /app/superset-frontend
 npm install -f --no-optional --global webpack webpack-cli
 npm install -f --no-optional

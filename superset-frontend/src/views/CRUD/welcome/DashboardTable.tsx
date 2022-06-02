@@ -131,7 +131,7 @@ function DashboardTable({
 
   const handleDashboardEdit = (edits: Dashboard) =>
     SupersetClient.get({
-      endpoint: `/api/v1/dashboard/${edits.id}`,
+      endpoint: `${process.env.APP_PREFIX}/api/v1/dashboard/${edits.id}`,
     }).then(
       ({ json = {} }) => {
         setDashboards(
@@ -196,7 +196,7 @@ function DashboardTable({
             ),
             buttonStyle: 'tertiary',
             onClick: () => {
-              window.location.assign('/dashboard/new');
+              window.location.assign(`${process.env.APP_PREFIX}/dashboard/new`);
             },
           },
           {
@@ -205,10 +205,12 @@ function DashboardTable({
             onClick: () => {
               const target =
                 activeTab === TableTab.Favorite
-                  ? `/dashboard/list/?filters=(favorite:(label:${t(
+                  ? `${
+                      process.env.APP_PREFIX
+                    }/dashboard/list/?filters=(favorite:(label:${t(
                       'Yes',
                     )},value:!t))`
-                  : '/dashboard/list/';
+                  : `${process.env.APP_PREFIX}/dashboard/list/`;
               history.push(target);
             },
           },

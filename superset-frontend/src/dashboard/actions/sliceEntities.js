@@ -17,7 +17,7 @@
  * under the License.
  */
 /* eslint camelcase: 0 */
-import { t, SupersetClient } from '@superset-ui/core';
+import { SupersetClient, t } from '@superset-ui/core';
 import rison from 'rison';
 
 import { addDangerToast } from 'src/components/MessageToasts/actions';
@@ -35,11 +35,13 @@ export function setAllSlices(slices) {
 }
 
 export const FETCH_ALL_SLICES_STARTED = 'FETCH_ALL_SLICES_STARTED';
+
 export function fetchAllSlicesStarted() {
   return { type: FETCH_ALL_SLICES_STARTED };
 }
 
 export const FETCH_ALL_SLICES_FAILED = 'FETCH_ALL_SLICES_FAILED';
+
 export function fetchAllSlicesFailed(error) {
   return { type: FETCH_ALL_SLICES_FAILED, payload: { error } };
 }

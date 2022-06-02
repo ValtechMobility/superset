@@ -16,13 +16,42 @@
 #
 
 ######################################################################
+# PY stage that simply does a pip install on our requirements
+######################################################################
+ARG PY_VER=3.8.12
+FROM python:${PY_VER} AS superset-py
+
+RUN mkdir /app \
+        && apt-get update -y \
+        && apt-get install -y --no-install-recommends \
+            build-essential \
+            default-libmysqlclient-dev \
+            libpq-dev \
+            libsasl2-dev \
+            libecpg-dev \
+        && rm -rf /var/lib/apt/lists/*
+
+# First, we just wanna install requirements, which will allow us to utilize the cache
+# in order to only build if and only if requirements change
+COPY ./requirements/*.txt  /app/requirements/
+COPY setup.py MANIFEST.in README.md /app/
+COPY superset-frontend/package.json /app/superset-frontend/
+RUN cd /app \
+    && mkdir -p superset/static \
+    && touch superset/static/version_info.json \
+    && pip install --no-cache -r requirements/local.txt
+
+
+######################################################################
 # Node stage to deal with static asset construction
 ######################################################################
 ARG PY_VER=3.8.16-slim
 FROM node:16-slim AS superset-node
 
 ARG NPM_BUILD_CMD="build"
+ARG APP_PREFIX
 ENV BUILD_CMD=${NPM_BUILD_CMD}
+ENV APP_PREFIX=${APP_PREFIX}
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # NPM ci first, as to NOT invalidate previous steps except for when package.json changes
@@ -44,6 +73,8 @@ RUN npm run ${BUILD_CMD}
 ######################################################################
 # Final lean image...
 ######################################################################
+ARG PY_VER=3.8.12
+ARG APP_PREFIX
 FROM python:${PY_VER} AS lean
 
 ENV LANG=C.UTF-8 \
@@ -52,7 +83,9 @@ ENV LANG=C.UTF-8 \
     FLASK_APP="superset.app:create_app()" \
     PYTHONPATH="/app/pythonpath" \
     SUPERSET_HOME="/app/superset_home" \
-    SUPERSET_PORT=8088
+    SUPERSET_PORT=8088 \
+    APP_PREFIX=${APP_PREFIX}
+
 
 RUN mkdir -p ${PYTHONPATH} \
         && useradd --user-group -d ${SUPERSET_HOME} -m --no-log-init --shell /bin/bash superset \
@@ -96,7 +129,7 @@ WORKDIR /app
 
 USER superset
 
-HEALTHCHECK CMD curl -f "http://localhost:$SUPERSET_PORT/health"
+HEALTHCHECK CMD curl -f "http://localhost:$SUPERSET_PORT${APP_PREFIX}/health"
 
 EXPOSE ${SUPERSET_PORT}
 
@@ -108,7 +141,8 @@ CMD /usr/bin/run-server.sh
 FROM lean AS dev
 ARG GECKODRIVER_VERSION=v0.32.0
 ARG FIREFOX_VERSION=106.0.3
-
+ARG APP_PREFIX
+ENV APP_PREFIX=${APP_PREFIX}
 COPY ./requirements/*.txt ./docker/requirements-*.txt/ /app/requirements/
 
 USER root
@@ -145,6 +179,8 @@ USER superset
 # CI image...
 ######################################################################
 FROM lean AS ci
+ARG APP_PREFIX
+ENV APP_PREFIX=${APP_PREFIX}
 
 COPY --chown=superset ./docker/docker-bootstrap.sh /app/docker/
 COPY --chown=superset ./docker/docker-init.sh /app/docker/

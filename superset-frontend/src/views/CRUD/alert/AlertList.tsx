@@ -77,6 +77,7 @@ interface AlertListProps {
     lastName: string;
   };
 }
+
 const deleteAlerts = makeApi<number[], { message: string }>({
   requestType: 'rison',
   method: 'DELETE',
