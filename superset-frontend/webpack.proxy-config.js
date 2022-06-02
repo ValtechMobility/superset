@@ -25,7 +25,7 @@ const { supersetPort = 8088, superset: supersetUrl = null } = parsedArgs;
 const backend = `${(supersetUrl || `http://localhost:${supersetPort}`).replace(
   '//+$/',
   '',
-)}${process.env.APP_PREFIX}`; // strip ending backslash
+)}/data`; // strip ending backslash
 
 let manifest;
 function isHTML(res) {
