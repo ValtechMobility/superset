@@ -17,11 +17,9 @@
 """A collection of ORM sqlalchemy models for SQL Lab"""
 import os
 import re
-from datetime import datetime
-from typing import Any, Dict, List
-
 import simplejson as json
 import sqlalchemy as sqla
+from datetime import datetime
 from flask import Markup
 from flask_appbuilder import Model
 from flask_appbuilder.models.decorators import renders
@@ -39,6 +37,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import backref, relationship
+from typing import Any, Dict, List
 
 from superset import security_manager
 from superset.models.helpers import (

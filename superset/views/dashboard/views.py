@@ -17,8 +17,6 @@
 import json
 import os
 import re
-from typing import Callable, List, Union
-
 from flask import g, redirect, request, Response
 from flask_appbuilder import expose
 from flask_appbuilder.actions import action
@@ -26,6 +24,7 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder.security.decorators import has_access
 from flask_babel import gettext as __, lazy_gettext as _
 from flask_login import AnonymousUserMixin, LoginManager
+from typing import Callable, List, Union
 
 from superset import db, event_logger, is_feature_enabled, security_manager
 from superset.constants import MODEL_VIEW_RW_METHOD_PERMISSION_MAP, RouteMethod
