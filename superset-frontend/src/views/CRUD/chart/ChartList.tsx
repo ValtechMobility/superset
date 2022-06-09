@@ -22,7 +22,7 @@ import {
   SupersetClient,
   t,
 } from '@superset-ui/core';
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import rison from 'rison';
 import { uniqBy } from 'lodash';
 import moment from 'moment';
