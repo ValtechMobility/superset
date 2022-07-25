@@ -16,38 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import {
-  getChartMetadataRegistry,
-  styled,
-  SupersetClient,
-  t,
-} from '@superset-ui/core';
+import { getChartMetadataRegistry, styled, SupersetClient, t, } from '@superset-ui/core';
 import React, { useMemo, useState } from 'react';
 import rison from 'rison';
 import { uniqBy } from 'lodash';
 import moment from 'moment';
 import { FeatureFlag, isFeatureEnabled } from 'src/featureFlags';
-import {
-  createErrorHandler,
-  createFetchRelated,
-  handleChartDelete,
-} from 'src/views/CRUD/utils';
-import {
-  useChartEditModal,
-  useFavoriteStatus,
-  useListViewResource,
-} from 'src/views/CRUD/hooks';
+import { createErrorHandler, createFetchRelated, handleChartDelete, } from 'src/views/CRUD/utils';
+import { useChartEditModal, useFavoriteStatus, useListViewResource, } from 'src/views/CRUD/hooks';
 import handleResourceExport from 'src/utils/export';
 import ConfirmStatusChange from 'src/components/ConfirmStatusChange';
 import SubMenu, { SubMenuProps } from 'src/views/components/SubMenu';
 import FaveStar from 'src/components/FaveStar';
-import ListView, {
-  Filter,
-  FilterOperator,
-  Filters,
-  ListViewProps,
-  SelectOption,
-} from 'src/components/ListView';
+import ListView, { Filter, FilterOperator, Filters, ListViewProps, SelectOption, } from 'src/components/ListView';
 import Loading from 'src/components/Loading';
 import { dangerouslyGetItemDoNotUse } from 'src/utils/localStorageHelpers';
 import withToasts from 'src/components/MessageToasts/withToasts';
@@ -636,7 +617,7 @@ function ChartList(props: ChartListProps) {
       ),
       buttonStyle: 'primary',
       onClick: () => {
-        window.location.assign('/chart/add');
+        window.location.assign('/analytics/chart/add');
       },
     });
 

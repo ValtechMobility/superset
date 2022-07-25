@@ -18,12 +18,12 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { styled, t } from '@superset-ui/core';
-import { EmptyStateBig } from 'src/components/EmptyState';
-import { componentShape } from '../util/propShapes';
+import {styled, t} from '@superset-ui/core';
+import {EmptyStateBig} from 'src/components/EmptyState';
+import {componentShape} from '../util/propShapes';
 import DashboardComponent from '../containers/DashboardComponent';
 import DragDroppable from './dnd/DragDroppable';
-import { GRID_GUTTER_SIZE, GRID_COLUMN_COUNT } from '../util/constants';
+import {GRID_COLUMN_COUNT, GRID_GUTTER_SIZE} from '../util/constants';
 
 const propTypes = {
   depth: PropTypes.number.isRequired,
@@ -163,7 +163,7 @@ class DashboardGrid extends React.PureComponent {
                 </>
               }
               buttonAction={() => {
-                window.location.assign('/chart/add');
+                window.location.assign('/analytics/chart/add');
               }}
               image="chart.svg"
             />
