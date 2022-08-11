@@ -402,14 +402,14 @@ const FilterBar: React.FC<FiltersBarProps> = ({
           />
         </CollapsedBar>
         <Bar className={cx({ open: filtersOpen })} width={width}>
-        <Header
-          toggleFiltersBar={toggleFiltersBar}
-          onApply={handleApply}
-          onClearAll={handleClearAll}
-          isApplyDisabled={isApplyDisabled}
-          dataMaskSelected={dataMaskSelected}
-          dataMaskApplied={dataMaskApplied}
-        />
+          <Header
+            toggleFiltersBar={toggleFiltersBar}
+            onApply={handleApply}
+            onClearAll={handleClearAll}
+            isApplyDisabled={isApplyDisabled}
+            dataMaskSelected={dataMaskSelected}
+            dataMaskApplied={dataMaskApplied}
+          />
           {!isInitialized ? (
             <div css={{ height }}>
               <Loading />
@@ -498,7 +498,6 @@ const FilterBar: React.FC<FiltersBarProps> = ({
               )}
             </div>
           )}
-          
         </Bar>
       </BarWrapper>
     </FilterBarScrollContext.Provider>

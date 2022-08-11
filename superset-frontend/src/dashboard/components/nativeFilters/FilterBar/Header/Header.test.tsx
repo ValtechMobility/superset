@@ -23,6 +23,24 @@ import Header from './index';
 
 const createProps = () => ({
   toggleFiltersBar: jest.fn(),
+  onApply: jest.fn(),
+  onClearAll: jest.fn(),
+  dataMaskSelected: {
+    DefaultsID: {
+      filterState: {
+        value: null,
+      },
+    },
+  },
+  dataMaskApplied: {
+    DefaultsID: {
+      id: 'DefaultsID',
+      filterState: {
+        value: null,
+      },
+    },
+  },
+  isApplyDisabled: false,
 });
 
 test('should render', () => {

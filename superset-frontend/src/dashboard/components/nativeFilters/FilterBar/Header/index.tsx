@@ -23,7 +23,7 @@ import {
   DataMaskStateWithId,
   styled,
   t,
-  useTheme
+  useTheme,
 } from '@superset-ui/core';
 import React, { FC } from 'react';
 import Icons from 'src/components/Icons';
