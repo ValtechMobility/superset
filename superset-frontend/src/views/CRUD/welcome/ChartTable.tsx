@@ -19,8 +19,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { t } from '@superset-ui/core';
 import { filter } from 'lodash';
-import { useChartEditModal, useFavoriteStatus, useListViewResource, } from 'src/views/CRUD/hooks';
-import { getItem, LocalStorageKeys, setItem, } from 'src/utils/localStorageHelpers';
+import {
+  useChartEditModal,
+  useFavoriteStatus,
+  useListViewResource,
+} from 'src/views/CRUD/hooks';
+import {
+  getItem,
+  LocalStorageKeys,
+  setItem,
+} from 'src/utils/localStorageHelpers';
 import withToasts from 'src/components/MessageToasts/withToasts';
 import { useHistory } from 'react-router-dom';
 import { TableTabTypes } from 'src/views/CRUD/types';
