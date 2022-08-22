@@ -1861,13 +1861,13 @@ class DistributionBarViz(BaseViz):
                 offset = 0 if len(metrics) > 1 else 1
                 series_title = ", ".join([str(s) for s in name[offset:]])
             values = []
-            for i, v in ys.items():
+            for j, (i, v) in enumerate(ys.items()):
                 x = i
                 if isinstance(x, (tuple, list)):
                     x = ", ".join([str(s) for s in x])
                 else:
                     x = str(x)
-                values.append({"x": x, "y": v})
+                values.append({"x": x, "y": v, "z": j})
             chart_data.append({"key": series_title, "values": values})
         return chart_data
 
