@@ -434,7 +434,7 @@ function nvd3Vis(element, props) {
         chart.stacked(isBarStacked);
         if (orderBars) {
           data.forEach(d => {
-            d.values.sort((a, b) => (tryNumify(a.x) < tryNumify(b.x) ? -1 : 1));
+            d.values.sort((a, b) => (tryNumify(a.z) < tryNumify(b.z) ? -1 : 1));
           });
         }
         if (!reduceXTicks) {
