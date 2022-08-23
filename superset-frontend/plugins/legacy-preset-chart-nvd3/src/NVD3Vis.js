@@ -429,9 +429,7 @@ function nvd3Vis(element, props) {
           .reduceXTicks(reduceXTicks)
           .groupSpacing(0.1); // Distance between each group of bars.
 
-        chart.xAxis
-          .showMaxMin(false)
-          .tickPadding(25);
+        chart.xAxis.showMaxMin(false).tickPadding(25);
 
         chart.stacked(isBarStacked);
         if (orderBars) {
