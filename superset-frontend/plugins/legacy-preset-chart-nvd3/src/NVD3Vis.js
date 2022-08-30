@@ -669,6 +669,14 @@ function nvd3Vis(element, props) {
       chart.interactiveLayer.tooltip.contentGenerator(d =>
         generateTimePivotTooltip(d, xAxisFormatter, yAxisFormatter),
       );
+    } else if (vizType === 'dist_bar') {
+      const colorFn = getScale(colorScheme);
+      chart.barColor(
+        data
+          .map(x => x.values)
+          .flat()
+          .map(x => colorFn(cleanColorInput(x.x), sliceId)),
+      );
     } else if (vizType !== 'bullet') {
       const colorFn = getScale(colorScheme);
       chart.color(
