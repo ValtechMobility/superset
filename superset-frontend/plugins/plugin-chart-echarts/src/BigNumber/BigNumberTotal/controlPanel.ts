@@ -76,6 +76,18 @@ export default {
         ],
         [
           {
+            name: 'color_threshold',
+            config: {
+              type: 'TextControl',
+              freeForm: true,
+              label: t('Coloring Threshold'),
+              renderTrigger: true,
+              description: 'Threshold above which number is red',
+            },
+          },
+        ],
+        [
+          {
             name: 'force_timestamp_formatting',
             config: {
               type: 'CheckboxControl',

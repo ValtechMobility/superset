@@ -36,6 +36,7 @@ export default function transformProps(chartProps: BigNumberTotalChartProps) {
     forceTimestampFormatting,
     timeFormat,
     yAxisFormat,
+    colorThreshold,
   } = formData;
   const { data = [], coltypes = [] } = queriesData[0];
   const granularity = extractTimegrain(rawFormData as QueryFormData);
@@ -72,5 +73,6 @@ export default function transformProps(chartProps: BigNumberTotalChartProps) {
     headerFontSize,
     subheaderFontSize,
     subheader: formattedSubheader,
+    colorThreshold,
   };
 }

@@ -62,6 +62,7 @@ type BigNumberVisProps = {
   trendLineData?: TimeSeriesDatum[];
   mainColor: string;
   echartOptions: EChartsCoreOption;
+  colorThreshold?: number;
 };
 
 class BigNumberVis extends React.PureComponent<BigNumberVisProps> {
@@ -145,7 +146,11 @@ class BigNumberVis extends React.PureComponent<BigNumberVisProps> {
   }
 
   renderHeader(maxHeight: number) {
-    const { bigNumber, headerFormatter, width } = this.props;
+    const { bigNumber, headerFormatter, width, colorThreshold } = this.props;
+    const numberColor =
+      (bigNumber ?? 0) > (colorThreshold ?? 0) && colorThreshold !== undefined
+        ? 'red'
+        : 'black';
     const text = bigNumber === null ? t('No data') : headerFormatter(bigNumber);
 
     const container = this.createTemporaryContainer();
@@ -165,6 +170,7 @@ class BigNumberVis extends React.PureComponent<BigNumberVisProps> {
         style={{
           fontSize,
           height: maxHeight,
+          color: numberColor,
         }}
       >
         {text}
