@@ -1,0 +1,32 @@
+{
+  "name": "@superset-ui/plugin-country-map-pie-chart",
+  "version": "0.1.1",
+  "description": "Plugin Country Map Pie Chart",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "files": [
+    "esm",
+    "lib"
+  ],
+  "author": "My Name",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@types/d3-cloud": "^1.2.1",
+    "@types/d3-scale": "^2.0.2",
+    "d3-cloud": "^1.2.5",
+    "d3-scale": "^3.0.1",
+    "encodable": "^0.7.6",
+    "d3": "^7.8.4"
+  },
+  "peerDependencies": {
+    "@types/react": "*",
+    "@types/lodash": "*",
+    "@superset-ui/chart-controls": "*",
+    "@superset-ui/core": "*",
+    "react": "^16.13.1"
+  }
+}
