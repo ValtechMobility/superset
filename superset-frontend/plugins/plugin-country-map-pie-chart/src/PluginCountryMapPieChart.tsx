@@ -24,6 +24,7 @@ import {
   PluginCountryMapPieChartStylesProps,
 } from './types';
 import * as d3 from 'd3';
+import geoData from '../geo.json';
 
 // The following Styles component is a <div> element, which has been styled using Emotion
 // For docs, visit https://emotion.sh/docs/styled
@@ -64,76 +65,51 @@ export default function PluginCountryMapPieChart(
 
   const { data, height, width, scale } = props;
 
-  const rootElem = createRef<HTMLDivElement>();
+  useEffect(() => {
+    console.log('Calling the Effect');
+    console.log(geoData.features);
+    const projection = d3
+      .geoMercator()
+      .center([4, 47]) // GPS of location to zoom on
+      .scale(700) // This is like the zoom
+      .translate([width / 2, height / 2]);
 
-  // let svg = d3.select("#country_pie_map")
-  //   .append('svg')
-  //   .attr('width', width)
-  //   .attr('height', height);
-  // //svg.classed('plugin-country-map-pie-chart', true);
-  //
-  //
-  // let projection = d3
-  //   .geoMercator()
-  //   .center([0, 0]) // GPS of location to zoom on
-  //   .scale(scale) // This is like the zoom
-  //   .translate([width / 2, height / 2]);
+    const svg = d3.select("#country_pie_map")
+      .classed('plugin-country-map-pie-chart', true)
+      .append('svg')
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .selectAll("path")
+      .data(geoData.features)
+      .enter()
+      .append("path")
+      .attr("fill", "#888888")
+      .attr("d", d3.geoPath()
+        .projection(projection)
+      )
+      .attr("id", (d) => {return d.properties.name})
+      .style("stroke", "black")
+      .style("opacity", .3);
 
-  d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson", function(data){
-    // Draw the map
-    // svg.append("g")
-    //   .selectAll("path")
-    //   .data(data.features)
-    //   .enter()
-    //   .append("path")
-    //   .attr("fill", "#888888")
-    //   .attr("d", d3.geoPath()
-    //     .projection(projection)
-    //   )
-    //   .attr("id", (d) => {return d.properties.name})
-    //   .style("stroke", "black")
-    //   .style("opacity", .3)
-
-    const svg = d3.select("#country_pie_map");
-    console.log('svg', svg);
-    svg.classed('country_pie_map', true);
-    console.log('svg classed', svg);
-
-
-    svg
-      .append('circle')
-      .attr('cx', '50%')
-      .attr('cy', '50%')
-      .attr('r', 20)
-      .style('fill', 'green');
-
-    // // create a tooltip
-    // var Tooltip = d3.select("#country_pie_map")
-    //   .append("div")
-    //   .attr("class", "tooltip")
-    //   .style("opacity", 1)
-    //   .style("background-color", "white")
-    //   .style("border", "solid")
-    //   .style("border-width", "2px")
-    //   .style("border-radius", "5px")
-    //   .style("padding", "5px")
-
-    // var highlight = d3.select("#France")
-    //   .attr("fill", "#DD0000")
+    d3.select("#France")
+      .attr("fill", "#990000");
   });
 
   let selected = 'France'
 
   return (
     <Styles
-      ref={rootElem}
       boldText={props.boldText}
       headerFontSize={props.headerFontSize}
-      height={height}
-      width={width}
+      height={370}
+      width={1220}
+      scale={800}
     >
       <h3>Campaign Status {selected}</h3>
-      <div id="country_pie_map"></div>
+      <div id="country_pie_map">
+
+      </div>
     </Styles>
   )};
 
