@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { createRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@superset-ui/core';
+import * as d3 from 'd3';
 import {
-  Point,
   PluginCountryMapPieChartProps,
   PluginCountryMapPieChartStylesProps,
 } from './types';
-import * as d3 from 'd3';
-import geoData from '../geo.json';
+// eslint-disable-next-line import/extensions
+import geoData from './data/geo.json';
 
 // The following Styles component is a <div> element, which has been styled using Emotion
 // For docs, visit https://emotion.sh/docs/styled
@@ -62,41 +62,36 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
 export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
-
   const { data, height, width, scale } = props;
 
   useEffect(() => {
     console.log('Calling the Effect');
-    console.log(geoData.features);
     const projection = d3
       .geoMercator()
       .center([4, 47]) // GPS of location to zoom on
       .scale(700) // This is like the zoom
       .translate([width / 2, height / 2]);
 
-    const svg = d3.select("#country_pie_map")
+    d3.select('#country_pie_map')
       .classed('plugin-country-map-pie-chart', true)
       .append('svg')
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .selectAll("path")
+      .attr('width', width)
+      .attr('height', height)
+      .append('g')
+      .selectAll('path')
       .data(geoData.features)
       .enter()
-      .append("path")
-      .attr("fill", "#888888")
-      .attr("d", d3.geoPath()
-        .projection(projection)
-      )
-      .attr("id", (d) => {return d.properties.name})
-      .style("stroke", "black")
-      .style("opacity", .3);
+      .append('path')
+      .attr('fill', '#888888')
+      .attr('d', d3.geoPath().projection(projection))
+      .attr('id', d => d.properties.name)
+      .style('stroke', 'black')
+      .style('opacity', 0.3);
 
-    d3.select("#France")
-      .attr("fill", "#990000");
-  });
+    d3.select('#France').attr('fill', '#990000');
+  }, []);
 
-  let selected = 'France'
+  const selected = 'France';
 
   return (
     <Styles
@@ -107,9 +102,7 @@ export default function PluginCountryMapPieChart(
       scale={800}
     >
       <h3>Campaign Status {selected}</h3>
-      <div id="country_pie_map">
-
-      </div>
+      <div id="country_pie_map" />
     </Styles>
-  )};
-
+  );
+}

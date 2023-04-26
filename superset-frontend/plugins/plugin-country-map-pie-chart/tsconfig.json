@@ -41,5 +41,6 @@
   "include": [
     "src/**/*",
     "types/**/*",
+    "src/data/geo.json"
   ]
 }
