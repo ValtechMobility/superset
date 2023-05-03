@@ -20,6 +20,7 @@ import React, { useEffect, useState } from 'react';
 import Button from 'src/components/Button';
 import Select from 'src/components/Select';
 import { styled, SupersetClient, t } from '@superset-ui/core';
+import { QueryResponse } from '@superset-ui/core/src/query';
 import { debounce } from 'lodash';
 import Loading from 'src/components/Loading';
 import {
@@ -84,7 +85,7 @@ function QuerySearch({ actions, displayLimit }: QuerySearchProps) {
   const [from, setFrom] = useState<string>('28 days ago');
   const [to, setTo] = useState<string>('now');
   const [status, setStatus] = useState<string>('success');
-  const [queriesArray, setQueriesArray] = useState<Query[]>([]);
+  const [queriesArray, setQueriesArray] = useState<QueryResponse[]>([]);
   const [queriesLoading, setQueriesLoading] = useState<boolean>(true);
 
   const getTimeFromSelection = (selection: string) => {

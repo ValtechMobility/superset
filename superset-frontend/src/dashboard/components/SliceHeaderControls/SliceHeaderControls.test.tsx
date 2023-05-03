@@ -95,6 +95,7 @@ const createProps = (viz_type = 'sunburst') => ({
 
 test('Should render', () => {
   const props = createProps();
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
   expect(
     screen.getByRole('button', { name: 'More Options' }),
@@ -124,6 +125,7 @@ test('Should render default props', () => {
   // @ts-ignore
   delete props.sliceCanEdit;
 
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
   expect(
     screen.getByRole('menuitem', { name: 'Enter fullscreen' }),
@@ -150,6 +152,7 @@ test('Should render default props', () => {
 
 test('Should "export to CSV"', async () => {
   const props = createProps();
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
 
   expect(props.exportCSV).toBeCalledTimes(0);
@@ -161,6 +164,7 @@ test('Should "export to CSV"', async () => {
 
 test('Should not show "Download" if slice is filter box', () => {
   const props = createProps('filter_box');
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
   expect(screen.queryByText('Download')).not.toBeInTheDocument();
 });
@@ -171,6 +175,7 @@ test('Export full CSV is under featureflag', async () => {
     [FeatureFlag.ALLOW_FULL_CSV_EXPORT]: false,
   };
   const props = createProps('table');
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
   userEvent.hover(screen.getByText('Download'));
   expect(await screen.findByText('Export to .CSV')).toBeInTheDocument();
@@ -183,6 +188,7 @@ test('Should "export full CSV"', async () => {
     [FeatureFlag.ALLOW_FULL_CSV_EXPORT]: true,
   };
   const props = createProps('table');
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
   expect(props.exportFullCSV).toBeCalledTimes(0);
   userEvent.hover(screen.getByText('Download'));
@@ -197,6 +203,7 @@ test('Should not show export full CSV if report is not table', async () => {
     [FeatureFlag.ALLOW_FULL_CSV_EXPORT]: true,
   };
   const props = createProps();
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
   userEvent.hover(screen.getByText('Download'));
   expect(await screen.findByText('Export to .CSV')).toBeInTheDocument();
@@ -205,6 +212,7 @@ test('Should not show export full CSV if report is not table', async () => {
 
 test('Should "Show chart description"', () => {
   const props = createProps();
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
 
   expect(props.toggleExpandSlice).toBeCalledTimes(0);
@@ -215,6 +223,7 @@ test('Should "Show chart description"', () => {
 
 test('Should "Force refresh"', () => {
   const props = createProps();
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
 
   expect(props.forceRefresh).toBeCalledTimes(0);
@@ -226,6 +235,7 @@ test('Should "Force refresh"', () => {
 
 test('Should "Enter fullscreen"', () => {
   const props = createProps();
+  // @ts-ignore
   render(<SliceHeaderControls {...props} />, { useRedux: true });
 
   expect(props.handleToggleFullSize).toBeCalledTimes(0);

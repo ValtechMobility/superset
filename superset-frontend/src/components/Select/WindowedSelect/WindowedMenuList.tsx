@@ -56,7 +56,7 @@ export type WindowedMenuListProps = {
  */
 
 type MenuListPropsChildren<OptionType> =
-  | Component<OptionProps<OptionType>>[]
+  | Component<OptionProps<OptionTypeBase>>[]
   | ReactElement[];
 
 export type MenuListProps<OptionType extends OptionTypeBase> =
