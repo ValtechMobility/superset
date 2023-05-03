@@ -112,3 +112,5 @@ try:
     )
 except ImportError:
     logger.info("Using default Docker config...")
+
+SECRET_KEY = "RANDomK3Y_for_l0Cal"
