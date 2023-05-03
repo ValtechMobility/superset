@@ -54,9 +54,8 @@ RUN npm install -g npm@${NPM_VER}
 
 
 ARG NPM_BUILD_CMD="build"
-ARG APP_PREFIX=""
 ENV BUILD_CMD=${NPM_BUILD_CMD}
-ENV APP_PREFIX=${APP_PREFIX}
+ENV APP_PREFIX="/analytics"
 
 
 # NPM ci first, as to NOT invalidate previous steps except for when package.json changes
