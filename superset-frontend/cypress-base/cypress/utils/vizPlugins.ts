@@ -89,7 +89,9 @@ export function interceptChart({
   legacy?: boolean;
   method?: 'POST' | 'GET';
 }) {
-  const urlBase = legacy ? '**/analytics/superset/explore_json/' : '**/analytics/api/v1/chart/data';
+  const urlBase = legacy
+    ? '**/analytics/superset/explore_json/'
+    : '**/analytics/api/v1/chart/data';
   let url;
   if (sliceId) {
     const encodedFormData = encodeURIComponent(

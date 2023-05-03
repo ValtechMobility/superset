@@ -26,14 +26,15 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@airbnb/config-babel": "^2.0.1"
+  },
   "peerDependencies": {
     "@superset-ui/chart-controls": "*",
     "@superset-ui/core": "*",
     "react": "^16.13.1"
   },
   "devDependencies": {
-    "@airbnb/config-babel": "^2.0.1",
     "@babel/cli": "^7.16.0",
     "@types/jest": "^26.0.4",
     "jest": "^26.6.3",

@@ -16,9 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useEffect, createRef } from 'react';
+import React, { createRef, useEffect } from 'react';
 import { styled } from '@superset-ui/core';
-import { PluginCountryMapPieChartProps, PluginCountryMapPieChartStylesProps } from './types';
+import {
+  PluginCountryMapPieChartProps,
+  PluginCountryMapPieChartStylesProps,
+} from './types';
 
 // The following Styles component is a <div> element, which has been styled using Emotion
 // For docs, visit https://emotion.sh/docs/styled
@@ -38,14 +41,15 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
     /* You can use your props to control CSS! */
     margin-top: 0;
     margin-bottom: ${({ theme }) => theme.gridUnit * 3}px;
-    font-size: ${({ theme, headerFontSize }) => theme.typography.sizes[headerFontSize]}px;
-    font-weight: ${({ theme, boldText }) => theme.typography.weights[boldText ? 'bold' : 'normal']};
+    font-size: ${({ theme, headerFontSize }) =>
+      theme.typography.sizes[headerFontSize]}px;
+    font-weight: ${({ theme, boldText }) =>
+      theme.typography.weights[boldText ? 'bold' : 'normal']};
   }
 
   pre {
-    height: ${({ theme, headerFontSize, height }) => (
-      height - theme.gridUnit * 12 - theme.typography.sizes[headerFontSize]
-    )}px;
+    height: ${({ theme, headerFontSize, height }) =>
+      height - theme.gridUnit * 12 - theme.typography.sizes[headerFontSize]}px;
   }
 `;
 
@@ -57,7 +61,9 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
  *  * FormData (your controls!) provided as props by transformProps.ts
  */
 
-export default function PluginCountryMapPieChart(props: PluginCountryMapPieChartProps) {
+export default function PluginCountryMapPieChart(
+  props: PluginCountryMapPieChartProps,
+) {
   // height and width are the height and width of the DOM element as it exists in the dashboard.
   // There is also a `data` prop, which is, of course, your DATA 🎉
   const { data, height, width } = props;
