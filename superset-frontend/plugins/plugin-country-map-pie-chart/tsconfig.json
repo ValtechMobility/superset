@@ -5,6 +5,7 @@
     "declarationDir": "lib",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": false,
     "isolatedModules": false,
     "jsx": "react",
     "lib": [
@@ -19,7 +20,7 @@
     "outDir": "lib",
     "pretty": true,
     "removeComments": false,
-    "strict": true,
+    "strict": false,
     "target": "es2015",
     "useDefineForClassFields": false,
     "composite": true,
@@ -39,6 +40,7 @@
   ],
   "include": [
     "src/**/*",
-    "types/**/*"
+    "types/**/*",
+    "src/data/geo.json"
   ]
 }

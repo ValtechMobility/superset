@@ -16,11 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { QueryFormData, supersetTheme, TimeseriesDataRecord } from '@superset-ui/core';
+import {
+  QueryFormData,
+  supersetTheme,
+  TimeseriesDataRecord,
+} from '@superset-ui/core';
+
+export class Point {
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+  }
+
+  x: number;
+
+  y: number;
+}
 
 export interface PluginCountryMapPieChartStylesProps {
   height: number;
   width: number;
+  center: Point;
+  scale: number;
   headerFontSize: keyof typeof supersetTheme.typography.sizes;
   boldText: boolean;
 }
@@ -33,8 +50,19 @@ export type PluginCountryMapPieChartQueryFormData = QueryFormData &
   PluginCountryMapPieChartStylesProps &
   PluginCountryMapPieChartCustomizeProps;
 
-export type PluginCountryMapPieChartProps = PluginCountryMapPieChartStylesProps &
-  PluginCountryMapPieChartCustomizeProps & {
-    data: TimeseriesDataRecord[];
-    // add typing here for the props you pass in from transformProps.ts!
+export type PluginCountryMapPieChartProps =
+  PluginCountryMapPieChartStylesProps &
+    PluginCountryMapPieChartCustomizeProps & {
+      data: TimeseriesDataRecord[];
+      // add typing here for the props you pass in from transformProps.ts!
+    };
+
+export interface GeoData {
+  type: string;
+  properties: { name: string };
+  geometry: {
+    type: string;
+    coordinates: number[][][];
   };
+  id: string;
+}

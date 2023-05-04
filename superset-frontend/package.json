@@ -73,6 +73,7 @@
     "last 3 edge versions"
   ],
   "dependencies": {
+    "@airbnb/config-babel": "^3.1.0",
     "@ant-design/icons": "^4.2.2",
     "@babel/runtime-corejs3": "^7.12.5",
     "@data-ui/sparkline": "^0.0.84",
@@ -108,6 +109,7 @@
     "@superset-ui/plugin-chart-pivot-table": "file:./plugins/plugin-chart-pivot-table",
     "@superset-ui/plugin-chart-table": "file:./plugins/plugin-chart-table",
     "@superset-ui/plugin-chart-word-cloud": "file:./plugins/plugin-chart-word-cloud",
+    "@superset-ui/plugin-country-map-pie-chart": "file:./plugins/plugin-country-map-pie-chart",
     "@superset-ui/preset-chart-xy": "file:./plugins/preset-chart-xy",
     "@superset-ui/switchboard": "file:./packages/superset-ui-switchboard",
     "@vx/responsive": "^0.0.195",
@@ -238,6 +240,7 @@
     "@testing-library/react-hooks": "^5.0.3",
     "@testing-library/user-event": "^12.7.0",
     "@types/classnames": "^2.2.10",
+    "@types/d3": "^7.4.0",
     "@types/dom-to-image": "^2.6.0",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",

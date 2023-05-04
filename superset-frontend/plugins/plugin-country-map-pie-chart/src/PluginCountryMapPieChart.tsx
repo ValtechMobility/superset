@@ -16,9 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { useEffect, createRef } from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@superset-ui/core';
-import { PluginCountryMapPieChartProps, PluginCountryMapPieChartStylesProps } from './types';
+import * as d3 from 'd3';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { GeoProjection } from 'd3-geo';
+import {
+  GeoData,
+  PluginCountryMapPieChartProps,
+  PluginCountryMapPieChartStylesProps,
+  Point,
+} from './types';
+// eslint-disable-next-line import/extensions
+import * as geoData from './data/geo.json';
 
 // The following Styles component is a <div> element, which has been styled using Emotion
 // For docs, visit https://emotion.sh/docs/styled
@@ -38,14 +48,10 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
     /* You can use your props to control CSS! */
     margin-top: 0;
     margin-bottom: ${({ theme }) => theme.gridUnit * 3}px;
-    font-size: ${({ theme, headerFontSize }) => theme.typography.sizes[headerFontSize]}px;
-    font-weight: ${({ theme, boldText }) => theme.typography.weights[boldText ? 'bold' : 'normal']};
-  }
-
-  pre {
-    height: ${({ theme, headerFontSize, height }) => (
-      height - theme.gridUnit * 12 - theme.typography.sizes[headerFontSize]
-    )}px;
+    font-size: ${({ theme, headerFontSize }) =>
+      theme.typography.sizes[headerFontSize]}px;
+    font-weight: ${({ theme, boldText }) =>
+      theme.typography.weights[boldText ? 'bold' : 'normal']};
   }
 `;
 
@@ -57,32 +63,54 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
  *  * FormData (your controls!) provided as props by transformProps.ts
  */
 
-export default function PluginCountryMapPieChart(props: PluginCountryMapPieChartProps) {
-  // height and width are the height and width of the DOM element as it exists in the dashboard.
-  // There is also a `data` prop, which is, of course, your DATA 🎉
+export default function PluginCountryMapPieChart(
+  props: PluginCountryMapPieChartProps,
+) {
   const { data, height, width } = props;
 
-  const rootElem = createRef<HTMLDivElement>();
-
-  // Often, you just want to get a hold of the DOM and go nuts.
-  // Here, you can do that with createRef, and the useEffect hook.
+  console.log('data', data);
   useEffect(() => {
-    const root = rootElem.current as HTMLElement;
-    console.log('Plugin element', root);
-  });
+    console.log('Calling the Effect');
 
-  console.log('Plugin props', props);
+    const projection = d3
+      .geoMercator()
+      .center([4, 47]) // GPS of location to zoom on
+      .scale(700) // This is like the zoom
+      .translate([width / 2, height / 2]) as GeoProjection;
+
+    // @ts-ignore
+    d3.select('#country_pie_map')
+      .classed('plugin-country-map-pie-chart', true)
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .append('g')
+      .selectAll('path')
+      .data(geoData.features)
+      .enter()
+      .append('path')
+      .attr('fill', '#888888')
+      .attr('d', d3.geoPath().projection(projection))
+      .attr('id', d => (d as GeoData).properties.name)
+      .style('stroke', 'black')
+      .style('opacity', 0.3);
+
+    d3.select('#France').attr('fill', '#990000');
+  }, []);
+
+  const selected = 'France';
 
   return (
     <Styles
-      ref={rootElem}
       boldText={props.boldText}
       headerFontSize={props.headerFontSize}
-      height={height}
-      width={width}
+      height={370}
+      width={1220}
+      scale={800}
+      center={new Point()}
     >
-      <h3>{props.headerText}</h3>
-      <pre>${JSON.stringify(data, null, 2)}</pre>
+      <h3>Campaign Status {selected}</h3>
+      <div id="country_pie_map" />
     </Styles>
   );
 }

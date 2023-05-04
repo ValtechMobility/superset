@@ -6,6 +6,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
+    "resolveJsonModule": true,
 
     /* Modules */
     "baseUrl": ".",
@@ -73,6 +74,7 @@
     "./plugins/*/src/**/*",
     "./plugins/*/types/**/*",
     "./packages/*/test/**/*",
-    "./plugins/*/test/**/*"
+    "./plugins/*/test/**/*",
+    "./plugins/plugin-country-map-pie-chart/src/data/geo.json"
   ]
 }
