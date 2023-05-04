@@ -24,10 +24,10 @@ install: superset pre-commit
 
 superset:
 	# Install external dependencies
-	pip install -r requirements/local.txt
+	pip3 install -r requirements/local.txt
 
 	# Install Superset in editable (development) mode
-	pip install -e .
+	pip3 install -e .
 
 	# Create an admin user in your metadata database
 	superset fab create-admin \

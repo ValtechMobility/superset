@@ -37,8 +37,8 @@
   "scripts": {
     "_lint": "eslint --ignore-path=.eslintignore --ext .js,.jsx,.ts,tsx .",
     "_prettier": "prettier './({src,spec,cypress-base,plugins,packages,.storybook}/**/*{.js,.jsx,.ts,.tsx,.css,.less,.scss,.sass}|package.json)'",
-    "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 NODE_ENV=production APP_PREFIX= BABEL_ENV=\"${BABEL_ENV:=production}\" webpack --mode=production --color",
-    "build-dev": "cross-env NODE_OPTIONS=--max_old_space_size=8192 NODE_ENV=development APP_PREFIX= webpack --mode=development --color",
+    "build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 NODE_ENV=production APP_PREFIX=\"/analytics\"  BABEL_ENV=\"${BABEL_ENV:=production}\" webpack --mode=production --color",
+    "build-dev": "cross-env NODE_OPTIONS=--max_old_space_size=8192 NODE_ENV=development APP_PREFIX=\"/analytics\"  webpack --mode=development --color",
     "build-instrumented": "cross-env NODE_ENV=production BABEL_ENV=instrumented webpack --mode=production --color",
     "build-storybook": "build-storybook",
     "check-translation": "prettier --check ../superset/translations/**/LC_MESSAGES/*.json",
@@ -343,7 +343,7 @@
     "webpack-sources": "^3.2.0"
   },
   "engines": {
-    "node": "^16.9.1",
+    "node": "^17.0.0",
     "npm": "^7.5.4 || ^8.1.2"
   },
   "readme": "ERROR: No README data found!",

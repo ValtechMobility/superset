@@ -18,7 +18,7 @@
 ######################################################################
 # PY stage that simply does a pip install on our requirements
 ######################################################################
-ARG PY_VER=3.8.12
+ARG PY_VER=3.8.16-slim
 FROM python:${PY_VER} AS superset-py
 
 RUN mkdir /app \
@@ -39,14 +39,14 @@ COPY superset-frontend/package.json /app/superset-frontend/
 RUN cd /app \
     && mkdir -p superset/static \
     && touch superset/static/version_info.json \
-    && pip install --no-cache -r requirements/local.txt
+    && pip3 install --no-cache -r requirements/local.txt
 
 
 ######################################################################
 # Node stage to deal with static asset construction
 ######################################################################
 ARG PY_VER=3.8.16-slim
-FROM node:16-slim AS superset-node
+FROM node:17 AS superset-node
 
 ARG NPM_BUILD_CMD="build"
 ARG APP_PREFIX
@@ -73,10 +73,9 @@ RUN npm run ${BUILD_CMD}
 ######################################################################
 # Final lean image...
 ######################################################################
-ARG PY_VER=3.8.12
-ARG APP_PREFIX
-FROM python:${PY_VER} AS lean
 
+FROM python:${PY_VER} AS lean
+ARG APP_PREFIX
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
     FLASK_ENV=production \
@@ -109,7 +108,7 @@ COPY superset-frontend/package.json /app/superset-frontend/
 RUN cd /app \
     && mkdir -p superset/static \
     && touch superset/static/version_info.json \
-    && pip install --no-cache -r requirements/local.txt
+    && pip3 install --no-cache -r requirements/local.txt
 
 COPY --from=superset-node /app/superset/static/assets /app/superset/static/assets
 
@@ -118,7 +117,7 @@ COPY superset /app/superset
 COPY setup.py MANIFEST.in README.md /app/
 RUN cd /app \
         && chown -R superset:superset * \
-        && pip install -e . \
+        && pip3 install -e . \
         && flask fab babel-compile --target superset/translations
 
 COPY ./docker/run-server.sh /usr/bin/
@@ -170,8 +169,8 @@ RUN wget https://download-installer.cdn.mozilla.net/pub/firefox/releases/${FIREF
 
 # Cache everything for dev purposes...
 RUN cd /app \
-    && pip install --no-cache -r requirements/docker.txt \
-    && pip install --no-cache -r requirements/requirements-local.txt || true
+    && pip3 install --no-cache -r requirements/docker.txt \
+    && pip3 install --no-cache -r requirements/requirements-local.txt || true
 USER superset
 
 
