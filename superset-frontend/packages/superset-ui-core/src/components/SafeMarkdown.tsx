@@ -18,6 +18,7 @@
  */
 
 import React from 'react';
+// @ts-ignore
 import ReactMarkdown, { MarkdownAbstractSyntaxTree } from 'react-markdown';
 // @ts-ignore no types available
 import htmlParser from 'react-markdown/plugins/html-parser';
@@ -36,7 +37,7 @@ function isSafeMarkup(node: MarkdownAbstractSyntaxTree) {
 
 function SafeMarkdown({ source }: SafeMarkdownProps) {
   return (
-    <ReactMarkdown
+    <MarkdownAbstractSyntaxTree
       source={source}
       escapeHtml={isFeatureEnabled(FeatureFlag.ESCAPE_MARKDOWN_HTML)}
       skipHtml={!isFeatureEnabled(FeatureFlag.DISPLAY_MARKDOWN_HTML)}
