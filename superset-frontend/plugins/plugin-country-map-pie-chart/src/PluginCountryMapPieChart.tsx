@@ -17,10 +17,9 @@
  * under the License.
  */
 import React, { useEffect } from 'react';
+// @ts-ignore
 import { styled } from '@superset-ui/core';
 import * as d3 from 'd3';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { GeoProjection } from 'd3-geo';
 import {
   GeoData,
   PluginCountryMapPieChartProps,
@@ -76,8 +75,9 @@ export default function PluginCountryMapPieChart(
       .geoMercator()
       .center([4, 47]) // GPS of location to zoom on
       .scale(700) // This is like the zoom
-      .translate([width / 2, height / 2]) as GeoProjection;
+      .translate([width / 2, height / 2]);
 
+    // @ts-ignore
     // @ts-ignore
     d3.select('#country_pie_map')
       .classed('plugin-country-map-pie-chart', true)
@@ -90,7 +90,7 @@ export default function PluginCountryMapPieChart(
       .enter()
       .append('path')
       .attr('fill', '#888888')
-      .attr('d', d3.geoPath().projection(projection))
+      .attr('d', d3.geoPath().projection(projection).projection)
       .attr('id', d => (d as GeoData).properties.name)
       .style('stroke', 'black')
       .style('opacity', 0.3);
