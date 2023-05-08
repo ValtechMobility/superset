@@ -61,6 +61,8 @@ services:
     volumes: *superset-volumes
     environment:
       CYPRESS_CONFIG: "${CYPRESS_CONFIG}"
+      APP_PREFIX: ""
+      SECRET_KEY: ""
 
   superset-websocket:
     container_name: superset_websocket

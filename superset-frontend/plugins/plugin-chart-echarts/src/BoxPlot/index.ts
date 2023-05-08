@@ -48,7 +48,7 @@ export default class EchartsBoxPlotChartPlugin extends ChartPlugin<
         category: t('Distribution'),
         credits: ['https://echarts.apache.org'],
         description: t(
-          'Also known as a box and whisker plot, this visualization compares the distributions of a related metric across multiple groups. The box in the middle emphasizes the mean, median, and inner 2 quartiles. The whiskers around each box visualize the min, max, range, and outer 2 quartiles.',
+          'Duuuuuum known as a box and whisker plot, this visualization compares the distributions of a related metric across multiple groups. The box in the middle emphasizes the mean, median, and inner 2 quartiles. The whiskers around each box visualize the min, max, range, and outer 2 quartiles.',
         ),
         exampleGallery: [{ url: example }],
         name: t('Box Plot'),

@@ -1,6 +1,6 @@
 {
   "name": "@superset-ui/plugin-country-map-pie-chart",
-  "version": "0.1.0",
+  "version": "0.18.25",
   "description": "Plugin Country Map Pie Chart",
   "sideEffects": false,
   "main": "lib/index.js",
@@ -16,16 +16,16 @@
   },
   "dependencies": {
     "@airbnb/config-babel": "^3.1.0",
-    "d3-scale": "1.0.5",
+    "d3": "4.13.0",
     "d3-geo-projection": "2.9.0",
-    "encodable": "^0.7.6",
-    "d3": "4.13.0"
+    "d3-scale": "1.0.5",
+    "encodable": "^0.7.6"
   },
   "peerDependencies": {
-    "@types/react": "*",
-    "@types/lodash": "*",
     "@superset-ui/chart-controls": "*",
     "@superset-ui/core": "*",
+    "@types/lodash": "*",
+    "@types/react": "*",
     "react": "^16.13.1"
   }
 }

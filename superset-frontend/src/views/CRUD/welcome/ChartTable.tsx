@@ -213,7 +213,7 @@ function ChartTable({
             ),
             buttonStyle: 'tertiary',
             onClick: () => {
-              window.location.assign(`${process.env.APP_PREFIX}/chart/add`);
+              window.location.assign('/chart/add');
             },
           },
           {
@@ -222,12 +222,10 @@ function ChartTable({
             onClick: () => {
               const target =
                 chartFilter === 'Favorite'
-                  ? `${
-                      process.env.APP_PREFIX
-                    }/chart/list/?filters=(favorite:(label:${t(
+                  ? `/chart/list/?filters=(favorite:(label:${t(
                       'Yes',
                     )},value:!t))`
-                  : `${process.env.APP_PREFIX}/chart/list/`;
+                  : '/chart/list/';
               history.push(target);
             },
           },

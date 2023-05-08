@@ -17,6 +17,7 @@
  * under the License.
  */
 export { default as EchartsBoxPlotChartPlugin } from './BoxPlot';
+export { default as MapPieChartPlugin } from './MapPieChart';
 export { default as EchartsTimeseriesChartPlugin } from './Timeseries';
 export { default as EchartsAreaChartPlugin } from './Timeseries/Area';
 export { default as EchartsTimeseriesBarChartPlugin } from './Timeseries/Regular/Bar';
@@ -35,6 +36,7 @@ export { default as EchartsTreemapChartPlugin } from './Treemap';
 export { BigNumberChartPlugin, BigNumberTotalChartPlugin } from './BigNumber';
 
 export { default as BoxPlotTransformProps } from './BoxPlot/transformProps';
+export { default as MapPieChartTransformProps } from './MapPieChart/transformProps';
 export { default as FunnelTransformProps } from './Funnel/transformProps';
 export { default as GaugeTransformProps } from './Gauge/transformProps';
 export { default as GraphTransformProps } from './Graph/transformProps';

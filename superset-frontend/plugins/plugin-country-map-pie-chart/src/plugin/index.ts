@@ -38,6 +38,7 @@ export default class PluginCountryMapPieChart extends ChartPlugin {
       description: 'Plugin Country Map Pie Chart',
       name: t('Plugin Country Map Pie Chart'),
       thumbnail,
+      category: t('Map'),
     });
 
     super({

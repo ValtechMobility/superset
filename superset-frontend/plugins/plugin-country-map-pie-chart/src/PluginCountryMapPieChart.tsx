@@ -69,7 +69,7 @@ export default function PluginCountryMapPieChart(
 
   console.log('data', data);
   useEffect(() => {
-    console.log('Calling the Effect');
+    console.log('Calling the other effect now!');
 
     const projection = d3
       .geoMercator()

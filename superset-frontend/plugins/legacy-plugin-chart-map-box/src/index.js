@@ -25,7 +25,7 @@ import controlPanel from './controlPanel';
 const metadata = new ChartMetadata({
   category: t('Map'),
   credits: ['https://www.mapbox.com/mapbox-gl-js/api/'],
-  description: '',
+  description: 'Test',
   exampleGallery: [
     { url: example1, description: t('Light mode') },
     { url: example2, description: t('Dark mode') },
