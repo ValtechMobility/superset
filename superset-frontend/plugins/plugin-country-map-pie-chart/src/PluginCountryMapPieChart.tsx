@@ -90,11 +90,11 @@ export default function PluginCountryMapPieChart(
       .append('path')
       .attr('fill', '#888888')
       .attr('d', d3.geoPath().projection(projection))
-      .attr('id', d => (d as GeoData).properties.name)
+      .attr('id', d => (d as GeoData).iso)
       .style('stroke', 'black')
       .style('opacity', 0.3);
 
-   // d3.select('#France').attr('fill', '#770000');
+    d3.select('#FR').attr('fill', '#770000');
   }, []);
 
   const selected = 'France';

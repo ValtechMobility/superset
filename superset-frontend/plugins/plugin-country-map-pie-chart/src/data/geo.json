@@ -289,7 +289,7 @@
           ]
         ]
       },
-      "id": "AFG"
+      "iso": "AF"
     },
     {
       "type": "Feature",
@@ -609,7 +609,7 @@
           ]
         ]
       },
-      "id": "AGO"
+      "iso": "AO"
     },
     {
       "type": "Feature",
@@ -711,7 +711,7 @@
           ]
         ]
       },
-      "id": "ALB"
+      "iso": "AL"
     },
     {
       "type": "Feature",
@@ -813,7 +813,7 @@
           ]
         ]
       },
-      "id": "ARE"
+      "iso": "AE"
     },
     {
       "type": "Feature",
@@ -1317,7 +1317,7 @@
           ]
         ]
       },
-      "id": "ARG"
+      "iso": "AR"
     },
     {
       "type": "Feature",
@@ -1411,7 +1411,7 @@
           ]
         ]
       },
-      "id": "ARM"
+      "iso": "AM"
     },
     {
       "type": "Feature",
@@ -4087,7 +4087,7 @@
           ]
         ]
       },
-      "id": "ATA"
+      "iso": "AQ"
     },
     {
       "type": "Feature",
@@ -4137,7 +4137,7 @@
           ]
         ]
       },
-      "id": "ATF"
+      "iso": "ATF"
     },
     {
       "type": "Feature",
@@ -5121,7 +5121,7 @@
           ]
         ]
       },
-      "id": "AUS"
+      "iso": "AU"
     },
     {
       "type": "Feature",
@@ -5283,7 +5283,7 @@
           ]
         ]
       },
-      "id": "AUT"
+      "iso": "AT"
     },
     {
       "type": "Feature",
@@ -5479,7 +5479,7 @@
           ]
         ]
       },
-      "id": "AZE"
+      "iso": "AZ"
     },
     {
       "type": "Feature",
@@ -5545,7 +5545,7 @@
           ]
         ]
       },
-      "id": "BDI"
+      "iso": "BI"
     },
     {
       "type": "Feature",
@@ -5619,7 +5619,7 @@
           ]
         ]
       },
-      "id": "BEL"
+      "iso": "BE"
     },
     {
       "type": "Feature",
@@ -5733,7 +5733,7 @@
           ]
         ]
       },
-      "id": "BEN"
+      "iso": "BJ"
     },
     {
       "type": "Feature",
@@ -5903,7 +5903,7 @@
           ]
         ]
       },
-      "id": "BFA"
+      "iso": "BF"
     },
     {
       "type": "Feature",
@@ -6061,7 +6061,7 @@
           ]
         ]
       },
-      "id": "BGD"
+      "iso": "BD"
     },
     {
       "type": "Feature",
@@ -6187,7 +6187,7 @@
           ]
         ]
       },
-      "id": "BGR"
+      "iso": "BG"
     },
     {
       "type": "Feature",
@@ -6295,7 +6295,7 @@
           ]
         ]
       },
-      "id": "BHS"
+      "iso": "BHS"
     },
     {
       "type": "Feature",
@@ -6397,7 +6397,7 @@
           ]
         ]
       },
-      "id": "BIH"
+      "iso": "BA"
     },
     {
       "type": "Feature",
@@ -6587,7 +6587,7 @@
           ]
         ]
       },
-      "id": "BLR"
+      "iso": "BY"
     },
     {
       "type": "Feature",
@@ -6681,7 +6681,7 @@
           ]
         ]
       },
-      "id": "BLZ"
+      "iso": "BZ"
     },
     {
       "type": "Feature",
@@ -6935,7 +6935,7 @@
           ]
         ]
       },
-      "id": "BOL"
+      "iso": "BOL"
     },
     {
       "type": "Feature",
@@ -7761,7 +7761,7 @@
           ]
         ]
       },
-      "id": "BRA"
+      "iso": "BR"
     },
     {
       "type": "Feature",
@@ -7807,7 +7807,7 @@
           ]
         ]
       },
-      "id": "BRN"
+      "iso": "BRN"
     },
     {
       "type": "Feature",
@@ -7873,7 +7873,7 @@
           ]
         ]
       },
-      "id": "BTN"
+      "iso": "BT"
     },
     {
       "type": "Feature",
@@ -8047,7 +8047,7 @@
           ]
         ]
       },
-      "id": "BWA"
+      "iso": "BW"
     },
     {
       "type": "Feature",
@@ -8309,7 +8309,7 @@
           ]
         ]
       },
-      "id": "CAF"
+      "iso": "CF"
     },
     {
       "type": "Feature",
@@ -11621,7 +11621,7 @@
           ]
         ]
       },
-      "id": "CAN"
+      "iso": "CA"
     },
     {
       "type": "Feature",
@@ -11731,7 +11731,7 @@
           ]
         ]
       },
-      "id": "CHE"
+      "iso": "CH"
     },
     {
       "type": "Feature",
@@ -12207,7 +12207,7 @@
           ]
         ]
       },
-      "id": "CHL"
+      "iso": "CL"
     },
     {
       "type": "Feature",
@@ -13187,7 +13187,7 @@
           ]
         ]
       },
-      "id": "CHN"
+      "iso": "CN"
     },
     {
       "type": "Feature",
@@ -13385,7 +13385,7 @@
           ]
         ]
       },
-      "id": "CIV"
+      "iso": "CIV"
     },
     {
       "type": "Feature",
@@ -13643,7 +13643,7 @@
           ]
         ]
       },
-      "id": "CMR"
+      "iso": "CM"
     },
     {
       "type": "Feature",
@@ -14145,7 +14145,7 @@
           ]
         ]
       },
-      "id": "COD"
+      "iso": "COD"
     },
     {
       "type": "Feature",
@@ -14355,7 +14355,7 @@
           ]
         ]
       },
-      "id": "COG"
+      "iso": "COG"
     },
     {
       "type": "Feature",
@@ -14769,7 +14769,7 @@
           ]
         ]
       },
-      "id": "COL"
+      "iso": "CO"
     },
     {
       "type": "Feature",
@@ -14927,7 +14927,7 @@
           ]
         ]
       },
-      "id": "CRI"
+      "iso": "CR"
     },
     {
       "type": "Feature",
@@ -15109,7 +15109,7 @@
           ]
         ]
       },
-      "id": "CUB"
+      "iso": "CU"
     },
     {
       "type": "Feature",
@@ -15187,7 +15187,7 @@
           ]
         ]
       },
-      "id": "-99"
+      "iso": "-99"
     },
     {
       "type": "Feature",
@@ -15261,7 +15261,7 @@
           ]
         ]
       },
-      "id": "CYP"
+      "iso": "CY"
     },
     {
       "type": "Feature",
@@ -15415,7 +15415,7 @@
           ]
         ]
       },
-      "id": "CZE"
+      "iso": "CZE"
     },
     {
       "type": "Feature",
@@ -15661,7 +15661,7 @@
           ]
         ]
       },
-      "id": "DEU"
+      "iso": "DE"
     },
     {
       "type": "Feature",
@@ -15735,7 +15735,7 @@
           ]
         ]
       },
-      "id": "DJI"
+      "iso": "DJ"
     },
     {
       "type": "Feature",
@@ -15851,7 +15851,7 @@
           ]
         ]
       },
-      "id": "DNK"
+      "iso": "DK"
     },
     {
       "type": "Feature",
@@ -15969,7 +15969,7 @@
           ]
         ]
       },
-      "id": "DOM"
+      "iso": "DO"
     },
     {
       "type": "Feature",
@@ -16231,7 +16231,7 @@
           ]
         ]
       },
-      "id": "DZA"
+      "iso": "DZ"
     },
     {
       "type": "Feature",
@@ -16377,7 +16377,7 @@
           ]
         ]
       },
-      "id": "ECU"
+      "iso": "EC"
     },
     {
       "type": "Feature",
@@ -16559,7 +16559,7 @@
           ]
         ]
       },
-      "id": "EGY"
+      "iso": "EG"
     },
     {
       "type": "Feature",
@@ -16685,7 +16685,7 @@
           ]
         ]
       },
-      "id": "ERI"
+      "iso": "ER"
     },
     {
       "type": "Feature",
@@ -16903,7 +16903,7 @@
           ]
         ]
       },
-      "id": "ESP"
+      "iso": "ES"
     },
     {
       "type": "Feature",
@@ -16985,7 +16985,7 @@
           ]
         ]
       },
-      "id": "EST"
+      "iso": "EE"
     },
     {
       "type": "Feature",
@@ -17235,7 +17235,7 @@
           ]
         ]
       },
-      "id": "ETH"
+      "iso": "ET"
     },
     {
       "type": "Feature",
@@ -17401,7 +17401,7 @@
           ]
         ]
       },
-      "id": "FIN"
+      "iso": "FI"
     },
     {
       "type": "Feature",
@@ -17513,7 +17513,7 @@
           ]
         ]
       },
-      "id": "FJI"
+      "iso": "FJ"
     },
     {
       "type": "Feature",
@@ -17567,7 +17567,7 @@
           ]
         ]
       },
-      "id": "FLK"
+      "iso": "FLK"
     },
     {
       "type": "Feature",
@@ -17887,7 +17887,7 @@
           ]
         ]
       },
-      "id": "FRA"
+      "iso": "FR"
     },
     {
       "type": "Feature",
@@ -18025,7 +18025,7 @@
           ]
         ]
       },
-      "id": "GAB"
+      "iso": "GA"
     },
     {
       "type": "Feature",
@@ -18269,7 +18269,7 @@
           ]
         ]
       },
-      "id": "GBR"
+      "iso": "GBR"
     },
     {
       "type": "Feature",
@@ -18379,7 +18379,7 @@
           ]
         ]
       },
-      "id": "GEO"
+      "iso": "GE"
     },
     {
       "type": "Feature",
@@ -18493,7 +18493,7 @@
           ]
         ]
       },
-      "id": "GHA"
+      "iso": "GH"
     },
     {
       "type": "Feature",
@@ -18787,7 +18787,7 @@
           ]
         ]
       },
-      "id": "GIN"
+      "iso": "GN"
     },
     {
       "type": "Feature",
@@ -18865,7 +18865,7 @@
           ]
         ]
       },
-      "id": "GMB"
+      "iso": "GM"
     },
     {
       "type": "Feature",
@@ -18955,7 +18955,7 @@
           ]
         ]
       },
-      "id": "GNB"
+      "iso": "GNB"
     },
     {
       "type": "Feature",
@@ -18997,7 +18997,7 @@
           ]
         ]
       },
-      "id": "GNQ"
+      "iso": "GQ"
     },
     {
       "type": "Feature",
@@ -19233,7 +19233,7 @@
           ]
         ]
       },
-      "id": "GRC"
+      "iso": "GR"
     },
     {
       "type": "Feature",
@@ -19775,7 +19775,7 @@
           ]
         ]
       },
-      "id": "GRL"
+      "iso": "GL"
     },
     {
       "type": "Feature",
@@ -19929,7 +19929,7 @@
           ]
         ]
       },
-      "id": "GTM"
+      "iso": "GT"
     },
     {
       "type": "Feature",
@@ -20103,7 +20103,7 @@
           ]
         ]
       },
-      "id": "GUY"
+      "iso": "GY"
     },
     {
       "type": "Feature",
@@ -20345,7 +20345,7 @@
           ]
         ]
       },
-      "id": "HND"
+      "iso": "HN"
     },
     {
       "type": "Feature",
@@ -20527,7 +20527,7 @@
           ]
         ]
       },
-      "id": "HRV"
+      "iso": "HR"
     },
     {
       "type": "Feature",
@@ -20625,7 +20625,7 @@
           ]
         ]
       },
-      "id": "HTI"
+      "iso": "HT"
     },
     {
       "type": "Feature",
@@ -20763,7 +20763,7 @@
           ]
         ]
       },
-      "id": "HUN"
+      "iso": "HU"
     },
     {
       "type": "Feature",
@@ -21827,7 +21827,7 @@
           ]
         ]
       },
-      "id": "IDN"
+      "iso": "ID"
     },
     {
       "type": "Feature",
@@ -22385,7 +22385,7 @@
           ]
         ]
       },
-      "id": "IND"
+      "iso": "IN"
     },
     {
       "type": "Feature",
@@ -22451,7 +22451,7 @@
           ]
         ]
       },
-      "id": "IRL"
+      "iso": "IE"
     },
     {
       "type": "Feature",
@@ -22765,7 +22765,7 @@
           ]
         ]
       },
-      "id": "IRN"
+      "iso": "IRN"
     },
     {
       "type": "Feature",
@@ -22899,7 +22899,7 @@
           ]
         ]
       },
-      "id": "IRQ"
+      "iso": "IQ"
     },
     {
       "type": "Feature",
@@ -22993,7 +22993,7 @@
           ]
         ]
       },
-      "id": "ISL"
+      "iso": "IS"
     },
     {
       "type": "Feature",
@@ -23099,7 +23099,7 @@
           ]
         ]
       },
-      "id": "ISR"
+      "iso": "IL"
     },
     {
       "type": "Feature",
@@ -23471,7 +23471,7 @@
           ]
         ]
       },
-      "id": "ITA"
+      "iso": "IT"
     },
     {
       "type": "Feature",
@@ -23529,7 +23529,7 @@
           ]
         ]
       },
-      "id": "JAM"
+      "iso": "JM"
     },
     {
       "type": "Feature",
@@ -23619,7 +23619,7 @@
           ]
         ]
       },
-      "id": "JOR"
+      "iso": "JO"
     },
     {
       "type": "Feature",
@@ -23903,7 +23903,7 @@
           ]
         ]
       },
-      "id": "JPN"
+      "iso": "JP"
     },
     {
       "type": "Feature",
@@ -24365,7 +24365,7 @@
           ]
         ]
       },
-      "id": "KAZ"
+      "iso": "KZ"
     },
     {
       "type": "Feature",
@@ -24527,7 +24527,7 @@
           ]
         ]
       },
-      "id": "KEN"
+      "iso": "KE"
     },
     {
       "type": "Feature",
@@ -24681,7 +24681,7 @@
           ]
         ]
       },
-      "id": "KGZ"
+      "iso": "KG"
     },
     {
       "type": "Feature",
@@ -24763,7 +24763,7 @@
           ]
         ]
       },
-      "id": "KHM"
+      "iso": "KH"
     },
     {
       "type": "Feature",
@@ -24853,7 +24853,7 @@
           ]
         ]
       },
-      "id": "KOR"
+      "iso": "KOR"
     },
     {
       "type": "Feature",
@@ -24951,7 +24951,7 @@
           ]
         ]
       },
-      "id": "OSA"
+      "iso": "OSA"
     },
     {
       "type": "Feature",
@@ -25001,7 +25001,7 @@
           ]
         ]
       },
-      "id": "KWT"
+      "iso": "KW"
     },
     {
       "type": "Feature",
@@ -25163,7 +25163,7 @@
           ]
         ]
       },
-      "id": "LAO"
+      "iso": "LAO"
     },
     {
       "type": "Feature",
@@ -25221,7 +25221,7 @@
           ]
         ]
       },
-      "id": "LBN"
+      "iso": "LB"
     },
     {
       "type": "Feature",
@@ -25343,7 +25343,7 @@
           ]
         ]
       },
-      "id": "LBR"
+      "iso": "LR"
     },
     {
       "type": "Feature",
@@ -25581,7 +25581,7 @@
           ]
         ]
       },
-      "id": "LBY"
+      "iso": "LY"
     },
     {
       "type": "Feature",
@@ -25635,7 +25635,7 @@
           ]
         ]
       },
-      "id": "LKA"
+      "iso": "LK"
     },
     {
       "type": "Feature",
@@ -25697,7 +25697,7 @@
           ]
         ]
       },
-      "id": "LSO"
+      "iso": "LS"
     },
     {
       "type": "Feature",
@@ -25787,7 +25787,7 @@
           ]
         ]
       },
-      "id": "LTU"
+      "iso": "LT"
     },
     {
       "type": "Feature",
@@ -25829,7 +25829,7 @@
           ]
         ]
       },
-      "id": "LUX"
+      "iso": "LU"
     },
     {
       "type": "Feature",
@@ -25931,7 +25931,7 @@
           ]
         ]
       },
-      "id": "LVA"
+      "iso": "LV"
     },
     {
       "type": "Feature",
@@ -26201,7 +26201,7 @@
           ]
         ]
       },
-      "id": "MAR"
+      "iso": "MA"
     },
     {
       "type": "Feature",
@@ -26323,7 +26323,7 @@
           ]
         ]
       },
-      "id": "MDA"
+      "iso": "MDA"
     },
     {
       "type": "Feature",
@@ -26533,7 +26533,7 @@
           ]
         ]
       },
-      "id": "MDG"
+      "iso": "MG"
     },
     {
       "type": "Feature",
@@ -27227,7 +27227,7 @@
           ]
         ]
       },
-      "id": "MEX"
+      "iso": "MX"
     },
     {
       "type": "Feature",
@@ -27309,7 +27309,7 @@
           ]
         ]
       },
-      "id": "MKD"
+      "iso": "MKD"
     },
     {
       "type": "Feature",
@@ -27627,7 +27627,7 @@
           ]
         ]
       },
-      "id": "MLI"
+      "iso": "ML"
     },
     {
       "type": "Feature",
@@ -27921,7 +27921,7 @@
           ]
         ]
       },
-      "id": "MMR"
+      "iso": "MM"
     },
     {
       "type": "Feature",
@@ -28007,7 +28007,7 @@
           ]
         ]
       },
-      "id": "MNE"
+      "iso": "ME"
     },
     {
       "type": "Feature",
@@ -28321,7 +28321,7 @@
           ]
         ]
       },
-      "id": "MNG"
+      "iso": "MN"
     },
     {
       "type": "Feature",
@@ -28643,7 +28643,7 @@
           ]
         ]
       },
-      "id": "MOZ"
+      "iso": "MZ"
     },
     {
       "type": "Feature",
@@ -28813,7 +28813,7 @@
           ]
         ]
       },
-      "id": "MRT"
+      "iso": "MR"
     },
     {
       "type": "Feature",
@@ -28939,7 +28939,7 @@
           ]
         ]
       },
-      "id": "MWI"
+      "iso": "MW"
     },
     {
       "type": "Feature",
@@ -29207,7 +29207,7 @@
           ]
         ]
       },
-      "id": "MYS"
+      "iso": "MY"
     },
     {
       "type": "Feature",
@@ -29397,7 +29397,7 @@
           ]
         ]
       },
-      "id": "NAM"
+      "iso": "NA"
     },
     {
       "type": "Feature",
@@ -29463,7 +29463,7 @@
           ]
         ]
       },
-      "id": "NCL"
+      "iso": "NC"
     },
     {
       "type": "Feature",
@@ -29709,7 +29709,7 @@
           ]
         ]
       },
-      "id": "NER"
+      "iso": "NE"
     },
     {
       "type": "Feature",
@@ -29955,7 +29955,7 @@
           ]
         ]
       },
-      "id": "NGA"
+      "iso": "NG"
     },
     {
       "type": "Feature",
@@ -30177,7 +30177,7 @@
           ]
         ]
       },
-      "id": "NIC"
+      "iso": "NI"
     },
     {
       "type": "Feature",
@@ -30247,7 +30247,7 @@
           ]
         ]
       },
-      "id": "NLD"
+      "iso": "NL"
     },
     {
       "type": "Feature",
@@ -30627,7 +30627,7 @@
           ]
         ]
       },
-      "id": "NOR"
+      "iso": "NO"
     },
     {
       "type": "Feature",
@@ -30733,7 +30733,7 @@
           ]
         ]
       },
-      "id": "NPL"
+      "iso": "NP"
     },
     {
       "type": "Feature",
@@ -31017,7 +31017,7 @@
           ]
         ]
       },
-      "id": "NZL"
+      "iso": "NZ"
     },
     {
       "type": "Feature",
@@ -31225,7 +31225,7 @@
           ]
         ]
       },
-      "id": "OMN"
+      "iso": "OM"
     },
     {
       "type": "Feature",
@@ -31503,7 +31503,7 @@
           ]
         ]
       },
-      "id": "PAK"
+      "iso": "PK"
     },
     {
       "type": "Feature",
@@ -31725,7 +31725,7 @@
           ]
         ]
       },
-      "id": "PAN"
+      "iso": "PA"
     },
     {
       "type": "Feature",
@@ -32043,7 +32043,7 @@
           ]
         ]
       },
-      "id": "PER"
+      "iso": "PE"
     },
     {
       "type": "Feature",
@@ -32523,7 +32523,7 @@
           ]
         ]
       },
-      "id": "PHL"
+      "iso": "PH"
     },
     {
       "type": "Feature",
@@ -32875,7 +32875,7 @@
           ]
         ]
       },
-      "id": "PNG"
+      "iso": "PG"
     },
     {
       "type": "Feature",
@@ -33069,7 +33069,7 @@
           ]
         ]
       },
-      "id": "POL"
+      "iso": "PL"
     },
     {
       "type": "Feature",
@@ -33119,7 +33119,7 @@
           ]
         ]
       },
-      "id": "PRI"
+      "iso": "PR"
     },
     {
       "type": "Feature",
@@ -33305,7 +33305,7 @@
           ]
         ]
       },
-      "id": "PRK"
+      "iso": "PRK"
     },
     {
       "type": "Feature",
@@ -33451,7 +33451,7 @@
           ]
         ]
       },
-      "id": "PRT"
+      "iso": "PT"
     },
     {
       "type": "Feature",
@@ -33597,7 +33597,7 @@
           ]
         ]
       },
-      "id": "PRY"
+      "iso": "PY"
     },
     {
       "type": "Feature",
@@ -33647,7 +33647,7 @@
           ]
         ]
       },
-      "id": "QAT"
+      "iso": "QA"
     },
     {
       "type": "Feature",
@@ -33837,7 +33837,7 @@
           ]
         ]
       },
-      "id": "ROU"
+      "iso": "RO"
     },
     {
       "type": "Feature",
@@ -36293,7 +36293,7 @@
           ]
         ]
       },
-      "id": "RUS"
+      "iso": "RUS"
     },
     {
       "type": "Feature",
@@ -36359,7 +36359,7 @@
           ]
         ]
       },
-      "id": "RWA"
+      "iso": "RW"
     },
     {
       "type": "Feature",
@@ -36485,7 +36485,7 @@
           ]
         ]
       },
-      "id": "ESH"
+      "iso": "EH"
     },
     {
       "type": "Feature",
@@ -36803,7 +36803,7 @@
           ]
         ]
       },
-      "id": "SAU"
+      "iso": "SA"
     },
     {
       "type": "Feature",
@@ -37133,7 +37133,7 @@
           ]
         ]
       },
-      "id": "SDN"
+      "iso": "SD"
     },
     {
       "type": "Feature",
@@ -37399,7 +37399,7 @@
           ]
         ]
       },
-      "id": "SDS"
+      "iso": "SS"
     },
     {
       "type": "Feature",
@@ -37589,7 +37589,7 @@
           ]
         ]
       },
-      "id": "SEN"
+      "iso": "SN"
     },
     {
       "type": "Feature",
@@ -37769,7 +37769,7 @@
           ]
         ]
       },
-      "id": "SLB"
+      "iso": "SB"
     },
     {
       "type": "Feature",
@@ -37871,7 +37871,7 @@
           ]
         ]
       },
-      "id": "SLE"
+      "iso": "SL"
     },
     {
       "type": "Feature",
@@ -37965,7 +37965,7 @@
           ]
         ]
       },
-      "id": "SLV"
+      "iso": "SV"
     },
     {
       "type": "Feature",
@@ -38075,7 +38075,7 @@
           ]
         ]
       },
-      "id": "ABV"
+      "iso": "ABV"
     },
     {
       "type": "Feature",
@@ -38233,7 +38233,7 @@
           ]
         ]
       },
-      "id": "SOM"
+      "iso": "SO"
     },
     {
       "type": "Feature",
@@ -38431,7 +38431,7 @@
           ]
         ]
       },
-      "id": "SRB"
+      "iso": "SRB"
     },
     {
       "type": "Feature",
@@ -38549,7 +38549,7 @@
           ]
         ]
       },
-      "id": "SUR"
+      "iso": "SR"
     },
     {
       "type": "Feature",
@@ -38695,7 +38695,7 @@
           ]
         ]
       },
-      "id": "SVK"
+      "iso": "SK"
     },
     {
       "type": "Feature",
@@ -38781,7 +38781,7 @@
           ]
         ]
       },
-      "id": "SVN"
+      "iso": "SI"
     },
     {
       "type": "Feature",
@@ -38955,7 +38955,7 @@
           ]
         ]
       },
-      "id": "SWE"
+      "iso": "SE"
     },
     {
       "type": "Feature",
@@ -39013,7 +39013,7 @@
           ]
         ]
       },
-      "id": "SWZ"
+      "iso": "SWZ"
     },
     {
       "type": "Feature",
@@ -39135,7 +39135,7 @@
           ]
         ]
       },
-      "id": "SYR"
+      "iso": "SYR"
     },
     {
       "type": "Feature",
@@ -39381,7 +39381,7 @@
           ]
         ]
       },
-      "id": "TCD"
+      "iso": "TD"
     },
     {
       "type": "Feature",
@@ -39471,7 +39471,7 @@
           ]
         ]
       },
-      "id": "TGO"
+      "iso": "TG"
     },
     {
       "type": "Feature",
@@ -39741,7 +39741,7 @@
           ]
         ]
       },
-      "id": "THA"
+      "iso": "TH"
     },
     {
       "type": "Feature",
@@ -39919,7 +39919,7 @@
           ]
         ]
       },
-      "id": "TJK"
+      "iso": "TJ"
     },
     {
       "type": "Feature",
@@ -40149,7 +40149,7 @@
           ]
         ]
       },
-      "id": "TKM"
+      "iso": "TM"
     },
     {
       "type": "Feature",
@@ -40207,7 +40207,7 @@
           ]
         ]
       },
-      "id": "TLS"
+      "iso": "TLS"
     },
     {
       "type": "Feature",
@@ -40253,7 +40253,7 @@
           ]
         ]
       },
-      "id": "TTO"
+      "iso": "TT"
     },
     {
       "type": "Feature",
@@ -40391,7 +40391,7 @@
           ]
         ]
       },
-      "id": "TUN"
+      "iso": "TN"
     },
     {
       "type": "Feature",
@@ -40679,7 +40679,7 @@
           ]
         ]
       },
-      "id": "TUR"
+      "iso": "TR"
     },
     {
       "type": "Feature",
@@ -40729,7 +40729,7 @@
           ]
         ]
       },
-      "id": "TWN"
+      "iso": "TWN"
     },
     {
       "type": "Feature",
@@ -40939,7 +40939,7 @@
           ]
         ]
       },
-      "id": "TZA"
+      "iso": "TZA"
     },
     {
       "type": "Feature",
@@ -41061,7 +41061,7 @@
           ]
         ]
       },
-      "id": "UGA"
+      "iso": "UG"
     },
     {
       "type": "Feature",
@@ -41467,7 +41467,7 @@
           ]
         ]
       },
-      "id": "UKR"
+      "iso": "UA"
     },
     {
       "type": "Feature",
@@ -41565,7 +41565,7 @@
           ]
         ]
       },
-      "id": "URY"
+      "iso": "UY"
     },
     {
       "type": "Feature",
@@ -43393,7 +43393,7 @@
           ]
         ]
       },
-      "id": "USA"
+      "iso": "USA"
     },
     {
       "type": "Feature",
@@ -43623,7 +43623,7 @@
           ]
         ]
       },
-      "id": "UZB"
+      "iso": "UZ"
     },
     {
       "type": "Feature",
@@ -44005,7 +44005,7 @@
           ]
         ]
       },
-      "id": "VEN"
+      "iso": "VEN"
     },
     {
       "type": "Feature",
@@ -44195,7 +44195,7 @@
           ]
         ]
       },
-      "id": "VNM"
+      "iso": "VNM"
     },
     {
       "type": "Feature",
@@ -44263,7 +44263,7 @@
           ]
         ]
       },
-      "id": "VUT"
+      "iso": "VU"
     },
     {
       "type": "Feature",
@@ -44313,7 +44313,7 @@
           ]
         ]
       },
-      "id": "PSE"
+      "iso": "PSE"
     },
     {
       "type": "Feature",
@@ -44503,7 +44503,7 @@
           ]
         ]
       },
-      "id": "YEM"
+      "iso": "YE"
     },
     {
       "type": "Feature",
@@ -44895,7 +44895,7 @@
           ]
         ]
       },
-      "id": "ZAF"
+      "iso": "ZA"
     },
     {
       "type": "Feature",
@@ -45153,7 +45153,7 @@
           ]
         ]
       },
-      "id": "ZMB"
+      "iso": "ZM"
     },
     {
       "type": "Feature",
@@ -45315,7 +45315,7 @@
           ]
         ]
       },
-      "id": "ZWE"
+      "iso": "ZW"
     }
   ]
 }
