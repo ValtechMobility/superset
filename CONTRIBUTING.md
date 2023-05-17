@@ -441,7 +441,7 @@ pip install -e .
 superset db upgrade
 
 # Create an admin user in your metadata database (use `admin` as username to be able to load the examples)
-superset fab create-admin
+
 
 # Create default roles and permissions
 superset init

@@ -37,7 +37,6 @@ import * as geoData from './data/geo.json';
 // https://github.com/apache-superset/superset-ui/blob/master/packages/superset-ui-core/src/style/index.ts
 
 const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
-  background-color: ${({ theme }) => theme.colors.secondary.light2};
   padding: ${({ theme }) => theme.gridUnit * 4}px;
   border-radius: ${({ theme }) => theme.gridUnit * 2}px;
   height: ${({ height }) => height}px;
@@ -74,7 +73,7 @@ export default function PluginCountryMapPieChart(
     const projection = d3
       .geoMercator()
       .center([4, 47]) // GPS of location to zoom on
-      .scale(700) // This is like the zoom
+      .scale(100) // This is like the zoom
       .translate([width / 2, height / 2]);
 
     // @ts-ignore
@@ -95,7 +94,7 @@ export default function PluginCountryMapPieChart(
       .style('stroke', 'black')
       .style('opacity', 0.3);
 
-    d3.select('#France').attr('fill', '#770000');
+   // d3.select('#France').attr('fill', '#770000');
   }, []);
 
   const selected = 'France';
@@ -104,8 +103,6 @@ export default function PluginCountryMapPieChart(
     <Styles
       boldText={props.boldText}
       headerFontSize={props.headerFontSize}
-      height={370}
-      width={1220}
       scale={800}
       center={new Point()}
     >
