@@ -22,7 +22,6 @@ import { BootstrapData, CommonBootstrapData } from './types/bootstrapTypes';
 
 export const DATETIME_WITH_TIME_ZONE = 'YYYY-MM-DD HH:mm:ssZ';
 export const TIME_WITH_MS = 'HH:mm:ss.SSS';
-
 export const BOOL_TRUE_DISPLAY = 'True';
 export const BOOL_FALSE_DISPLAY = 'False';
 
