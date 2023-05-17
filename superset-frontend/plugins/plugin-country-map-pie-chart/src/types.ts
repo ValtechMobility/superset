@@ -58,11 +58,10 @@ export type PluginCountryMapPieChartProps =
     };
 
 export interface GeoData {
-  type: string;
   properties: { name: string };
   geometry: {
     type: string;
     coordinates: number[][][];
   };
-  id: string;
+  iso: string;
 }
