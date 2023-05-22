@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@airbnb/config-babel": "^3.1.0",
+    "@types/d3": "^7.4.0",
     "d3": "4.13.0",
     "d3-geo-projection": "2.9.0",
     "d3-scale": "1.0.5",
