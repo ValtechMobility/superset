@@ -67,41 +67,63 @@ export default function PluginCountryMapPieChart(
   const { data, height, width } = props;
   const dummyData = [9, 20, 30];
 
+  const radius = Math.min(width, height) / 2;
+
+  const color = d3.scaleOrdinal().range(['#98abc5', '#8a89a6', '#7b6888']);
+
+  const arc = d3
+    .arc()
+    .outerRadius(radius - 10)
+    .innerRadius(0);
+
+  const pie = d3
+    .pie()
+    .sort(null)
+    .value(function (d) {
+      return d;
+    });
+
+  const projection = d3
+    .geoMercator()
+    .center([4, 47]) // GPS of location to zoom on
+    .scale(100) // This is like the zoom
+    .translate([width / 2, height / 2]);
+
   useEffect(() => {
-    const width = 960;
-    const height = 500;
-    const radius = Math.min(width, height) / 2;
-
-    const color = d3.scaleOrdinal().range(['#98abc5', '#8a89a6', '#7b6888']);
-
-    const arc = d3
-      .arc()
-      .outerRadius(radius - 10)
-      .innerRadius(0);
-
-    const pie = d3
-      .pie()
-      .sort(null)
-      .value(function (d) {
-        return d;
-      });
-
-    const svg = d3
+    const countryPieMap = d3
       .select('#country_pie_map')
       .append('svg')
       .attr('width', width)
-      .attr('height', height)
-      .append('g')
-      .attr('transform', `translate(${width / 2},${height / 2})`);
+      .attr('height', height);
 
-    const g = svg
+    const oneDummyPie1 = countryPieMap
+      .append('g')
+      .attr('id', 'pie1')
+      .attr('transform', `translate(${width / 2},${height / 2})`)
       .selectAll('.arc')
       .data(pie(dummyData))
       .enter()
       .append('g')
       .attr('class', 'arc');
 
-    g.append('path')
+    const oneDummyPie2 = countryPieMap
+      .append('g')
+      .attr('id', 'pie2')
+      .attr('transform', `translate(${width / 2},${height / 2})`)
+      .selectAll('.arc')
+      .data(pie(dummyData))
+      .enter()
+      .append('g')
+      .attr('class', 'arc');
+
+    oneDummyPie1
+      .append('path')
+      .attr('d', arc)
+      .style('fill', function (d) {
+        return color(d.data);
+      });
+    oneDummyPie2
+      .append('path')
       .attr('d', arc)
       .style('fill', function (d) {
         return color(d.data);
@@ -116,8 +138,8 @@ export default function PluginCountryMapPieChart(
       headerFontSize={props.headerFontSize}
       scale={800}
       center={new Point()}
-      height={30}
-      width={30}
+      height={300}
+      width={300}
     >
       <h3>Campaign Status {selected}</h3>
       <div id="country_pie_map" />
