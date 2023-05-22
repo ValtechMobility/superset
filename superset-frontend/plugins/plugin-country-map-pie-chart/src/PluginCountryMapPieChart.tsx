@@ -20,6 +20,7 @@ import React, { useEffect } from 'react';
 // @ts-ignore
 import { styled } from '@superset-ui/core';
 import * as d3 from 'd3';
+import { forEach } from 'lodash';
 import {
   GeoData,
   PluginCountryMapPieChartProps,
@@ -28,7 +29,6 @@ import {
 } from './types';
 // eslint-disable-next-line import/extensions
 import * as geoData from './data/geo.json';
-import {forEach} from "lodash";
 
 // The following Styles component is a <div> element, which has been styled using Emotion
 // For docs, visit https://emotion.sh/docs/styled
@@ -68,14 +68,12 @@ export default function PluginCountryMapPieChart(
   const { data, height, width } = props;
   const dummyData = [9, 20, 30];
 
-  const radius = Math.min(width, height) / 2;
 
-  const color = d3.scaleOrdinal().range(['#98abc5', '#8a89a6', '#7b6888']);
+  const color = d3
+    .scaleOrdinal()
+    .range(['#F80556', '#008833', '#D8D3F8', '#7E24FF', '#FAA000']);
 
-  const arc = d3
-    .arc()
-    .outerRadius(radius - 10)
-    .innerRadius(0);
+
 
   const pie = d3
     .pie()
@@ -87,13 +85,14 @@ export default function PluginCountryMapPieChart(
   const projection = d3
     .geoMercator()
     .center([4, 47]) // GPS of location to zoom on
-    .scale(100) // This is like the zoom
+    .scale(400) // This is like the zoom
     .translate([width / 2, height / 2]);
 
   useEffect(() => {
     const countryPieMap = d3
       .select('#country_pie_map')
       .append('svg')
+      .attr('style', 'background-color:#7FABF6;opacity: 0.5;')
       .attr('width', width)
       .attr('height', height);
 
@@ -113,20 +112,51 @@ export default function PluginCountryMapPieChart(
       .data(geoData.features)
       .enter()
       .append('path')
-      .attr('fill', '#888888')
+      .attr('fill', '#DDDDDD')
       .attr('d', d3.geoPath().projection(projection))
       .attr('id', d => (d as GeoData).iso)
       .style('stroke', 'black')
       .style('opacity', 0.3);
 
+    Array.of(data).forEach(function (value1, index) {
+      Array.of(value1).forEach(function (value2) {
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < value2.length; i++) {
+          const countryIso = value2[i].country_iso;
+          d3.select(`#${countryIso}`)
+            .attr('fill', '#A0D6AE')
+            .attr('style', 'opacity:0.9;stroke:black;stroke-linecap: round;');
 
-    oneDummyPie1
-      .append('path')
-      .attr('d', arc)
-      .style('fill', function (d) {
-        return color(d.data);
+          const radius = Math.min(width, height) / 2;
+          const arc = d3
+            .arc()
+            .outerRadius(radius - 10)
+            .innerRadius(0);
+
+          const countryPie = countryPieMap
+            .append('g')
+            .attr('id', `${countryIso}Pie`)
+            .attr('transform', `translate(${width / 2},${height / 2})`)
+            .selectAll('.arc')
+            .data(pie(dummyData))
+            .enter()
+            .append('g')
+            .attr('class', 'arc')
+            .append('path')
+            .attr('d', arc)
+            .style('fill', function (d) {
+              return color(d.data);
+            });
+        }
       });
-
+    });
+    //
+    // oneDummyPie1
+    //     //   .append('path')
+    //     //   .attr('d', arc)
+    //     //   .style('fill', function (d) {
+    //     //     return color(d.data);
+    //   });
   }, []);
 
   const selected = 'France';
