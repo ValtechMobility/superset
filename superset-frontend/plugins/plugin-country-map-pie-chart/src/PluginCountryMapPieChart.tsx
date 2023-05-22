@@ -28,6 +28,7 @@ import {
 } from './types';
 // eslint-disable-next-line import/extensions
 import * as geoData from './data/geo.json';
+import {forEach} from "lodash";
 
 // The following Styles component is a <div> element, which has been styled using Emotion
 // For docs, visit https://emotion.sh/docs/styled
@@ -106,15 +107,18 @@ export default function PluginCountryMapPieChart(
       .append('g')
       .attr('class', 'arc');
 
-    const oneDummyPie2 = countryPieMap
+    countryPieMap
       .append('g')
-      .attr('id', 'pie2')
-      .attr('transform', `translate(${width / 2},${height / 2})`)
-      .selectAll('.arc')
-      .data(pie(dummyData))
+      .selectAll('path')
+      .data(geoData.features)
       .enter()
-      .append('g')
-      .attr('class', 'arc');
+      .append('path')
+      .attr('fill', '#888888')
+      .attr('d', d3.geoPath().projection(projection))
+      .attr('id', d => (d as GeoData).iso)
+      .style('stroke', 'black')
+      .style('opacity', 0.3);
+
 
     oneDummyPie1
       .append('path')
@@ -122,12 +126,7 @@ export default function PluginCountryMapPieChart(
       .style('fill', function (d) {
         return color(d.data);
       });
-    oneDummyPie2
-      .append('path')
-      .attr('d', arc)
-      .style('fill', function (d) {
-        return color(d.data);
-      });
+
   }, []);
 
   const selected = 'France';
