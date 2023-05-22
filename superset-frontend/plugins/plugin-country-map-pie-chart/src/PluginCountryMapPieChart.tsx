@@ -20,6 +20,7 @@ import React, { useEffect } from 'react';
 // @ts-ignore
 import { styled } from '@superset-ui/core';
 import * as d3 from 'd3';
+import { Arc } from 'd3';
 import {
   GeoData,
   PluginCountryMapPieChartProps,
@@ -65,11 +66,23 @@ export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
   const { data, height, width } = props;
+  const dummyData = [2, 4, 8, 10];
 
-  console.log('data2', data);
+  const color = d3.scaleOrdinal([
+    '#4daf4a',
+    '#377eb8',
+    '#ff7f00',
+    '#984ea3',
+    '#e41a1c',
+  ]);
+
+  // Generate the pie
+  const pie = d3.pie();
+
+  // Generate the arcs
+  const arc = d3.arc().innerRadius(0).outerRadius(100);
+
   useEffect(() => {
-    console.log('Calling the other effect now!');
-
     const projection = d3
       .geoMercator()
       .center([4, 47]) // GPS of location to zoom on
@@ -84,6 +97,7 @@ export default function PluginCountryMapPieChart(
       .attr('width', width)
       .attr('height', height)
       .append('g')
+      .attr('id', 'groot')
       .selectAll('path')
       .data(geoData.features)
       .enter()
@@ -95,6 +109,30 @@ export default function PluginCountryMapPieChart(
       .style('opacity', 0.3);
 
     d3.select('#FR').attr('fill', '#770000');
+
+    d3.select('#groot')
+      .append('circle')
+      .attr('cx', 100)
+      .attr('cy', 100)
+      .attr('r', 50)
+      .attr('stroke', 'black')
+      .attr('fill', '#69a3b2');
+
+    // d3.select('#svgroot')
+    //   // .append('svg')
+    //   // .attr('width', 200)
+    //   // .attr('height', 200)
+    //   .append('g')
+    //   .attr('transform', `translate(100,100)`)
+    //   .selectAll('arc')
+    //   .data(pie(dummyData))
+    //   .enter()
+    //   .append('g')
+    //   .attr('class', 'arc')
+    //   .attr('fill', function (d, i) {
+    //     return color(String(i));
+    //   })
+    //   .attr('d', arc);
   }, []);
 
   const selected = 'France';
@@ -105,6 +143,8 @@ export default function PluginCountryMapPieChart(
       headerFontSize={props.headerFontSize}
       scale={800}
       center={new Point()}
+      height={30}
+      width={30}
     >
       <h3>Campaign Status {selected}</h3>
       <div id="country_pie_map" />
