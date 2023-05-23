@@ -19,7 +19,6 @@
 import {
   QueryFormData,
   supersetTheme,
-  TimeseriesDataRecord,
 } from '@superset-ui/core';
 
 export class Point {
@@ -53,7 +52,7 @@ export type PluginCountryMapPieChartQueryFormData = QueryFormData &
 export type PluginCountryMapPieChartProps =
   PluginCountryMapPieChartStylesProps &
     PluginCountryMapPieChartCustomizeProps & {
-      data: TimeseriesDataRecord[];
+      data;
       // add typing here for the props you pass in from transformProps.ts!
     };
 
