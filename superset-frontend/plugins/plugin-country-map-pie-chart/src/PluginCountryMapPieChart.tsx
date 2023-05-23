@@ -20,7 +20,7 @@ import React, { useEffect } from 'react';
 // @ts-ignore
 import { styled } from '@superset-ui/core';
 import * as d3 from 'd3';
-import { forEach } from 'lodash';
+import { GeoPermissibleObjects } from 'd3';
 import {
   GeoData,
   PluginCountryMapPieChartProps,
@@ -68,12 +68,9 @@ export default function PluginCountryMapPieChart(
   const { data, height, width } = props;
   const dummyData = [9, 20, 30];
 
-
   const color = d3
     .scaleOrdinal()
     .range(['#F80556', '#008833', '#D8D3F8', '#7E24FF', '#FAA000']);
-
-
 
   const pie = d3
     .pie()
@@ -96,16 +93,6 @@ export default function PluginCountryMapPieChart(
       .attr('width', width)
       .attr('height', height);
 
-    const oneDummyPie1 = countryPieMap
-      .append('g')
-      .attr('id', 'pie1')
-      .attr('transform', `translate(${width / 2},${height / 2})`)
-      .selectAll('.arc')
-      .data(pie(dummyData))
-      .enter()
-      .append('g')
-      .attr('class', 'arc');
-
     countryPieMap
       .append('g')
       .selectAll('path')
@@ -123,40 +110,45 @@ export default function PluginCountryMapPieChart(
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < value2.length; i++) {
           const countryIso = value2[i].country_iso;
-          d3.select(`#${countryIso}`)
+          const country = d3.select(`#${countryIso}`);
+          country
             .attr('fill', '#A0D6AE')
             .attr('style', 'opacity:0.9;stroke:black;stroke-linecap: round;');
 
-          const radius = Math.min(width, height) / 2;
+          const radius = 20; // Math.min(width, height) / 2;
           const arc = d3
             .arc()
             .outerRadius(radius - 10)
             .innerRadius(0);
 
-          const countryPie = countryPieMap
-            .append('g')
-            .attr('id', `${countryIso}Pie`)
-            .attr('transform', `translate(${width / 2},${height / 2})`)
-            .selectAll('.arc')
-            .data(pie(dummyData))
-            .enter()
-            .append('g')
-            .attr('class', 'arc')
-            .append('path')
-            .attr('d', arc)
-            .style('fill', function (d) {
-              return color(d.data);
-            });
+          if (country.node() != null) {
+            const centroid = d3
+              .geoPath()
+              .centroid(country.datum() as GeoPermissibleObjects);
+            console.log(centroid);
+            const countryPie = countryPieMap
+              .append('g')
+              .attr('id', `${countryIso}Pie`)
+              .attr(
+                'transform',
+                `translate(${width / 2 + centroid[0]},${
+                  height / 2 + centroid[1]
+                })`,
+              )
+              .selectAll('.arc')
+              .data(pie(dummyData))
+              .enter()
+              .append('g')
+              .attr('class', 'arc')
+              .append('path')
+              .attr('d', arc)
+              .style('fill', function (d) {
+                return color(d.data);
+              });
+          }
         }
       });
     });
-    //
-    // oneDummyPie1
-    //     //   .append('path')
-    //     //   .attr('d', arc)
-    //     //   .style('fill', function (d) {
-    //     //     return color(d.data);
-    //   });
   }, []);
 
   const selected = 'France';
