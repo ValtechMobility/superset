@@ -126,6 +126,7 @@ export default function PluginCountryMapPieChart(
               .geoPath()
               .centroid(country.datum() as GeoPermissibleObjects);
             console.log(centroid);
+
             const countryPie = countryPieMap
               .append('g')
               .attr('id', `${countryIso}Pie`)
@@ -143,7 +144,7 @@ export default function PluginCountryMapPieChart(
               .append('path')
               .attr('d', arc)
               .style('fill', function (d) {
-                return color(d.data);
+                return color(d);
               });
           }
         }
