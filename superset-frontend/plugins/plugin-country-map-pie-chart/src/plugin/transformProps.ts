@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { ChartProps, TimeseriesDataRecord } from '@superset-ui/core';
+import { ChartProps } from '@superset-ui/core';
+import {UpdateData} from "../types";
 
 export default function transformProps(chartProps: ChartProps) {
   /**
@@ -50,9 +51,7 @@ export default function transformProps(chartProps: ChartProps) {
    */
   const { width, height, formData, queriesData } = chartProps;
   const { boldText, headerFontSize, headerText } = formData;
-  const data = Array.from(queriesData[0].data);
-
-  console.log('formData via TransformProps.ts', formData);
+  const data = Array.from(queriesData[0].data) as UpdateData[];
 
   return {
     width,

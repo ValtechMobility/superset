@@ -21,11 +21,13 @@ import React, { useEffect } from 'react';
 import { styled } from '@superset-ui/core';
 import * as d3 from 'd3';
 import { GeoPermissibleObjects } from 'd3';
+import { ColorScheme } from '@superset-ui/core/lib';
 import {
   GeoData,
   PluginCountryMapPieChartProps,
   PluginCountryMapPieChartStylesProps,
   Point,
+  UpdateData,
 } from './types';
 // eslint-disable-next-line import/extensions
 import * as geoData from './data/geo.json';
@@ -66,7 +68,6 @@ export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
   const { data, height, width } = props;
-  const dummyData = [9, 20, 30];
 
   const color = d3
     .scaleOrdinal()
@@ -76,7 +77,7 @@ export default function PluginCountryMapPieChart(
     .pie()
     .sort(null)
     .value(function (d) {
-      return d;
+      return d['COUNT(pie_detail)'];
     });
 
   const centerX = width / 2;
@@ -107,47 +108,54 @@ export default function PluginCountryMapPieChart(
       .style('stroke', 'black')
       .style('opacity', 0.3);
 
-    Array.of(data).forEach(function (value1, index) {
-      Array.of(value1).forEach(function (value2) {
-        // eslint-disable-next-line no-plusplus
-        for (const element of value2) {
-          const countryIso = element.country_iso;
-          const country = d3.select(`#${countryIso}`);
-          country
-            .attr('fill', '#A0D6AE')
-            .attr('style', 'opacity:0.9;stroke:black;stroke-linecap: round;');
+    const countries = [];
+    data.forEach(function (entry: UpdateData) {
+      const countryIso = entry.country_iso;
+      if (
+        countries.filter(function (x: string) {
+          return x === countryIso;
+        }).length === 0
+      )
+        countries.push(countryIso);
+    });
 
-          const radius = 20; // Math.min(width, height) / 2;
-          const arc = d3
-            .arc()
-            .outerRadius(radius - 10)
-            .innerRadius(0);
+    countries.forEach(function (countryIso) {
+      const entries = data.filter(function (x: UpdateData) {return x.country_iso === countryIso});
+      const country = d3.select(`#${countryIso}`);
+      country
+        .attr('fill', '#A0D6AE')
+        .attr('style', 'opacity:0.9;stroke:black;stroke-linecap: round;');
 
-          if (country.node() != null) {
-            const centroid = geoData.features.filter(function (x) {
-              return x.iso === countryIso;
-            })[0].centroid;
+      const radius = 20; // Todo Relative to amount of vehicles
+      const arc = d3
+        .arc()
+        .outerRadius(radius - 10)
+        .innerRadius(0);
 
-            const countryPie = countryPieMap
-              .append('g')
-              .attr('id', `${countryIso}Pie`)
-              .attr(
-                'transform',
-                `translate(${projection([centroid[0], centroid[1]])})`,
-              )
-              .selectAll('.arc')
-              .data(pie(dummyData))
-              .enter()
-              .append('g')
-              .attr('class', 'arc')
-              .append('path')
-              .attr('d', arc)
-              .style('fill', function (d) {
-                return color(d.data);
-              });
+      if (country.node() != null) {
+        const { centroid } = geoData.features.filter(function (x) {
+          return x.iso === countryIso;
+        })[0];
+
+        const countryPie = countryPieMap
+          .append('g')
+          .attr('id', `${countryIso}Pie`)
+          .attr(
+            'transform',
+            `translate(${projection([centroid[0], centroid[1]])})`,
+          )
+          .selectAll('.arc')
+          .data(pie(entries))
+          .enter()
+          .append('g')
+          .attr('class', 'arc')
+          .append('path')
+          .attr('d', arc)
+          .style('fill', function (d) {
+            return color(d.data);
+          });
           }
-        }
-      });
+
     });
   }, []);
 
