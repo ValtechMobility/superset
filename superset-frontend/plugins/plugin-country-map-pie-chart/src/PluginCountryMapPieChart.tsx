@@ -129,11 +129,11 @@ export default function PluginCountryMapPieChart(
       const radius = 20; // Todo Relative to amount of vehicles
       const arc = d3
         .arc()
-        .outerRadius(radius - 10)
+        .outerRadius(radius)
         .innerRadius(0);
 
       if (country.node() != null) {
-        const { centroid } = geoData.features.filter(function (x) {
+        const {centroid} = geoData.features.filter(function (x) {
           return x.iso === countryIso;
         })[0];
 
@@ -152,10 +152,11 @@ export default function PluginCountryMapPieChart(
           .append('path')
           .attr('d', arc)
           .style('fill', function (d) {
-            return color(d.data);
-          });
-          }
-
+            return color(d.data.pie_detail);
+          })
+          .style('opacity', 1)
+          .style('stroke', 'black');
+      }
     });
   }, []);
 
