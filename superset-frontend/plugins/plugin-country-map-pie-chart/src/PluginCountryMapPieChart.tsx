@@ -54,6 +54,11 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
     font-weight: ${({ theme, boldText }) =>
       theme.typography.weights[boldText ? 'bold' : 'normal']};
   }
+
+  .pie-chart {
+    stroke: black;
+    opacity: 1;
+  }
 `;
 
 /**
@@ -84,8 +89,8 @@ export default function PluginCountryMapPieChart(
   const centerY = height / 2;
   const projection = d3
     .geoTransverseMercator()
-    .center([4, 47])
-    .scale(500) // This is like the zoom
+    .center([4, 55])
+    .scale(800) // This is like the zoom
     .translate([centerX, centerY]);
 
   useEffect(() => {
@@ -119,27 +124,33 @@ export default function PluginCountryMapPieChart(
         countries.push(countryIso);
     });
 
+    const div = d3
+      .select('#country_pie_map')
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 1);
+
     countries.forEach(function (countryIso) {
-      const entries = data.filter(function (x: UpdateData) {return x.country_iso === countryIso});
+      const entries = data.filter(function (x: UpdateData) {
+        return x.country_iso === countryIso;
+      });
       const country = d3.select(`#${countryIso}`);
       country
         .attr('fill', '#A0D6AE')
         .attr('style', 'opacity:0.9;stroke:black;stroke-linecap: round;');
 
       const radius = 20; // Todo Relative to amount of vehicles
-      const arc = d3
-        .arc()
-        .outerRadius(radius)
-        .innerRadius(0);
+      const arc = d3.arc().outerRadius(radius).innerRadius(0);
 
       if (country.node() != null) {
-        const {centroid} = geoData.features.filter(function (x) {
+        const { centroid } = geoData.features.filter(function (x) {
           return x.iso === countryIso;
         })[0];
 
         const countryPie = countryPieMap
           .append('g')
           .attr('id', `${countryIso}Pie`)
+          .classed('pie-chart', true)
           .attr(
             'transform',
             `translate(${projection([centroid[0], centroid[1]])})`,
@@ -154,8 +165,12 @@ export default function PluginCountryMapPieChart(
           .style('fill', function (d) {
             return color(d.data.pie_detail);
           })
-          .style('opacity', 1)
-          .style('stroke', 'black');
+          .on('mouseover', function (d, i) {
+            div
+              .html(d.data.pie_detail)
+              .style('left', `${centerX + 10}px`)
+              .style('top', `${centerY - 15}px`);
+          });
       }
     });
   }, []);
