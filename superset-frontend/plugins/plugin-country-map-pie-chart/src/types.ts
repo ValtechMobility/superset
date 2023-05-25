@@ -65,3 +65,11 @@ export interface GeoData {
   iso: string;
   centroid: number[][];
 }
+
+export interface UpdateData {
+  brand: string;
+  region: string;
+  country_iso: string;
+  pie_detail: string;
+  'COUNT(pie_detail)': number;
+}
