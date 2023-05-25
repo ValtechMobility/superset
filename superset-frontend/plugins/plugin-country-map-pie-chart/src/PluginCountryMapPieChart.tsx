@@ -63,6 +63,31 @@ export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
   const { data, height, width } = props;
+  let countries = [];
+  data.forEach(function (entry: UpdateData) {
+    const countryIso = entry.country_iso;
+    if (
+      countries.filter(function (x: string) {
+        return x === countryIso;
+      }).length === 0
+    )
+      countries.push(countryIso);
+  });
+
+  // Todo: This is an artificial filter, we should remove this before deployment
+  countries = ['IT', 'DE', 'FR', 'PT'];
+
+  let selected = '';
+  let center = [4, 45];
+  let scale = 500;
+  if (countries.length === 1) {
+    const filtered = geoData.features.filter(function (f) {
+      return f.iso === countries[0];
+    })[0];
+    selected = filtered.properties.name;
+    center = filtered.centroid;
+    scale = 1000;
+  }
 
   const color = d3
     .scaleOrdinal()
@@ -79,8 +104,8 @@ export default function PluginCountryMapPieChart(
   const centerY = height / 2;
   const projection = d3
     .geoTransverseMercator()
-    .center([4, 55])
-    .scale(800) // This is like the zoom
+    .center(center)
+    .scale(scale) // This is like the zoom
     .translate([centerX, centerY]);
 
   useEffect(() => {
@@ -102,23 +127,13 @@ export default function PluginCountryMapPieChart(
       .attr('d', d3.geoPath().projection(projection))
       .attr('id', d => (d as unknown as GeoData).iso)
       .style('stroke', 'black')
+      .attr('filter', 'blur(1)')
       .style('opacity', 0.3);
-
-    const countries = [];
-    data.forEach(function (entry: UpdateData) {
-      const countryIso = entry.country_iso;
-      if (
-        countries.filter(function (x: string) {
-          return x === countryIso;
-        }).length === 0
-      )
-        countries.push(countryIso);
-    });
 
     const div = d3
       .select('#country_pie_map')
       .append('div')
-      .attr('class', 'tooltip')
+      .attr('class', 'tooltip');
 
     countries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
@@ -127,9 +142,10 @@ export default function PluginCountryMapPieChart(
       const country = d3.select(`#${countryIso}`);
       country
         .attr('fill', '#A0D6AE')
-        .attr('style', 'opacity:0.9;stroke:black;stroke-linecap: round;');
+        .attr('filter', 'blur(0)')
+        .attr('style', 'opacity:1;stroke:black;stroke-linecap: round;');
 
-      const radius = 20; // Todo Relative to amount of vehicles
+      const radius = 15; // Todo Relative to amount of vehicles
       const arc = d3.arc().outerRadius(radius).innerRadius(0);
 
       if (country.node() != null) {
@@ -156,9 +172,12 @@ export default function PluginCountryMapPieChart(
             return color((d.data as unknown as UpdateData).pie_detail);
           })
           .on('mouseover', function (d, i) {
-            const svg = document.getElementById('groot');
-            const x = svg.getBoundingClientRect().x;
-            const y = svg.getBoundingClientRect().y;
+            const svg = document
+              .getElementById('groot')
+              .getBoundingClientRect();
+            const { x } = svg;
+            const { y } = svg;
+            d3.select(this).attr('opacity', '100');
             div
               .html(`${d.data.pie_detail}: ${d.data['COUNT(pie_detail)']}`)
               .style('opacity', 1)
@@ -170,9 +189,7 @@ export default function PluginCountryMapPieChart(
           });
       }
     });
-  }, []);
-
-  const selected = 'France';
+  }, [color, countries, data, height, pie, projection, width]);
 
   return (
     <Styles
