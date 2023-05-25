@@ -57,6 +57,22 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
     padding: 5px;
     border-radius: 10px;
   }
+
+  .selected-country {
+    opacity: 1;
+    stroke: black;
+    filter: blur(0);
+    stroke-linecap: round;
+    fill: #a0d6ae;
+  }
+  
+  .unselected-country {
+    opacity: 0.3;
+    stroke: black;
+    filter: blur(2);
+    stroke-linecap: round;
+    fill: #dddddd;
+  }
 `;
 
 export default function PluginCountryMapPieChart(
@@ -108,42 +124,39 @@ export default function PluginCountryMapPieChart(
     .scale(scale) // This is like the zoom
     .translate([centerX, centerY]);
 
+  const svg = d3
+    .select('#country_pie_map')
+    .append('svg')
+    .attr('id', 'groot')
+    .attr('style', 'background-color:#7FABF6;opacity: 0.5;')
+    .attr('width', width)
+    .attr('height', height);
+
+  const map = svg
+    .append('g')
+    .selectAll('path')
+    .data(geoData.features)
+    .enter()
+    .append('path')
+    .attr('d', d3.geoPath().projection(projection))
+    .attr('id', d => (d as unknown as GeoData).iso)
+    .attr('class', 'unselected-country');
+
+  const div = d3
+    .select('#country_pie_map')
+    .append('div')
+    .attr('class', 'tooltip');
+
   useEffect(() => {
-    const countryPieMap = d3
-      .select('#country_pie_map')
-      .append('svg')
-      .attr('id', 'groot')
-      .attr('style', 'background-color:#7FABF6;opacity: 0.5;')
-      .attr('width', width)
-      .attr('height', height);
-
-    countryPieMap
-      .append('g')
-      .selectAll('path')
-      .data(geoData.features)
-      .enter()
-      .append('path')
-      .attr('fill', '#DDDDDD')
-      .attr('d', d3.geoPath().projection(projection))
-      .attr('id', d => (d as unknown as GeoData).iso)
-      .style('stroke', 'black')
-      .attr('filter', 'blur(1)')
-      .style('opacity', 0.3);
-
-    const div = d3
-      .select('#country_pie_map')
-      .append('div')
-      .attr('class', 'tooltip');
+    d3.selectAll('.selected-country').attr('class', 'unselected-country');
 
     countries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
         return x.country_iso === countryIso;
       });
-      const country = d3.select(`#${countryIso}`);
-      country
-        .attr('fill', '#A0D6AE')
-        .attr('filter', 'blur(0)')
-        .attr('style', 'opacity:1;stroke:black;stroke-linecap: round;');
+      const country = d3
+        .select(`#${countryIso}`)
+        .attr('class', 'selected-country');
 
       const radius = 15; // Todo Relative to amount of vehicles
       const arc = d3.arc().outerRadius(radius).innerRadius(0);
@@ -153,7 +166,7 @@ export default function PluginCountryMapPieChart(
           return x.iso === countryIso;
         })[0];
 
-        const countryPie = countryPieMap
+        svg
           .append('g')
           .attr('id', `${countryIso}Pie`)
           .classed('pie-chart', true)
@@ -189,7 +202,7 @@ export default function PluginCountryMapPieChart(
           });
       }
     });
-  }, [color, countries, data, height, pie, projection, width]);
+  }, [color, countries, svg, data, pie, projection, div]);
 
   return (
     <Styles
