@@ -79,11 +79,13 @@ export default function PluginCountryMapPieChart(
       return d;
     });
 
+  const centerX = width / 2;
+  const centerY = height / 2;
   const projection = d3
     .geoMercator()
     .center([4, 47]) // GPS of location to zoom on
-    .scale(400) // This is like the zoom
-    .translate([width / 2, height / 2]);
+    .scale(500) // This is like the zoom
+    .translate([centerX, centerY]);
 
   useEffect(() => {
     const countryPieMap = d3
@@ -108,8 +110,8 @@ export default function PluginCountryMapPieChart(
     Array.of(data).forEach(function (value1, index) {
       Array.of(value1).forEach(function (value2) {
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < value2.length; i++) {
-          const countryIso = value2[i].country_iso;
+        for (const element of value2) {
+          const countryIso = element.country_iso;
           const country = d3.select(`#${countryIso}`);
           country
             .attr('fill', '#A0D6AE')
@@ -125,26 +127,27 @@ export default function PluginCountryMapPieChart(
             const centroid = d3
               .geoPath()
               .centroid(country.datum() as GeoPermissibleObjects);
-            console.log(centroid);
+
+            //function(d) { return "translate("+projection([d.lon,d.lat])+")" }
+
 
             const countryPie = countryPieMap
               .append('g')
               .attr('id', `${countryIso}Pie`)
               .attr(
                 'transform',
-                `translate(${width / 2 + centroid[0]},${
-                  height / 2 + centroid[1]
-                })`,
+                `translate(${projection([centroid[0], centroid[1]])})`,
               )
               .selectAll('.arc')
               .data(pie(dummyData))
               .enter()
               .append('g')
+              .attr("transform",function() { return `translate(${projection([centerX,centerY])})` })
               .attr('class', 'arc')
               .append('path')
               .attr('d', arc)
               .style('fill', function (d) {
-                return color(d);
+                return color(d.data);
               });
           }
         }
