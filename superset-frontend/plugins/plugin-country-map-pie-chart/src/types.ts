@@ -63,4 +63,5 @@ export interface GeoData {
     coordinates: number[][][];
   };
   iso: string;
+  centroid: number[][];
 }

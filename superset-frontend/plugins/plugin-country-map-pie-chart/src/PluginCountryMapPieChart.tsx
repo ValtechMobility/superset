@@ -82,8 +82,8 @@ export default function PluginCountryMapPieChart(
   const centerX = width / 2;
   const centerY = height / 2;
   const projection = d3
-    .geoMercator()
-    .center([4, 47]) // GPS of location to zoom on
+    .geoTransverseMercator()
+    .center([4, 47])
     .scale(500) // This is like the zoom
     .translate([centerX, centerY]);
 
@@ -124,12 +124,9 @@ export default function PluginCountryMapPieChart(
             .innerRadius(0);
 
           if (country.node() != null) {
-            const centroid = d3
-              .geoPath()
-              .centroid(country.datum() as GeoPermissibleObjects);
-
-            //function(d) { return "translate("+projection([d.lon,d.lat])+")" }
-
+            const centroid = geoData.features.filter(function (x) {
+              return x.iso === countryIso;
+            })[0].centroid;
 
             const countryPie = countryPieMap
               .append('g')
@@ -142,7 +139,6 @@ export default function PluginCountryMapPieChart(
               .data(pie(dummyData))
               .enter()
               .append('g')
-              .attr("transform",function() { return `translate(${projection([centerX,centerY])})` })
               .attr('class', 'arc')
               .append('path')
               .attr('d', arc)
