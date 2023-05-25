@@ -49,6 +49,7 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
   .pie-chart {
     stroke: black;
     opacity: 1;
+    box-shadow: -4px 5px 5px 0px black;
   }
 
   .tooltip {
@@ -57,14 +58,6 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
     border-radius: 10px;
   }
 `;
-
-/**
- * ******************* WHAT YOU CAN BUILD HERE *******************
- *  In essence, a chart is given a few key ingredients to work with:
- *  * Data: provided via `props.data`
- *  * A DOM element
- *  * FormData (your controls!) provided as props by transformProps.ts
- */
 
 export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
@@ -107,7 +100,7 @@ export default function PluginCountryMapPieChart(
       .append('path')
       .attr('fill', '#DDDDDD')
       .attr('d', d3.geoPath().projection(projection))
-      .attr('id', d => (d as GeoData).iso)
+      .attr('id', d => (d as unknown as GeoData).iso)
       .style('stroke', 'black')
       .style('opacity', 0.3);
 
@@ -160,14 +153,14 @@ export default function PluginCountryMapPieChart(
           .append('path')
           .attr('d', arc)
           .style('fill', function (d) {
-            return color(d.data.pie_detail);
+            return color((d.data as unknown as UpdateData).pie_detail);
           })
           .on('mouseover', function (d, i) {
             const svg = document.getElementById('groot');
             const x = svg.getBoundingClientRect().x;
             const y = svg.getBoundingClientRect().y;
             div
-              .html(d.data.pie_detail)
+              .html(`${d.data.pie_detail}: ${d.data['COUNT(pie_detail)']}`)
               .style('opacity', 1)
               .style('left', `${d3.event.pageX - x + 5}px`)
               .style('top', `${d3.event.pageY - y - 5}px`);
