@@ -20,8 +20,6 @@ import React, { useEffect } from 'react';
 // @ts-ignore
 import { styled } from '@superset-ui/core';
 import * as d3 from 'd3';
-import { GeoPermissibleObjects } from 'd3';
-import { ColorScheme } from '@superset-ui/core/lib';
 import {
   GeoData,
   PluginCountryMapPieChartProps,
@@ -31,13 +29,6 @@ import {
 } from './types';
 // eslint-disable-next-line import/extensions
 import * as geoData from './data/geo.json';
-
-// The following Styles component is a <div> element, which has been styled using Emotion
-// For docs, visit https://emotion.sh/docs/styled
-
-// Theming variables are provided for your use via a ThemeProvider
-// imported from @superset-ui/core. For variables available, please visit
-// https://github.com/apache-superset/superset-ui/blob/master/packages/superset-ui-core/src/style/index.ts
 
 const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
   padding: ${({ theme }) => theme.gridUnit * 4}px;
@@ -58,6 +49,12 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
   .pie-chart {
     stroke: black;
     opacity: 1;
+  }
+
+  .tooltip {
+    background-color: white;
+    padding: 5px;
+    border-radius: 10px;
   }
 `;
 
@@ -97,6 +94,7 @@ export default function PluginCountryMapPieChart(
     const countryPieMap = d3
       .select('#country_pie_map')
       .append('svg')
+      .attr('id', 'groot')
       .attr('style', 'background-color:#7FABF6;opacity: 0.5;')
       .attr('width', width)
       .attr('height', height);
@@ -128,7 +126,6 @@ export default function PluginCountryMapPieChart(
       .select('#country_pie_map')
       .append('div')
       .attr('class', 'tooltip')
-      .style('opacity', 1);
 
     countries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
@@ -166,10 +163,17 @@ export default function PluginCountryMapPieChart(
             return color(d.data.pie_detail);
           })
           .on('mouseover', function (d, i) {
+            const svg = document.getElementById('groot');
+            const x = svg.getBoundingClientRect().x;
+            const y = svg.getBoundingClientRect().y;
             div
               .html(d.data.pie_detail)
-              .style('left', `${centerX + 10}px`)
-              .style('top', `${centerY - 15}px`);
+              .style('opacity', 1)
+              .style('left', `${d3.event.pageX - x + 5}px`)
+              .style('top', `${d3.event.pageY - y - 5}px`);
+          })
+          .on('mouseout', function () {
+            div.html('').style('opacity', 0);
           });
       }
     });
