@@ -47,7 +47,6 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
   }
 
   .pie-chart {
-    stroke: black;
     opacity: 1;
     box-shadow: -4px 5px 5px 0px black;
   }
@@ -59,19 +58,17 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
   }
 
   .selected-country {
-    opacity: 1;
-    stroke: black;
-    filter: blur(0);
+    stroke: #7d9485;
     stroke-linecap: round;
-    fill: #a0d6ae;
+    fill: #c2e0c8;
   }
-  
+
   .unselected-country {
-    opacity: 0.3;
-    stroke: black;
-    filter: blur(2);
+    stroke: #7d9485;
     stroke-linecap: round;
-    fill: #dddddd;
+    fill: #c2e0c8;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
   }
 `;
 
@@ -79,7 +76,7 @@ export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
   const { data, height, width } = props;
-  let countries = [];
+  const countries = [];
   data.forEach(function (entry: UpdateData) {
     const countryIso = entry.country_iso;
     if (
@@ -91,11 +88,13 @@ export default function PluginCountryMapPieChart(
   });
 
   // Todo: This is an artificial filter, we should remove this before deployment
-  countries = ['IT', 'DE', 'FR', 'PT'];
+  // countries = ['IT', 'DE', 'FR', 'PT'];
+
 
   let selected = '';
   let center = [4, 45];
   let scale = 500;
+  let radius = 15; // Todo Relative to amount of vehicles
   if (countries.length === 1) {
     const filtered = geoData.features.filter(function (f) {
       return f.iso === countries[0];
@@ -103,6 +102,7 @@ export default function PluginCountryMapPieChart(
     selected = filtered.properties.name;
     center = filtered.centroid;
     scale = 1000;
+    radius = 30;
   }
 
   const color = d3
@@ -128,9 +128,10 @@ export default function PluginCountryMapPieChart(
     .select('#country_pie_map')
     .append('svg')
     .attr('id', 'groot')
-    .attr('style', 'background-color:#7FABF6;opacity: 0.5;')
+    .attr('style', 'background-color:#92B4F2;')
     .attr('width', width)
-    .attr('height', height);
+    .attr('height', height)
+    .append('g');
 
   const map = svg
     .append('g')
@@ -140,7 +141,8 @@ export default function PluginCountryMapPieChart(
     .append('path')
     .attr('d', d3.geoPath().projection(projection))
     .attr('id', d => (d as unknown as GeoData).iso)
-    .attr('class', 'unselected-country');
+    .attr('class', 'unselected-country')
+    .attr('filter', 'blur(5px)');
 
   const div = d3
     .select('#country_pie_map')
@@ -148,7 +150,9 @@ export default function PluginCountryMapPieChart(
     .attr('class', 'tooltip');
 
   useEffect(() => {
-    d3.selectAll('.selected-country').attr('class', 'unselected-country');
+    d3.selectAll('.selected-country')
+      .attr('class', 'unselected-country')
+      .attr('filter', 'blur(5px)');
 
     countries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
@@ -156,9 +160,9 @@ export default function PluginCountryMapPieChart(
       });
       const country = d3
         .select(`#${countryIso}`)
-        .attr('class', 'selected-country');
+        .attr('class', 'selected-country').attr('filter', 'blur(0px)');
 
-      const radius = 15; // Todo Relative to amount of vehicles
+
       const arc = d3.arc().outerRadius(radius).innerRadius(0);
 
       if (country.node() != null) {
@@ -166,16 +170,19 @@ export default function PluginCountryMapPieChart(
           return x.iso === countryIso;
         })[0];
 
-        svg
+        const pieData = pie(entries);
+
+        const pieChart = svg
           .append('g')
           .attr('id', `${countryIso}Pie`)
           .classed('pie-chart', true)
+          // .style('opacity', 1)
           .attr(
             'transform',
             `translate(${projection([centroid[0], centroid[1]])})`,
           )
           .selectAll('.arc')
-          .data(pie(entries))
+          .data(pieData)
           .enter()
           .append('g')
           .attr('class', 'arc')
@@ -183,7 +190,9 @@ export default function PluginCountryMapPieChart(
           .attr('d', arc)
           .style('fill', function (d) {
             return color((d.data as unknown as UpdateData).pie_detail);
-          })
+          });
+
+        pieChart
           .on('mouseover', function (d, i) {
             const svg = document
               .getElementById('groot')
