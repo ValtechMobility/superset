@@ -69,6 +69,12 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
     fill: #c2e0c8;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(5px);
+    font: 400 5px/1.5 'Source Sans Pro', 'Noto Sans', sans-serif;
+  }
+
+  .place-label {
+    fill: #000;
+    font: 400 10px/1.5 'Source Sans Pro', 'Noto Sans', sans-serif;
   }
 `;
 
@@ -90,10 +96,9 @@ export default function PluginCountryMapPieChart(
   // Todo: This is an artificial filter, we should remove this before deployment
   // countries = ['IT', 'DE', 'FR', 'PT'];
 
-
   let selected = '';
-  let center = [4, 45];
-  let scale = 500;
+  let center = [7, 55];
+  let scale = 800;
   let radius = 15; // Todo Relative to amount of vehicles
   if (countries.length === 1) {
     const filtered = geoData.features.filter(function (f) {
@@ -101,8 +106,8 @@ export default function PluginCountryMapPieChart(
     })[0];
     selected = filtered.properties.name;
     center = filtered.centroid;
-    scale = 1000;
-    radius = 30;
+    scale = 2000;
+    radius = 100;
   }
 
   const color = d3
@@ -144,6 +149,24 @@ export default function PluginCountryMapPieChart(
     .attr('class', 'unselected-country')
     .attr('filter', 'blur(5px)');
 
+  svg
+    .append('g')
+    .selectAll('text')
+    .data(geoData.features)
+    .enter()
+    .append('text')
+    .attr('id', d => `${(d as unknown as GeoData).iso}Label`)
+    .attr('class', 'place-label')
+    .attr('transform', function (d) {
+      return `translate(${projection([d.centroid[0] - 1.7, d.centroid[1]])})`;
+    })
+    .attr('text-anchor', 'end')
+    .text(function (d) {
+      return d.properties.name;
+    })
+    .attr('class', 'unselected-country')
+    .attr('filter', 'blur(5px)');
+
   const div = d3
     .select('#country_pie_map')
     .append('div')
@@ -158,12 +181,27 @@ export default function PluginCountryMapPieChart(
       const entries = data.filter(function (x: UpdateData) {
         return x.country_iso === countryIso;
       });
+
       const country = d3
         .select(`#${countryIso}`)
-        .attr('class', 'selected-country').attr('filter', 'blur(0px)');
+        .attr('class', 'selected-country')
+        .attr('filter', 'blur(0px)');
 
+      d3.select(`#${countryIso}Label`)
+        .attr('class', 'place-label')
+        .attr('filter', 'blur(0px)');
 
-      const arc = d3.arc().outerRadius(radius).innerRadius(0);
+      let totalOperationCount = 0;
+      entries.forEach(function (x: UpdateData) {
+        totalOperationCount += x['COUNT(pie_detail)'];
+      });
+
+      const scaledRadius = Math.min(
+        Math.max(radius * (totalOperationCount / 1000), 5),
+        15,
+      );
+
+      const arc = d3.arc().outerRadius(scaledRadius).innerRadius(0);
 
       if (country.node() != null) {
         const { centroid } = geoData.features.filter(function (x) {
@@ -217,7 +255,7 @@ export default function PluginCountryMapPieChart(
     <Styles
       boldText={props.boldText}
       headerFontSize={props.headerFontSize}
-      scale={800}
+      scale={scale}
       center={new Point()}
       height={300}
       width={300}
