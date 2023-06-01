@@ -83,6 +83,7 @@ export default function PluginCountryMapPieChart(
 ) {
   const { data, height, width } = props;
   const countries = [];
+  let selected = '';
   data.forEach(function (entry: UpdateData) {
     const countryIso = entry.country_iso;
     if (
@@ -96,98 +97,102 @@ export default function PluginCountryMapPieChart(
   // Todo: This is an artificial filter, we should remove this before deployment
   // countries = ['IT', 'DE', 'FR', 'PT'];
 
-  let selected = '';
-  let center = [7, 55];
-  let scale = 800;
-  let radius = 15; // Todo Relative to amount of vehicles
-  if (countries.length === 1) {
-    const filtered = geoData.features.filter(function (f) {
-      return f.iso === countries[0];
-    })[0];
-    selected = filtered.properties.name;
-    center = filtered.centroid;
-    scale = 2000;
-    radius = 100;
-  }
-
   const color = d3
     .scaleOrdinal()
     .range(['#F80556', '#008833', '#D8D3F8', '#7E24FF', '#FAA000']);
 
-  const pie = d3
-    .pie()
-    .sort(null)
-    .value(function (d) {
-      return d['COUNT(pie_detail)'];
-    });
-
-  const centerX = width / 2;
-  const centerY = height / 2;
-  const projection = d3
-    .geoTransverseMercator()
-    .center(center)
-    .scale(scale) // This is like the zoom
-    .translate([centerX, centerY]);
-
   // canvas of the world map
   const svg = d3
-    .select('#country_pie_map')
-    .select('#canvas')
-    .attr('id', 'groot')
+    .select('#groot')
     .attr('style', 'background-color:#92B4F2;')
     .attr('width', width)
     .attr('height', height)
-    .append('g');
+    .select('#canvas');
 
+  const centerX = width / 2;
+  const centerY = height / 2;
 
-  // outline of countries
-  svg
-    .append('g')
-    .selectAll('path')
-    .data(geoData.features)
-    .enter()
-    .append('path')
-    .attr('d', d3.geoPath().projection(projection))
-    .attr('id', d => (d as unknown as GeoData).iso)
-    .attr('class', 'unselected-country')
-    .attr('filter', 'blur(5px)');
+  function drawWorldMap(center: number[], scale: number) {
+    // remove all drawn content from canvas
+    d3.select('#canvas').selectAll('*').remove();
 
+    // create a projection to position the map on the canvas
+    const projection = d3
+      .geoTransverseMercator()
+      .center(center)
+      .scale(scale) // This is like the zoom
+      .translate([centerX, centerY]);
 
-  // country label
-  svg
-    .append('g')
-    .selectAll('text')
-    .data(geoData.features)
-    .enter()
-    .append('text')
-    .attr('id', d => `${(d as unknown as GeoData).iso}Label`)
-    .attr('class', 'place-label')
-    .attr('transform', function (d) {
-      return `translate(${projection([d.centroid[0] - 1.7, d.centroid[1]])})`;
-    })
-    .attr('text-anchor', 'end')
-    .text(function (d) {
-      return d.properties.name;
-    })
-    .attr('class', 'unselected-country')
-    .attr('filter', 'blur(5px)');
+    // outline of countries
+    svg
+      .append('g')
+      .selectAll('path')
+      .data(geoData.features)
+      .enter()
+      .append('path')
+      .attr('d', d3.geoPath().projection(projection))
+      .attr('id', d => (d as unknown as GeoData).iso)
+      .attr('class', 'unselected-country')
+      .attr('filter', 'blur(5px)');
 
-  // tooltip
-  const div = d3
-    .select('#country_pie_map')
-    .select('#tooltip_text')
-    .attr('class', 'tooltip');
+    // country label
+    svg
+      .append('g')
+      .selectAll('text')
+      .data(geoData.features)
+      .enter()
+      .append('text')
+      .attr('id', d => `${(d as unknown as GeoData).iso}Label`)
+      .attr('class', 'place-label')
+      .attr('transform', function (d) {
+        return `translate(${projection([d.centroid[0] - 1.7, d.centroid[1]])})`;
+      })
+      .attr('text-anchor', 'end')
+      .text(function (d) {
+        return d.properties.name;
+      })
+      .attr('class', 'unselected-country')
+      .attr('filter', 'blur(5px)');
 
-  useEffect(() => {
+    // tooltip
+    const div = d3
+      .select('#country_pie_map')
+      .select('#tooltip_text')
+      .attr('class', 'tooltip');
+
     d3.selectAll('.selected-country')
       .attr('class', 'unselected-country')
       .attr('filter', 'blur(5px)');
+    return { projection, svg, div };
+  }
+
+  useEffect(() => {
+    let scale;
+    let center;
+    let radius;
+
+    if (countries.length === 1) {
+      const filtered = geoData.features.filter(function (f) {
+        return f.iso === countries[0];
+      })[0];
+      selected = filtered.properties.name;
+      center = filtered.centroid;
+      scale = 2000;
+      radius = 50;
+    } else {
+      scale = 800;
+      center = [7, 55];
+      radius = 15;
+    }
+
+    const { projection, div } = drawWorldMap(center, scale);
 
     countries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
         return x.country_iso === countryIso;
       });
 
+      // unblur the selected country and matching label
       const country = d3
         .select(`#${countryIso}`)
         .attr('class', 'selected-country')
@@ -197,14 +202,14 @@ export default function PluginCountryMapPieChart(
         .attr('class', 'place-label')
         .attr('filter', 'blur(0px)');
 
+      // calculate size of pie chart
       let totalOperationCount = 0;
       entries.forEach(function (x: UpdateData) {
         totalOperationCount += x['COUNT(pie_detail)'];
       });
-
       const scaledRadius = Math.min(
         Math.max(radius * (totalOperationCount / 1000), 5),
-        15,
+        radius,
       );
 
       const arc = d3.arc().outerRadius(scaledRadius).innerRadius(0);
@@ -214,7 +219,12 @@ export default function PluginCountryMapPieChart(
           return x.iso === countryIso;
         })[0];
 
-        const pieData = pie(entries);
+        const pieData = d3
+          .pie()
+          .sort(null)
+          .value(function (d) {
+            return d['COUNT(pie_detail)'];
+          })(entries);
 
         const pieChart = svg
           .append('g')
@@ -255,21 +265,16 @@ export default function PluginCountryMapPieChart(
           });
       }
     });
-  }, [color, countries, svg, data, pie, projection, div]);
+  });
 
   return (
-    <Styles
-      boldText={props.boldText}
-      headerFontSize={props.headerFontSize}
-      scale={scale}
-      center={new Point()}
-      height={300}
-      width={300}
-    >
+    <Styles boldText={props.boldText} headerFontSize={props.headerFontSize}>
       <h3>Campaign Status {selected}</h3>
       <div id="country_pie_map">
         <div id="tooltip_text" />
-        <svg id="canvas" />
+        <svg id="groot">
+          <g id="canvas" />
+        </svg>
       </div>
     </Styles>
   );
