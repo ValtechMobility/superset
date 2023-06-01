@@ -129,16 +129,19 @@ export default function PluginCountryMapPieChart(
     .scale(scale) // This is like the zoom
     .translate([centerX, centerY]);
 
+  // canvas of the world map
   const svg = d3
     .select('#country_pie_map')
-    .append('svg')
+    .select('#canvas')
     .attr('id', 'groot')
     .attr('style', 'background-color:#92B4F2;')
     .attr('width', width)
     .attr('height', height)
     .append('g');
 
-  const map = svg
+
+  // outline of countries
+  svg
     .append('g')
     .selectAll('path')
     .data(geoData.features)
@@ -149,6 +152,8 @@ export default function PluginCountryMapPieChart(
     .attr('class', 'unselected-country')
     .attr('filter', 'blur(5px)');
 
+
+  // country label
   svg
     .append('g')
     .selectAll('text')
@@ -167,9 +172,10 @@ export default function PluginCountryMapPieChart(
     .attr('class', 'unselected-country')
     .attr('filter', 'blur(5px)');
 
+  // tooltip
   const div = d3
     .select('#country_pie_map')
-    .append('div')
+    .select('#tooltip_text')
     .attr('class', 'tooltip');
 
   useEffect(() => {
@@ -261,7 +267,10 @@ export default function PluginCountryMapPieChart(
       width={300}
     >
       <h3>Campaign Status {selected}</h3>
-      <div id="country_pie_map" />
+      <div id="country_pie_map">
+        <div id="tooltip_text" />
+        <svg id="canvas" />
+      </div>
     </Styles>
   );
 }
