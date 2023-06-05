@@ -24,7 +24,6 @@ import {
   GeoData,
   PluginCountryMapPieChartProps,
   PluginCountryMapPieChartStylesProps,
-  Point,
   UpdateData,
 } from './types';
 // eslint-disable-next-line import/extensions
@@ -105,24 +104,47 @@ export default function PluginCountryMapPieChart(
   const svg = d3
     .select('#groot')
     .attr('style', 'background-color:#92B4F2;')
-    .attr('width', width)
-    .attr('height', height)
+    .attr('width', width - 32)
+    .attr('height', height - 64)
     .select('#canvas');
 
   const centerX = width / 2;
   const centerY = height / 2;
 
-  function drawWorldMap(center: number[], scale: number) {
+  let scale;
+  let center;
+  let radius;
+
+  if (countries.length === 1) {
+    const filtered = geoData.features.filter(function (f) {
+      return f.iso === countries[0];
+    })[0];
+    selected = filtered.properties.name;
+    center = filtered.centroid;
+    scale = 2000;
+    radius = 50;
+  } else {
+    scale = 800;
+    center = [7, 55];
+    radius = 15;
+  }
+
+  function drawWorldMap(center: number[], scale: number, countries: any[]) {
     // remove all drawn content from canvas
     d3.select('#canvas').selectAll('*').remove();
 
     // create a projection to position the map on the canvas
-    const projection = d3
-      .geoTransverseMercator()
-      .center(center)
-      .scale(scale) // This is like the zoom
-      .translate([centerX, centerY]);
-
+    const filtered = geoData.features.filter(function (f) {
+      return f.iso === countries[0];
+    })[0];
+    let projection;
+    if (countries.length === 1) {
+      projection = d3
+        .geoTransverseMercator()
+        .fitSize([width * 0.9, height * 0.9], filtered);
+    } else {
+      projection = d3.geoTransverseMercator().center(center).scale(scale); // This is like the zoom
+    }
     // outline of countries
     svg
       .append('g')
@@ -167,25 +189,7 @@ export default function PluginCountryMapPieChart(
   }
 
   useEffect(() => {
-    let scale;
-    let center;
-    let radius;
-
-    if (countries.length === 1) {
-      const filtered = geoData.features.filter(function (f) {
-        return f.iso === countries[0];
-      })[0];
-      selected = filtered.properties.name;
-      center = filtered.centroid;
-      scale = 2000;
-      radius = 50;
-    } else {
-      scale = 800;
-      center = [7, 55];
-      radius = 15;
-    }
-
-    const { projection, div } = drawWorldMap(center, scale);
+    const { projection, div } = drawWorldMap(center, scale, countries);
 
     countries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
@@ -207,10 +211,16 @@ export default function PluginCountryMapPieChart(
       entries.forEach(function (x: UpdateData) {
         totalOperationCount += x['COUNT(pie_detail)'];
       });
-      const scaledRadius = Math.min(
-        Math.max(radius * (totalOperationCount / 1000), 5),
-        radius,
-      );
+
+      let scaledRadius;
+      if (countries.length === 1) {
+        scaledRadius = radius;
+      } else {
+        scaledRadius = Math.min(
+          Math.max(radius * (totalOperationCount / 1000), 5),
+          radius,
+        );
+      }
 
       const arc = d3.arc().outerRadius(scaledRadius).innerRadius(0);
 
@@ -265,7 +275,7 @@ export default function PluginCountryMapPieChart(
           });
       }
     });
-  });
+  }, [data, selected]);
 
   return (
     <Styles boldText={props.boldText} headerFontSize={props.headerFontSize}>
