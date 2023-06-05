@@ -125,7 +125,7 @@ export default function PluginCountryMapPieChart(
     radius = 50;
   } else {
     scale = 800;
-    center = [7, 55];
+    center = [15, 58];
     radius = 15;
   }
 
@@ -158,23 +158,25 @@ export default function PluginCountryMapPieChart(
       .attr('filter', 'blur(5px)');
 
     // country label
-    svg
-      .append('g')
-      .selectAll('text')
-      .data(geoData.features)
-      .enter()
-      .append('text')
-      .attr('id', d => `${(d as unknown as GeoData).iso}Label`)
-      .attr('class', 'place-label')
-      .attr('transform', function (d) {
-        return `translate(${projection([d.centroid[0] - 1.7, d.centroid[1]])})`;
-      })
-      .attr('text-anchor', 'end')
-      .text(function (d) {
-        return d.properties.name;
-      })
-      .attr('class', 'unselected-country')
-      .attr('filter', 'blur(5px)');
+    if (countries.length > 1) {
+      svg
+        .append('g')
+        .selectAll('text')
+        .data(geoData.features)
+        .enter()
+        .append('text')
+        .attr('id', d => `${ (d as unknown as GeoData).iso }Label`)
+        .attr('class', 'place-label')
+        .attr('transform', function (d) {
+          return `translate(${ projection([d.centroid[0] - 1.7, d.centroid[1]]) })`;
+        })
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+          return d.properties.name;
+        })
+        .attr('class', 'unselected-country')
+        .attr('filter', 'blur(5px)');
+    }
 
     // tooltip
     const div = d3
