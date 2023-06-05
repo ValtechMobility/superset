@@ -131,25 +131,34 @@ export default function PluginCountryMapPieChart(
     const filtered = geoData.features.filter(function (f) {
       return f.iso === countries[0];
     })[0];
+    // outline of countries
     let projection;
     if (countries.length === 1) {
       projection = d3
         .geoTransverseMercator()
         .fitSize([width * 0.9, height * 0.9], filtered);
+      svg
+        .append('g')
+        .selectAll('path')
+        .data(geoData.features)
+        .enter()
+        .append('path')
+        .attr('d', d3.geoPath().projection(projection))
+        .attr('id', d => (d as unknown as GeoData).iso)
+        .attr('class', 'unselected-country')
+        .attr('filter', 'blur(5px)');
     } else {
       projection = d3.geoTransverseMercator().center(center).scale(scale); // This is like the zoom
+      svg
+        .append('g')
+        .selectAll('path')
+        .data(geoData.features)
+        .enter()
+        .append('path')
+        .attr('d', d3.geoPath().projection(projection))
+        .attr('id', d => (d as unknown as GeoData).iso)
+        .attr('class', 'unselected-country');
     }
-    // outline of countries
-    svg
-      .append('g')
-      .selectAll('path')
-      .data(geoData.features)
-      .enter()
-      .append('path')
-      .attr('d', d3.geoPath().projection(projection))
-      .attr('id', d => (d as unknown as GeoData).iso)
-      .attr('class', 'unselected-country')
-      .attr('filter', 'blur(5px)');
 
     // country label
     if (countries.length > 1) {
