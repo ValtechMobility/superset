@@ -232,7 +232,7 @@ export default function PluginCountryMapPieChart(
         scaledRadius = radius;
       } else {
         scaledRadius = Math.min(
-          Math.max(radius * (totalOperationCount / maxOperations), 5),
+          Math.max(radius * (totalOperationCount / maxOperations), 7),
           radius,
         );
       }
