@@ -93,9 +93,6 @@ export default function PluginCountryMapPieChart(
       countries.push(countryIso);
   });
 
-  // Todo: This is an artificial filter, we should remove this before deployment
-  // countries = ['IT', 'DE', 'FR', 'PT'];
-
   const color = d3
     .scaleOrdinal()
     .range(['#F80556', '#008833', '#D8D3F8', '#7E24FF', '#FAA000']);
@@ -107,9 +104,6 @@ export default function PluginCountryMapPieChart(
     .attr('width', width - 32)
     .attr('height', height - 64)
     .select('#canvas');
-
-  const centerX = width / 2;
-  const centerY = height / 2;
 
   let scale;
   let center;
@@ -126,7 +120,7 @@ export default function PluginCountryMapPieChart(
   } else {
     scale = 800;
     center = [15, 58];
-    radius = 15;
+    radius = 25;
   }
 
   function drawWorldMap(center: number[], scale: number, countries: any[]) {
@@ -165,10 +159,13 @@ export default function PluginCountryMapPieChart(
         .data(geoData.features)
         .enter()
         .append('text')
-        .attr('id', d => `${ (d as unknown as GeoData).iso }Label`)
+        .attr('id', d => `${(d as unknown as GeoData).iso}Label`)
         .attr('class', 'place-label')
         .attr('transform', function (d) {
-          return `translate(${ projection([d.centroid[0] - 1.7, d.centroid[1]]) })`;
+          return `translate(${projection([
+            d.centroid[0] - 1.7,
+            d.centroid[1],
+          ])})`;
         })
         .attr('text-anchor', 'end')
         .text(function (d) {
@@ -192,6 +189,22 @@ export default function PluginCountryMapPieChart(
 
   useEffect(() => {
     const { projection, div } = drawWorldMap(center, scale, countries);
+
+    let maxOperations = 0;
+
+    countries.forEach(function (countryIso) {
+      const entries = data.filter(function (x: UpdateData) {
+        return x.country_iso === countryIso;
+      });
+      let totalOperationCount = 0;
+      entries.forEach(function (x: UpdateData) {
+        totalOperationCount += x['COUNT(pie_detail)'];
+      });
+
+      if (totalOperationCount > maxOperations) {
+        maxOperations = totalOperationCount;
+      }
+    });
 
     countries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
@@ -219,7 +232,7 @@ export default function PluginCountryMapPieChart(
         scaledRadius = radius;
       } else {
         scaledRadius = Math.min(
-          Math.max(radius * (totalOperationCount / 1000), 5),
+          Math.max(radius * (totalOperationCount / maxOperations), 5),
           radius,
         );
       }
