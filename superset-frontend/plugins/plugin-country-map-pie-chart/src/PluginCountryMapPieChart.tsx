@@ -156,7 +156,11 @@ export default function PluginCountryMapPieChart(
       svg
         .append('g')
         .selectAll('text')
-        .data(geoData.features)
+        .data(
+          geoData.features.filter(function (f) {
+            return countries.includes(f.iso);
+          }),
+        )
         .enter()
         .append('text')
         .attr('id', d => `${(d as unknown as GeoData).iso}Label`)
@@ -171,8 +175,7 @@ export default function PluginCountryMapPieChart(
         .text(function (d) {
           return d.properties.name;
         })
-        .attr('class', 'unselected-country')
-        .attr('filter', 'blur(5px)');
+        .attr('class', 'unselected-country');
     }
 
     // tooltip
@@ -217,9 +220,7 @@ export default function PluginCountryMapPieChart(
         .attr('class', 'selected-country')
         .attr('filter', 'blur(0px)');
 
-      d3.select(`#${countryIso}Label`)
-        .attr('class', 'place-label')
-        .attr('filter', 'blur(0px)');
+      d3.select(`#${countryIso}Label`).attr('class', 'place-label');
 
       // calculate size of pie chart
       let totalOperationCount = 0;
