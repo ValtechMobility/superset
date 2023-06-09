@@ -168,9 +168,6 @@ export default class MainPreset extends Preset {
         new EchartsTreeChartPlugin().configure({ key: 'tree_chart' }),
         new EchartsSunburstChartPlugin().configure({ key: 'sunburst_v2' }),
         new HandlebarsChartPlugin().configure({ key: 'handlebars' }),
-        new PluginCountryMapPieChart().configure({
-          key: 'plugin_country_map_pie_chart',
-        }),
         ...experimentalplugins,
       ],
     });
