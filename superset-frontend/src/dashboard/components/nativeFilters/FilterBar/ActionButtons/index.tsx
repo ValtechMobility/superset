@@ -58,50 +58,6 @@ const containerStyle = (theme: SupersetTheme) => css`
   }
 `;
 
-const verticalStyle = (theme: SupersetTheme, width: number) => css`
-  flex-direction: column;
-  align-items: center;
-  pointer-events: none;
-  position: fixed;
-  z-index: 100;
-
-  // filter bar width minus 1px for border
-  width: ${width - 1}px;
-  bottom: 0;
-
-  padding: ${theme.gridUnit * 4}px;
-  padding-top: ${theme.gridUnit * 6}px;
-
-  background: linear-gradient(
-    ${rgba(theme.colors.grayscale.light5, 0)},
-    ${theme.colors.grayscale.light5} ${theme.opacity.mediumLight}
-  );
-
-  & > button {
-    pointer-events: auto;
-  }
-
-  & > .filter-apply-button {
-    margin-bottom: ${theme.gridUnit * 3}px;
-  }
-`;
-
-const horizontalStyle = (theme: SupersetTheme) => css`
-  align-items: center;
-  margin-left: auto;
-  && > .filter-clear-all-button {
-    text-transform: capitalize;
-    font-weight: ${theme.typography.weights.normal};
-  }
-  & > .filter-apply-button {
-    &[disabled],
-    &[disabled]:hover {
-      color: ${theme.colors.grayscale.light1};
-      background: ${theme.colors.grayscale.light3};
-    }
-  }
-`;
-
 const ActionButtons = ({
   width = OPEN_FILTER_BAR_WIDTH,
   onApply,
@@ -127,10 +83,31 @@ const ActionButtons = ({
     <div
       css={(theme: SupersetTheme) => [
         containerStyle(theme),
-        isVertical ? verticalStyle(theme, width) : horizontalStyle(theme),
+        css`
+          display: grid;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          grid-gap: 10px;
+          grid-template-columns: 1fr 1fr;
+          padding: 0 ${theme.gridUnit * 2}px;
+          .btn {
+            flex: 1;
+          }
+        `,
       ]}
       data-test="filterbar-action-buttons"
     >
+      <Button
+        disabled={!isClearAllEnabled}
+        buttonStyle="tertiary"
+        buttonSize="small"
+        className="filter-clear-all-button"
+        onClick={onClearAll}
+        {...getFilterBarTestId('clear-button')}
+      >
+        {t('Clear all')}
+      </Button>
       <Button
         disabled={isApplyDisabled}
         buttonStyle="primary"
@@ -140,16 +117,6 @@ const ActionButtons = ({
         {...getFilterBarTestId('apply-button')}
       >
         {isVertical ? t('Apply filters') : t('Apply')}
-      </Button>
-      <Button
-        disabled={!isClearAllEnabled}
-        buttonStyle="link"
-        buttonSize="small"
-        className="filter-clear-all-button"
-        onClick={onClearAll}
-        {...getFilterBarTestId('clear-button')}
-      >
-        {t('Clear all')}
       </Button>
     </div>
   );

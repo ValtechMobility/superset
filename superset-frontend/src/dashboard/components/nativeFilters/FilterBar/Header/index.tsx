@@ -18,7 +18,7 @@
  */
 /* eslint-disable no-param-reassign */
 import { css, styled, t, useTheme } from '@superset-ui/core';
-import React, { FC, useMemo } from 'react';
+import React, { FC, ReactNode, useMemo } from 'react';
 import Icons from 'src/components/Icons';
 import Button from 'src/components/Button';
 import { useSelector } from 'react-redux';
@@ -71,6 +71,7 @@ const Wrapper = styled.div`
 
 type HeaderProps = {
   toggleFiltersBar: (arg0: boolean) => void;
+  actions: ReactNode;
 };
 
 const AddFiltersButtonContainer = styled.div`
@@ -92,7 +93,7 @@ const AddFiltersButtonContainer = styled.div`
   `}
 `;
 
-const Header: FC<HeaderProps> = ({ toggleFiltersBar }) => {
+const Header: FC<HeaderProps> = ({ toggleFiltersBar, actions }) => {
   const theme = useTheme();
   const filters = useFilters();
   const filterValues = useMemo(() => Object.values(filters), [filters]);
@@ -127,6 +128,7 @@ const Header: FC<HeaderProps> = ({ toggleFiltersBar }) => {
           </FilterConfigurationLink>
         </AddFiltersButtonContainer>
       )}
+      {actions}
     </Wrapper>
   );
 };

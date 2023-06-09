@@ -17,7 +17,7 @@
  * under the License.
  */
 import { ChartProps } from '@superset-ui/core';
-import {UpdateData} from "../types";
+import { UpdateData } from '../types';
 
 export default function transformProps(chartProps: ChartProps) {
   /**
