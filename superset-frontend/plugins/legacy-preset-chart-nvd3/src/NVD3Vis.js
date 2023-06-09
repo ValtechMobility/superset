@@ -429,7 +429,7 @@ function nvd3Vis(element, props) {
           .reduceXTicks(reduceXTicks)
           .groupSpacing(0.1); // Distance between each group of bars.
 
-        chart.xAxis.showMaxMin(false);
+        chart.xAxis.showMaxMin(false).tickPadding(25);
 
         chart.stacked(isBarStacked);
         if (orderBars) {
@@ -437,7 +437,7 @@ function nvd3Vis(element, props) {
             const newValues = [...d.values]; // need to copy values to avoid redux store changed.
             // eslint-disable-next-line no-param-reassign
             d.values = newValues.sort((a, b) =>
-              tryNumify(a.x) < tryNumify(b.x) ? -1 : 1,
+              tryNumify(a.z) < tryNumify(b.z) ? -1 : 1,
             );
           });
         }
@@ -672,6 +672,14 @@ function nvd3Vis(element, props) {
       chart.useInteractiveGuideline(true);
       chart.interactiveLayer.tooltip.contentGenerator(d =>
         generateTimePivotTooltip(d, xAxisFormatter, yAxisFormatter),
+      );
+    } else if (vizType === 'dist_bar' && !chart.stacked()) {
+      const colorFn = getScale(colorScheme);
+      chart.barColor(
+        data
+          .map(x => x.values)
+          .flat()
+          .map(x => colorFn(cleanColorInput(x.x), sliceId)),
       );
     } else if (vizType !== 'bullet') {
       const colorFn = getScale(colorScheme);
