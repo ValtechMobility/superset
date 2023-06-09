@@ -16,10 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import {
-  QueryFormData,
-  supersetTheme,
-} from '@superset-ui/core';
+import { QueryFormData, supersetTheme } from '@superset-ui/core';
 
 export class Point {
   constructor() {
