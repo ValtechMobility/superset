@@ -669,7 +669,7 @@ function nvd3Vis(element, props) {
       chart.interactiveLayer.tooltip.contentGenerator(d =>
         generateTimePivotTooltip(d, xAxisFormatter, yAxisFormatter),
       );
-    } else if (vizType === 'dist_bar') {
+    } else if (vizType === 'dist_bar' && !chart.stacked()) {
       const colorFn = getScale(colorScheme);
       chart.barColor(
         data
