@@ -79,7 +79,6 @@ import {
   GroupByFilterPlugin,
 } from 'src/filters/components';
 import { PivotTableChartPlugin as PivotTableChartPluginV2 } from '@superset-ui/plugin-chart-pivot-table';
-import { PluginCountryMapPieChart } from '@superset-ui/plugin-country-map-pie-chart';
 import { HandlebarsChartPlugin } from '@superset-ui/plugin-chart-handlebars';
 import FilterBoxChartPlugin from '../FilterBox/FilterBoxChartPlugin';
 import TimeTableChartPlugin from '../TimeTable';
