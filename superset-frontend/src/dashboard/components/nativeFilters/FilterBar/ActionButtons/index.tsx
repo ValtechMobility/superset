@@ -27,7 +27,6 @@ import {
 } from '@superset-ui/core';
 import Button from 'src/components/Button';
 import { OPEN_FILTER_BAR_WIDTH } from 'src/dashboard/constants';
-import { rgba } from 'emotion-rgba';
 import { FilterBarOrientation } from 'src/dashboard/types';
 import { getFilterBarTestId } from '../utils';
 
