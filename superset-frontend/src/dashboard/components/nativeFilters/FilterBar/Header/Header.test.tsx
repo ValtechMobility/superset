@@ -23,6 +23,7 @@ import Header from './index';
 
 const createProps = () => ({
   toggleFiltersBar: jest.fn(),
+  actions: jest.fn(),
 });
 
 test('should render', () => {
