@@ -39,7 +39,7 @@ RUN npm ci
 COPY ./superset-frontend .
 
 # This seems to be the most expensive step
-RUN npm run ${BUILD_CMD} || true
+RUN npm run ${BUILD_CMD}
 
 ######################################################################
 # Final lean image...
