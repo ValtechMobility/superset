@@ -241,7 +241,7 @@ export default function PluginCountryMapPieChart(
       });
       let totalOperationCount = 0;
       entries.forEach(function (x: UpdateData) {
-        totalOperationCount += x['COUNT(pie_detail)'];
+        totalOperationCount += x['SUM(count_vin)'];
       });
 
       if (totalOperationCount > maxOperations) {
@@ -265,7 +265,7 @@ export default function PluginCountryMapPieChart(
       // calculate size of pie chart
       let totalOperationCount = 0;
       entries.forEach(function (x: UpdateData) {
-        totalOperationCount += x['COUNT(pie_detail)'];
+        totalOperationCount += x['SUM(count_vin)'];
       });
 
       let scaledRadius;
@@ -289,7 +289,7 @@ export default function PluginCountryMapPieChart(
           .pie()
           .sort(null)
           .value(function (d) {
-            return d['COUNT(pie_detail)'];
+            return d['SUM(count_vin)'];
           })(entries);
 
         const pieChart = svg
@@ -321,7 +321,7 @@ export default function PluginCountryMapPieChart(
             const { y } = svg;
             d3.select(this).attr('opacity', '100');
             div
-              .html(`${d.data.pie_detail}: ${d.data['COUNT(pie_detail)']}`)
+              .html(`${d.data.pie_detail}: ${d.data['SUM(count_vin)']}`)
               .style('opacity', 1)
               .style('left', `${d3.event.pageX - x + 5}px`)
               .style('top', `${d3.event.pageY - y - 5}px`);
