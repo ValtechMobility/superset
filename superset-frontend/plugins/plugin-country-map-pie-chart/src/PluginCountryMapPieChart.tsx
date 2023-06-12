@@ -95,7 +95,36 @@ export default function PluginCountryMapPieChart(
 
   const color = d3
     .scaleOrdinal()
-    .range(['#F80556', '#008833', '#D8D3F8', '#7E24FF', '#FAA000']);
+    .domain([
+      'Success',
+      'Up-To-Date',
+      'In Update Process',
+      'Disenrolled',
+      'Error in Front of Customer',
+      'UpdateJob Not Requested',
+      'Failed - Waiting for Retry',
+      'DL Preparation',
+      'DL Started',
+      'DL Session Completed',
+      'Installation Process',
+      'Campaign Not Feasible',
+      'Failed',
+    ])
+    .range([
+      '#00872B',
+      '#48AD3E',
+      '#00437A',
+      '#C2CACF',
+      '#A9E3FF',
+      '#A9E3FF',
+      '#FFD100',
+      '#4CC7F4',
+      '#4CC7F4',
+      '#0082D6',
+      '#001E50',
+      '#6A767D',
+      '#EE7203',
+    ]);
 
   // canvas of the world map
   const svg = d3
