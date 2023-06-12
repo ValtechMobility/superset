@@ -29,6 +29,7 @@ import PairedTTestChartPlugin from '@superset-ui/legacy-plugin-chart-paired-t-te
 import ParallelCoordinatesChartPlugin from '@superset-ui/legacy-plugin-chart-parallel-coordinates';
 import PartitionChartPlugin from '@superset-ui/legacy-plugin-chart-partition';
 import PivotTableChartPlugin from '@superset-ui/legacy-plugin-chart-pivot-table';
+import { PluginCountryMapPieChart } from '@superset-ui/plugin-country-map-pie-chart';
 import RoseChartPlugin from '@superset-ui/legacy-plugin-chart-rose';
 import SankeyChartPlugin from '@superset-ui/legacy-plugin-chart-sankey';
 import SunburstChartPlugin from '@superset-ui/legacy-plugin-chart-sunburst';
@@ -168,6 +169,9 @@ export default class MainPreset extends Preset {
         new EchartsTreeChartPlugin().configure({ key: 'tree_chart' }),
         new EchartsSunburstChartPlugin().configure({ key: 'sunburst_v2' }),
         new HandlebarsChartPlugin().configure({ key: 'handlebars' }),
+        new PluginCountryMapPieChart().configure({
+          key: 'plugin_country_map_pie_chart',
+        }),
         ...experimentalplugins,
       ],
     });
