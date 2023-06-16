@@ -30,6 +30,7 @@ import {
 } from './types';
 // eslint-disable-next-line import/extensions
 import * as geoData from './data/geo.json';
+import useForceUpdate from 'antd/lib/_util/hooks/useForceUpdate';
 
 const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
   padding: ${ ({ theme }) => theme.gridUnit * 4 }px;
@@ -83,16 +84,16 @@ export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
   const { data, height, width } = props;
-  const countries = [];
+  const selectedCountries = [];
   let selected = '';
   data.forEach(function (entry: UpdateData) {
     const countryIso = entry.country_iso;
     if (
-      countries.filter(function (x: string) {
+      selectedCountries.filter(function (x: string) {
         return x === countryIso;
       }).length === 0
     )
-      countries.push(countryIso);
+      selectedCountries.push(countryIso);
   });
 
   const color = d3
@@ -140,9 +141,9 @@ export default function PluginCountryMapPieChart(
   let center;
   let radius;
 
-  if (countries.length === 1) {
+  if (selectedCountries.length === 1) {
     const filtered = geoData.features.filter(function (f) {
-      return f.iso === countries[0];
+      return f.iso === selectedCountries[0];
     })[0];
     selected = filtered.properties.name;
     center = filtered.centroid;
@@ -154,17 +155,19 @@ export default function PluginCountryMapPieChart(
     radius = 25;
   }
 
-  function drawWorldMap(center: number[], scale: number, countries: any[]) {
+  const forceUpdate = useForceUpdate();
+
+  function drawWorldMap(center: number[], scale: number, selectedCountries: any[]) {
     // remove all drawn content from canvas
     d3.select('#canvas').selectAll('*').remove();
 
     // create a projection to position the map on the canvas
     const filtered = geoData.features.filter(function (f) {
-      return f.iso === countries[0];
+      return f.iso === selectedCountries[0];
     })[0];
-    // outline of countries
+    // outline of selectedCountries
     let projection;
-    if (countries.length === 1) {
+    if (selectedCountries.length === 1) {
       projection = d3
         .geoTransverseMercator()
         .fitSize([width * 0.9, height * 0.9], filtered);
@@ -189,16 +192,14 @@ export default function PluginCountryMapPieChart(
         .attr('d', d3.geoPath().projection(projection))
         .attr('id', d => (d as unknown as GeoData).iso)
         .attr('class', 'unselected-country');
-    }
 
-    // country label
-    if (countries.length > 1) {
+      // labels for all countries
       svg
         .append('g')
         .selectAll('text')
         .data(
           geoData.features.filter(function (f) {
-            return countries.includes(f.iso);
+            return selectedCountries.includes(f.iso);
           }),
         )
         .enter()
@@ -227,7 +228,7 @@ export default function PluginCountryMapPieChart(
     d3.selectAll('.selected-country')
       .attr('class', 'unselected-country')
       .attr('filter', 'blur(5px)');
-    return { projection, svg, div };
+    return { projection, div };
   }
 
   function drawPieChartForCountry(pieChartSlices, maxOperations: number, country: Selection<BaseType, unknown, HTMLElement, any>, countryIso, projection, div: Selection<BaseType, unknown, HTMLElement, any>) {
@@ -237,7 +238,7 @@ export default function PluginCountryMapPieChart(
     });
 
     let scaledRadius;
-    if (countries.length === 1) {
+    if (selectedCountries.length === 1) {
       scaledRadius = radius;
     } else {
       scaledRadius = Math.min(
@@ -283,7 +284,7 @@ export default function PluginCountryMapPieChart(
         });
 
       pieChart
-        .on('mouseover', function (d, i) {
+        .on('mouseover', function (d) {
           const svg = document
             .getElementById('groot')
             .getBoundingClientRect();
@@ -305,7 +306,7 @@ export default function PluginCountryMapPieChart(
   function processAllSelectedCountries(projection, div: Selection<BaseType, unknown, HTMLElement, any>) {
     let maxOperations = calculateMaxOperations();
 
-    countries.forEach(function (countryIso) {
+    selectedCountries.forEach(function (countryIso) {
       const pieChartSlices = data.filter(function (x: UpdateData) {
         return x.country_iso === countryIso;
       });
@@ -326,7 +327,7 @@ export default function PluginCountryMapPieChart(
 
   function calculateMaxOperations() {
     let maxOperations = 0;
-    countries.forEach(function (countryIso) {
+    selectedCountries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
         return x.country_iso === countryIso;
       });
@@ -343,9 +344,13 @@ export default function PluginCountryMapPieChart(
   }
 
   useEffect(() => {
-    const { projection, div } = drawWorldMap(center, scale, countries);
+    const { projection, div } = drawWorldMap(center, scale, selectedCountries);
     processAllSelectedCountries(projection, div);
-  }, [countries, svg, data]);
+    if (d3.select('#canvas').selectAll('*').size() === 0) {
+      console.log('Force updating chart since the map was not rendered correctly...');
+      forceUpdate();
+    }
+  }, [selectedCountries]);
 
   return (
     <Styles boldText={ props.boldText } headerFontSize={ props.headerFontSize }>
