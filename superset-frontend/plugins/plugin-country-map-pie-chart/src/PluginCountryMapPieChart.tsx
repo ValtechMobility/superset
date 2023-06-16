@@ -84,17 +84,11 @@ export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
   const { data, height, width } = props;
-  const selectedCountries = [];
+  const selectedCountries = getAllSelectedCountries();
   let selected = '';
-  data.forEach(function (entry: UpdateData) {
-    const countryIso = entry.country_iso;
-    if (
-      selectedCountries.filter(function (x: string) {
-        return x === countryIso;
-      }).length === 0
-    )
-      selectedCountries.push(countryIso);
-  });
+  let scale;
+  let center;
+  let radius;
 
   const color = d3
     .scaleOrdinal()
@@ -137,10 +131,6 @@ export default function PluginCountryMapPieChart(
     .attr('height', height - 64)
     .select('#canvas');
 
-  let scale;
-  let center;
-  let radius;
-
   if (selectedCountries.length === 1) {
     const filtered = geoData.features.filter(function (f) {
       return f.iso === selectedCountries[0];
@@ -156,6 +146,20 @@ export default function PluginCountryMapPieChart(
   }
 
   const forceUpdate = useForceUpdate();
+
+  function getAllSelectedCountries(): string[] {
+    const countryList = [];
+    data.forEach(function (entry: UpdateData) {
+      const countryIso = entry.country_iso;
+      if (
+        countryList.filter(function (x: string) {
+          return x === countryIso;
+        }).length === 0
+      )
+        countryList.push(countryIso);
+    });
+    return countryList;
+  }
 
   function drawWorldMap(center: number[], scale: number, selectedCountries: any[]) {
     // remove all drawn content from canvas
