@@ -32,19 +32,19 @@ import {
 import * as geoData from './data/geo.json';
 
 const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
-  padding: ${({ theme }) => theme.gridUnit * 4}px;
-  border-radius: ${({ theme }) => theme.gridUnit * 2}px;
-  height: ${({ height }) => height}px;
-  width: ${({ width }) => width}px;
+  padding: ${ ({ theme }) => theme.gridUnit * 4 }px;
+  border-radius: ${ ({ theme }) => theme.gridUnit * 2 }px;
+  height: ${ ({ height }) => height }px;
+  width: ${ ({ width }) => width }px;
 
   h3 {
     /* You can use your props to control CSS! */
     margin-top: 0;
-    margin-bottom: ${({ theme }) => theme.gridUnit * 3}px;
-    font-size: ${({ theme, headerFontSize }) =>
-      theme.typography.sizes[headerFontSize]}px;
-    font-weight: ${({ theme, boldText }) =>
-      theme.typography.weights[boldText ? 'bold' : 'normal']};
+    margin-bottom: ${ ({ theme }) => theme.gridUnit * 3 }px;
+    font-size: ${ ({ theme, headerFontSize }) =>
+  theme.typography.sizes[headerFontSize] }px;
+    font-weight: ${ ({ theme, boldText }) =>
+  theme.typography.weights[boldText ? 'bold' : 'normal'] };
   }
 
   .pie-chart {
@@ -203,13 +203,13 @@ export default function PluginCountryMapPieChart(
         )
         .enter()
         .append('text')
-        .attr('id', d => `${(d as unknown as GeoData).iso}Label`)
+        .attr('id', d => `${ (d as unknown as GeoData).iso }Label`)
         .attr('class', 'place-label')
         .attr('transform', function (d) {
-          return `translate(${projection([
+          return `translate(${ projection([
             d.centroid[0] - 1.7,
             d.centroid[1],
-          ])})`;
+          ]) })`;
         })
         .attr('text-anchor', 'end')
         .text(function (d) {
@@ -230,11 +230,102 @@ export default function PluginCountryMapPieChart(
     return { projection, svg, div };
   }
 
-  useEffect(() => {
-    const { projection, div } = drawWorldMap(center, scale, countries);
+  function drawPieChartForCountry(pieChartSlices, maxOperations: number, country: Selection<BaseType, unknown, HTMLElement, any>, countryIso, projection, div: Selection<BaseType, unknown, HTMLElement, any>) {
+    let totalOperationCount = 0;
+    pieChartSlices.forEach(function (x: UpdateData) {
+      totalOperationCount += x['SUM(count_vin)'];
+    });
 
+    let scaledRadius;
+    if (countries.length === 1) {
+      scaledRadius = radius;
+    } else {
+      scaledRadius = Math.min(
+        Math.max(radius * (totalOperationCount / maxOperations), 7),
+        radius,
+      );
+    }
+
+    const arc = d3.arc().outerRadius(scaledRadius).innerRadius(0);
+
+    if (country.node() != null) {
+      const { centroid } = geoData.features.filter(function (x) {
+        return x.iso === countryIso;
+      })[0];
+
+      const pieData = d3
+        .pie()
+        .sort(function (a, b) {
+          return b.pie_detail.localeCompare(a.pie_detail);
+        })
+        .value(function (d) {
+          return d['SUM(count_vin)'];
+        })(pieChartSlices);
+
+      const pieChart = svg
+        .append('g')
+        .attr('id', `${ countryIso }Pie`)
+        .classed('pie-chart', true)
+        // .style('opacity', 1)
+        .attr(
+          'transform',
+          `translate(${ projection([centroid[0], centroid[1]]) })`,
+        )
+        .selectAll('.arc')
+        .data(pieData)
+        .enter()
+        .append('g')
+        .attr('class', 'arc')
+        .append('path')
+        .attr('d', arc)
+        .style('fill', function (d) {
+          return color((d.data as unknown as UpdateData).pie_detail);
+        });
+
+      pieChart
+        .on('mouseover', function (d, i) {
+          const svg = document
+            .getElementById('groot')
+            .getBoundingClientRect();
+          const { x } = svg;
+          const { y } = svg;
+          d3.select(this).attr('opacity', '100');
+          div
+            .html(`${ d.data.pie_detail }: ${ d.data['SUM(count_vin)'] }`)
+            .style('opacity', 1)
+            .style('left', `${ d3.event.pageX - x + 5 }px`)
+            .style('top', `${ d3.event.pageY - y - 5 }px`);
+        })
+        .on('mouseout', function () {
+          div.html('').style('opacity', 0);
+        });
+    }
+  }
+
+  function processAllSelectedCountries(projection, div: Selection<BaseType, unknown, HTMLElement, any>) {
+    let maxOperations = calculateMaxOperations();
+
+    countries.forEach(function (countryIso) {
+      const pieChartSlices = data.filter(function (x: UpdateData) {
+        return x.country_iso === countryIso;
+      });
+      const country = unblurCountry(countryIso);
+      drawPieChartForCountry(pieChartSlices, maxOperations, country, countryIso, projection, div);
+    });
+  }
+
+  function unblurCountry(countryIso) {
+    const country = d3
+      .select(`#${ countryIso }`)
+      .attr('class', 'selected-country')
+      .attr('filter', 'blur(0px)');
+
+    d3.select(`#${ countryIso }Label`).attr('class', 'place-label');
+    return country;
+  }
+
+  function calculateMaxOperations() {
     let maxOperations = 0;
-
     countries.forEach(function (countryIso) {
       const entries = data.filter(function (x: UpdateData) {
         return x.country_iso === countryIso;
@@ -248,100 +339,21 @@ export default function PluginCountryMapPieChart(
         maxOperations = totalOperationCount;
       }
     });
+    return maxOperations;
+  }
 
-    countries.forEach(function (countryIso) {
-      const entries = data.filter(function (x: UpdateData) {
-        return x.country_iso === countryIso;
-      });
-
-      // unblur the selected country and matching label
-      const country = d3
-        .select(`#${countryIso}`)
-        .attr('class', 'selected-country')
-        .attr('filter', 'blur(0px)');
-
-      d3.select(`#${countryIso}Label`).attr('class', 'place-label');
-
-      // calculate size of pie chart
-      let totalOperationCount = 0;
-      entries.forEach(function (x: UpdateData) {
-        totalOperationCount += x['SUM(count_vin)'];
-      });
-
-      let scaledRadius;
-      if (countries.length === 1) {
-        scaledRadius = radius;
-      } else {
-        scaledRadius = Math.min(
-          Math.max(radius * (totalOperationCount / maxOperations), 7),
-          radius,
-        );
-      }
-
-      const arc = d3.arc().outerRadius(scaledRadius).innerRadius(0);
-
-      if (country.node() != null) {
-        const { centroid } = geoData.features.filter(function (x) {
-          return x.iso === countryIso;
-        })[0];
-
-        const pieData = d3
-          .pie()
-          .sort(function (a, b) {
-            return b.pie_detail.localeCompare(a.pie_detail);
-          })
-          .value(function (d) {
-            return d['SUM(count_vin)'];
-          })(entries);
-
-        const pieChart = svg
-          .append('g')
-          .attr('id', `${countryIso}Pie`)
-          .classed('pie-chart', true)
-          // .style('opacity', 1)
-          .attr(
-            'transform',
-            `translate(${projection([centroid[0], centroid[1]])})`,
-          )
-          .selectAll('.arc')
-          .data(pieData)
-          .enter()
-          .append('g')
-          .attr('class', 'arc')
-          .append('path')
-          .attr('d', arc)
-          .style('fill', function (d) {
-            return color((d.data as unknown as UpdateData).pie_detail);
-          });
-
-        pieChart
-          .on('mouseover', function (d, i) {
-            const svg = document
-              .getElementById('groot')
-              .getBoundingClientRect();
-            const { x } = svg;
-            const { y } = svg;
-            d3.select(this).attr('opacity', '100');
-            div
-              .html(`${d.data.pie_detail}: ${d.data['SUM(count_vin)']}`)
-              .style('opacity', 1)
-              .style('left', `${d3.event.pageX - x + 5}px`)
-              .style('top', `${d3.event.pageY - y - 5}px`);
-          })
-          .on('mouseout', function () {
-            div.html('').style('opacity', 0);
-          });
-      }
-    });
-  }, [data, selected]);
+  useEffect(() => {
+    const { projection, div } = drawWorldMap(center, scale, countries);
+    processAllSelectedCountries(projection, div);
+  }, [countries, svg, data]);
 
   return (
-    <Styles boldText={props.boldText} headerFontSize={props.headerFontSize}>
-      <h3>Campaign Status {selected}</h3>
+    <Styles boldText={ props.boldText } headerFontSize={ props.headerFontSize }>
+      <h3>Campaign Status { selected }</h3>
       <div id="country_pie_map">
-        <div id="tooltip_text" />
+        <div id="tooltip_text"/>
         <svg id="groot">
-          <g id="canvas" />
+          <g id="canvas"/>
         </svg>
       </div>
     </Styles>
