@@ -287,7 +287,9 @@ export default function PluginCountryMapPieChart(
 
         const pieData = d3
           .pie()
-          .sort(null)
+          .sort(function (a, b) {
+            return b.pie_detail.localeCompare(a.pie_detail);
+          })
           .value(function (d) {
             return d['SUM(count_vin)'];
           })(entries);
