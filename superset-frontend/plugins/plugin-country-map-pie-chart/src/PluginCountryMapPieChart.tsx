@@ -22,12 +22,7 @@ import React, { useEffect } from 'react';
 // @ts-ignore
 import { styled } from '@superset-ui/core';
 import * as d3 from 'd3';
-import {
-  GeoData,
-  PluginCountryMapPieChartProps,
-  PluginCountryMapPieChartStylesProps,
-  UpdateData,
-} from './types';
+import { GeoData, PluginCountryMapPieChartProps, PluginCountryMapPieChartStylesProps, UpdateData, } from './types';
 // eslint-disable-next-line import/extensions
 import * as geoData from './data/geo.json';
 import useForceUpdate from 'antd/lib/_util/hooks/useForceUpdate';
@@ -43,9 +38,9 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
     margin-top: 0;
     margin-bottom: ${ ({ theme }) => theme.gridUnit * 3 }px;
     font-size: ${ ({ theme, headerFontSize }) =>
-  theme.typography.sizes[headerFontSize] }px;
+      theme.typography.sizes[headerFontSize] }px;
     font-weight: ${ ({ theme, boldText }) =>
-  theme.typography.weights[boldText ? 'bold' : 'normal'] };
+      theme.typography.weights[boldText ? 'bold' : 'normal'] };
   }
 
   .pie-chart {
@@ -85,7 +80,6 @@ export default function PluginCountryMapPieChart(
 ) {
   const { data, height, width } = props;
   const selectedCountries = getAllSelectedCountries();
-  let selected = '';
   let scale;
   let center;
   let radius;
@@ -108,25 +102,25 @@ export default function PluginCountryMapPieChart(
       'Failed',
     ])
     .range([
-      '#00872B',
-      '#48AD3E',
-      '#00437A',
-      '#C2CACF',
-      '#E4002C',
+      '#008833',
+      '#D8D3F8',
+      '#7E24FF',
+      '#FAA000',
+      '#F80556',
       '#A9E3FF',
-      '#FFD100',
-      '#4CC7F4',
-      '#4CC7F4',
-      '#0082D6',
-      '#001E50',
-      '#6A767D',
-      '#EE7203',
+      '#FFF049',
+      '#8881E5',
+      '#8881E5',
+      '#442EE0',
+      '#170E5D',
+      '#78788C',
+      '#EE4C40',
     ]);
 
   // canvas of the world map
   const svg = d3
     .select('#groot')
-    .attr('style', 'background-color:#92B4F2;')
+    .attr('style', 'background-color: #92B4F2; border-radius: 8px;')
     .attr('width', width - 32)
     .attr('height', height - 64)
     .select('#canvas');
@@ -135,13 +129,12 @@ export default function PluginCountryMapPieChart(
     const filtered = geoData.features.filter(function (f) {
       return f.iso === selectedCountries[0];
     })[0];
-    selected = filtered.properties.name;
     center = filtered.centroid;
     scale = 2000;
     radius = 50;
   } else {
-    scale = 800;
-    center = [15, 58];
+    scale = 1150;
+    center = [5, 60];
     radius = 25;
   }
 
@@ -185,6 +178,45 @@ export default function PluginCountryMapPieChart(
         .attr('id', d => (d as unknown as GeoData).iso)
         .attr('class', 'unselected-country')
         .attr('filter', 'blur(5px)');
+
+      // labels for each country
+      svg
+        .append('g')
+        .selectAll('text')
+        .data(
+          geoData.features.filter(function (f) {
+            return selectedCountries.includes(f.iso);
+          }),
+        )
+        .enter()
+        .append('text')
+        .attr('id', d => `${ (d as unknown as GeoData).iso }Label`)
+        .attr('transform', function (d) {
+          let distance = 0.5;
+          if (d.properties.name.match('Norway') || d.properties.name.match('Sweden')) {
+            distance = -2.5;
+          }
+          if (d.properties.name.match('Cyprus') || d.properties.name.match('Luxembourg')) {
+            distance = 0.2;
+          }
+          if (d.properties.name.match('Germany') || d.properties.name.match('Spain')
+            || d.properties.name.match('Finland') || d.properties.name.match('France')
+            || d.properties.name.match('England') || d.properties.name.match('Greece')
+            || d.properties.name.match('Italy') || d.properties.name.match('Poland')
+            || d.properties.name.match('Portugal') || d.properties.name.match('Romania')
+          ) {
+            distance = 1.3;
+          }
+          return `translate(${ projection([
+            d.centroid[0],
+            d.centroid[1] - distance,
+          ]) })`;
+        })
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+          return d.properties.name;
+        })
+        .attr('style', 'font-size: 30px; font: \'Source Sans Pro\', \'Noto Sans\', sans-serif;');
     } else {
       projection = d3.geoTransverseMercator().center(center).scale(scale); // This is like the zoom
       svg
@@ -211,9 +243,13 @@ export default function PluginCountryMapPieChart(
         .attr('id', d => `${ (d as unknown as GeoData).iso }Label`)
         .attr('class', 'place-label')
         .attr('transform', function (d) {
+          let distance = 0;
+          if (d.properties.name.match('Germany')) {
+            distance = 0.7;
+          }
           return `translate(${ projection([
-            d.centroid[0] - 1.7,
-            d.centroid[1],
+            d.centroid[0] - 2,
+            d.centroid[1] + distance,
           ]) })`;
         })
         .attr('text-anchor', 'end')
@@ -246,7 +282,7 @@ export default function PluginCountryMapPieChart(
       scaledRadius = radius;
     } else {
       scaledRadius = Math.min(
-        Math.max(radius * (totalOperationCount / maxOperations), 7),
+        Math.max(radius * (totalOperationCount / maxOperations), 15),
         radius,
       );
     }
@@ -298,8 +334,8 @@ export default function PluginCountryMapPieChart(
           div
             .html(`${ d.data.pie_detail }: ${ d.data['SUM(count_vin)'] }`)
             .style('opacity', 1)
-            .style('left', `${ d3.event.pageX - x + 5 }px`)
-            .style('top', `${ d3.event.pageY - y - 5 }px`);
+            .style('left', `${ d3.event.pageX - x}px`)
+            .style('top', `${ d3.event.pageY - y - 130}px`);
         })
         .on('mouseout', function () {
           div.html('').style('opacity', 0);
@@ -358,7 +394,6 @@ export default function PluginCountryMapPieChart(
 
   return (
     <Styles boldText={ props.boldText } headerFontSize={ props.headerFontSize }>
-      <h3>Campaign Status { selected }</h3>
       <div id="country_pie_map">
         <div id="tooltip_text"/>
         <svg id="groot">
