@@ -60,18 +60,23 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
     fill: #c2e0c8;
   }
 
+  @font-face {
+    font-family: 'FKGrotesk';
+    font-weight: 700;
+    src: url('css/fonts/FKGrotesk-Medium.otf') format('opentype');
+  }
+
   .unselected-country {
     stroke: #7d9485;
     stroke-linecap: round;
     fill: #c2e0c8;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(5px);
-    font: 400 5px/1.5 'Source Sans Pro', 'Noto Sans', sans-serif;
   }
 
   .place-label {
     fill: #000;
-    font: 400 10px/1.5 'Source Sans Pro', 'Noto Sans', sans-serif;
+    font-size: 10px;
   }
 `;
 
@@ -103,17 +108,17 @@ export default function PluginCountryMapPieChart(
     ])
     .range([
       '#008833',
-      '#D8D3F8',
+      '#ACA2F1',
       '#7E24FF',
       '#FAA000',
       '#F80556',
-      '#A9E3FF',
-      '#FFF049',
-      '#8881E5',
-      '#8881E5',
+      '#FFC55B',
+      '#FF8E86',
+      '#2E218E',
       '#442EE0',
-      '#170E5D',
-      '#78788C',
+      '#00FA9A',
+      '#9E00FF',
+      '#FFF049',
       '#EE4C40',
     ]);
 
@@ -131,7 +136,7 @@ export default function PluginCountryMapPieChart(
     })[0];
     center = filtered.centroid;
     scale = 2000;
-    radius = 50;
+    radius = 75;
   } else {
     scale = 1150;
     center = [5, 60];
@@ -204,6 +209,7 @@ export default function PluginCountryMapPieChart(
             || d.properties.name.match('England') || d.properties.name.match('Greece')
             || d.properties.name.match('Italy') || d.properties.name.match('Poland')
             || d.properties.name.match('Portugal') || d.properties.name.match('Romania')
+            || d.properties.name.match('Bulgaria')
           ) {
             distance = 1.3;
           }
@@ -216,7 +222,7 @@ export default function PluginCountryMapPieChart(
         .text(function (d) {
           return d.properties.name;
         })
-        .attr('style', 'font-size: 30px; font: \'Source Sans Pro\', \'Noto Sans\', sans-serif;');
+        .attr('style', 'font-size: 30px;');
     } else {
       projection = d3.geoTransverseMercator().center(center).scale(scale); // This is like the zoom
       svg
