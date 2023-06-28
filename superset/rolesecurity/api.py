@@ -24,6 +24,7 @@ class RLSRestApi(BaseSupersetModelRestApi):
         "clause",
         "group_key",
         "id",
+        "name",
         "roles",
         "tables",
         "filter_type",
@@ -32,12 +33,14 @@ class RLSRestApi(BaseSupersetModelRestApi):
         "clause",
         "group_key",
         "id",
+        "name",
         "roles.id",
         "tables.id",
         "filter_type",
     ]
 
     add_columns = [
+        "name",
         "clause",
         "group_key",
         "roles",
