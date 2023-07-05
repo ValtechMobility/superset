@@ -340,8 +340,8 @@ export default function PluginCountryMapPieChart(
           div
             .html(`${ d.data.pie_detail }: ${ d.data['SUM(count_vin)'] }`)
             .style('opacity', 1)
-            .style('left', `${ d3.event.pageX - x}px`)
-            .style('top', `${ d3.event.pageY - y - 130}px`);
+            .style('left', `${ d3.event.pageX - x + 5}px`)
+            .style('top', `${ d3.event.pageY - y - 5}px`);
         })
         .on('mouseout', function () {
           div.html('').style('opacity', 0);
