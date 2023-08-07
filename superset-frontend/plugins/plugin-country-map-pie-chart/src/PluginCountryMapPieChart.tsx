@@ -111,7 +111,7 @@ export default function PluginCountryMapPieChart(
     radius = 75;
   } else {
     scale = 1150;
-    center = [5, 60];
+    center = [10, 60];
     radius = 25;
   }
 
@@ -312,8 +312,8 @@ export default function PluginCountryMapPieChart(
           div
             .html(`${ d.data.pie_detail }: ${ d.data[metric.label] }`)
             .style('opacity', 1)
-            .style('left', `${ d3.event.pageX - x + 5}px`)
-            .style('top', `${ d3.event.pageY - y - 5}px`);
+            .style('left', `${ d3.event.pageX - x + 20}px`)
+            .style('top', `${ d3.event.pageY - y - 20}px`);
         })
         .on('mouseout', function () {
           div.html('').style('opacity', 0);
