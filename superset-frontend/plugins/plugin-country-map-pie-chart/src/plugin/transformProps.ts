@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { ChartProps } from '@superset-ui/core';
+import { ChartProps, QueryFormData } from '@superset-ui/core';
 import { UpdateData } from '../types';
 
-export default function transformProps(chartProps: ChartProps) {
+export default function transformProps(chartProps: ChartProps<QueryFormData>) {
   /**
    * This function is called after a successful response has been
    * received from the chart data endpoint, and is used to transform
@@ -50,13 +50,14 @@ export default function transformProps(chartProps: ChartProps) {
    * be seen until restarting the development server.
    */
   const { width, height, formData, queriesData } = chartProps;
-  const { boldText, headerFontSize, headerText } = formData;
+  const { boldText, headerFontSize, headerText, metric } = formData;
   const data = Array.from(queriesData[0].data) as UpdateData[];
 
   return {
     width,
     height,
     data,
+    metric,
     // and now your control data, manipulated as needed, and passed through as props!
     boldText,
     headerFontSize,

@@ -83,7 +83,7 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
 export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
-  const { data, height, width } = props;
+  const { data, height, width, metric } = props;
   const selectedCountries = getAllSelectedCountries();
   let scale;
   let center;
@@ -280,7 +280,7 @@ export default function PluginCountryMapPieChart(
   function drawPieChartForCountry(pieChartSlices, maxOperations: number, country: Selection<BaseType, unknown, HTMLElement, any>, countryIso, projection, div: Selection<BaseType, unknown, HTMLElement, any>) {
     let totalOperationCount = 0;
     pieChartSlices.forEach(function (x: UpdateData) {
-      totalOperationCount += x['SUM(count_vin)'];
+      totalOperationCount += x[metric.label];
     });
 
     let scaledRadius;
@@ -306,7 +306,7 @@ export default function PluginCountryMapPieChart(
           return b.pie_detail.localeCompare(a.pie_detail);
         })
         .value(function (d) {
-          return d['SUM(count_vin)'];
+          return d[metric.label];
         })(pieChartSlices);
 
       const pieChart = svg
@@ -338,7 +338,7 @@ export default function PluginCountryMapPieChart(
           const { y } = svg;
           d3.select(this).attr('opacity', '100');
           div
-            .html(`${ d.data.pie_detail }: ${ d.data['SUM(count_vin)'] }`)
+            .html(`${ d.data.pie_detail }: ${ d.data[metric.label] }`)
             .style('opacity', 1)
             .style('left', `${ d3.event.pageX - x + 5}px`)
             .style('top', `${ d3.event.pageY - y - 5}px`);
@@ -379,7 +379,7 @@ export default function PluginCountryMapPieChart(
       });
       let totalOperationCount = 0;
       entries.forEach(function (x: UpdateData) {
-        totalOperationCount += x['SUM(count_vin)'];
+        totalOperationCount += x[metric.label];
       });
 
       if (totalOperationCount > maxOperations) {
