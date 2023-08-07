@@ -130,6 +130,7 @@ const config: ControlPanelConfig = {
       label: t('Hello Controls!'),
       expanded: true,
       controlSetRows: [
+        ['color_scheme'],
         [
           {
             name: 'header_text',

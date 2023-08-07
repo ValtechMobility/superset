@@ -16,7 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { ChartProps, QueryFormData } from '@superset-ui/core';
+import {
+  CategoricalColorNamespace,
+  ChartProps,
+  QueryFormData,
+} from '@superset-ui/core';
 import { UpdateData } from '../types';
 
 export default function transformProps(chartProps: ChartProps<QueryFormData>) {
@@ -50,14 +54,19 @@ export default function transformProps(chartProps: ChartProps<QueryFormData>) {
    * be seen until restarting the development server.
    */
   const { width, height, formData, queriesData } = chartProps;
-  const { boldText, headerFontSize, headerText, metric } = formData;
+  const { boldText, headerFontSize, headerText, metric, colorScheme } =
+    formData;
   const data = Array.from(queriesData[0].data) as UpdateData[];
+
+  const colorFn = CategoricalColorNamespace.getScale(colorScheme as string);
+  const dashboardColors = colorFn.parentForcedColors;
 
   return {
     width,
     height,
     data,
     metric,
+    dashboardColors,
     // and now your control data, manipulated as needed, and passed through as props!
     boldText,
     headerFontSize,

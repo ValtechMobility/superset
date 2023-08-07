@@ -45,7 +45,7 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
 
   .pie-chart {
     opacity: 1;
-    box-shadow: -4px 5px 5px 0px black;
+    box-shadow: -4px 5px 5px 0 black;
   }
 
   .tooltip {
@@ -83,7 +83,7 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
 export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
-  const { data, height, width, metric } = props;
+  const { data, height, width, metric, dashboardColors } = props;
   const selectedCountries = getAllSelectedCountries();
   let scale;
   let center;
@@ -91,36 +91,8 @@ export default function PluginCountryMapPieChart(
 
   const color = d3
     .scaleOrdinal()
-    .domain([
-      'Success',
-      'Up-To-Date',
-      'In Update Process',
-      'Disenrolled',
-      'Error in Front of Customer',
-      'UpdateJob Not Requested',
-      'Failed - Waiting for Retry',
-      'DL Preparation',
-      'DL Started',
-      'DL Session Completed',
-      'Installation Process',
-      'Campaign Not Feasible',
-      'Failed',
-    ])
-    .range([
-      '#008833',
-      '#ACA2F1',
-      '#7E24FF',
-      '#FAA000',
-      '#F80556',
-      '#FFC55B',
-      '#FF8E86',
-      '#2E218E',
-      '#442EE0',
-      '#00FA9A',
-      '#9E00FF',
-      '#FFF049',
-      '#EE4C40',
-    ]);
+    .domain(Object.keys(dashboardColors))
+    .range(Object.values(dashboardColors));
 
   // canvas of the world map
   const svg = d3

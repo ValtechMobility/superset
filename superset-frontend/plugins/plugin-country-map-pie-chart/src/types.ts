@@ -17,7 +17,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { QueryFormData, QueryFormMetric, supersetTheme } from '@superset-ui/core';
+import {
+  QueryFormData,
+  QueryFormMetric,
+  supersetTheme,
+} from '@superset-ui/core';
 
 export class Point {
   constructor() {
@@ -52,6 +56,7 @@ export type PluginCountryMapPieChartProps =
     PluginCountryMapPieChartCustomizeProps & {
       data;
       metric: QueryFormMetric;
+      colorScheme: string;
       // add typing here for the props you pass in from transformProps.ts!
     };
 
