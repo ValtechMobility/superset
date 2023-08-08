@@ -20,7 +20,7 @@
  */
 import React, { useEffect } from 'react';
 // @ts-ignore
-import { styled } from '@superset-ui/core';
+import { getMetricLabel, styled } from '@superset-ui/core';
 import * as d3 from 'd3';
 import { GeoData, PluginCountryMapPieChartProps, PluginCountryMapPieChartStylesProps, UpdateData, } from './types';
 // eslint-disable-next-line import/extensions
@@ -129,6 +129,12 @@ export default function PluginCountryMapPieChart(
         countryList.push(countryIso);
     });
     return countryList;
+  }
+
+  function metricLabel() {
+    if(Object.getPrototypeOf(metric) === Array.prototype) {
+      return getMetricLabel(metric[0]);
+    } else return getMetricLabel(metric);
   }
 
   function drawWorldMap(center: number[], scale: number, selectedCountries: any[]) {
@@ -252,7 +258,7 @@ export default function PluginCountryMapPieChart(
   function drawPieChartForCountry(pieChartSlices, maxOperations: number, country: Selection<BaseType, unknown, HTMLElement, any>, countryIso, projection, div: Selection<BaseType, unknown, HTMLElement, any>) {
     let totalOperationCount = 0;
     pieChartSlices.forEach(function (x: UpdateData) {
-      totalOperationCount += x[metric.label];
+      totalOperationCount += x[metricLabel()];
     });
 
     let scaledRadius;
@@ -278,7 +284,7 @@ export default function PluginCountryMapPieChart(
           return b.pie_detail.localeCompare(a.pie_detail);
         })
         .value(function (d) {
-          return d[metric.label];
+          return d[metricLabel()];
         })(pieChartSlices);
 
       const pieChart = svg
@@ -310,7 +316,7 @@ export default function PluginCountryMapPieChart(
           const { y } = svg;
           d3.select(this).attr('opacity', '100');
           div
-            .html(`${ d.data.pie_detail }: ${ d.data[metric.label] }`)
+            .html(`${ d.data.pie_detail }: ${ d.data[metricLabel()] }`)
             .style('opacity', 1)
             .style('left', `${ d3.event.pageX - x + 20}px`)
             .style('top', `${ d3.event.pageY - y - 20}px`);
@@ -351,7 +357,7 @@ export default function PluginCountryMapPieChart(
       });
       let totalOperationCount = 0;
       entries.forEach(function (x: UpdateData) {
-        totalOperationCount += x[metric.label];
+        totalOperationCount += x[metricLabel()];
       });
 
       if (totalOperationCount > maxOperations) {
