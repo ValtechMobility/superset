@@ -16,9 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import { t, validateNonEmpty } from '@superset-ui/core';
+import { t } from '@superset-ui/core';
 import {
   ControlPanelConfig,
+  getStandardizedControls,
   sections,
   sharedControls,
 } from '@superset-ui/chart-controls';
@@ -115,17 +116,7 @@ const config: ControlPanelConfig = {
             },
           },
         ],
-        [
-          {
-            name: 'metrics',
-            config: {
-              ...sharedControls.metrics,
-              // it's possible to add validators to controls if
-              // certain selections/types need to be enforced
-              validators: [validateNonEmpty],
-            },
-          },
-        ],
+        ['metric'],
         ['adhoc_filters'],
         [
           {
@@ -139,6 +130,7 @@ const config: ControlPanelConfig = {
       label: t('Hello Controls!'),
       expanded: true,
       controlSetRows: [
+        ['color_scheme'],
         [
           {
             name: 'header_text',
@@ -189,6 +181,10 @@ const config: ControlPanelConfig = {
       ],
     },
   ],
+  formDataOverrides: formData => ({
+    ...formData,
+    metric: getStandardizedControls().shiftMetric(),
+  }),
 };
 
 export default config;

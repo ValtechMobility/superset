@@ -45,7 +45,7 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
 
   .pie-chart {
     opacity: 1;
-    box-shadow: -4px 5px 5px 0px black;
+    box-shadow: -4px 5px 5px 0 black;
   }
 
   .tooltip {
@@ -83,7 +83,7 @@ const Styles = styled.div<PluginCountryMapPieChartStylesProps>`
 export default function PluginCountryMapPieChart(
   props: PluginCountryMapPieChartProps,
 ) {
-  const { data, height, width } = props;
+  const { data, height, width, metric, dashboardColors } = props;
   const selectedCountries = getAllSelectedCountries();
   let scale;
   let center;
@@ -91,36 +91,8 @@ export default function PluginCountryMapPieChart(
 
   const color = d3
     .scaleOrdinal()
-    .domain([
-      'Success',
-      'Up-To-Date',
-      'In Update Process',
-      'Disenrolled',
-      'Error in Front of Customer',
-      'UpdateJob Not Requested',
-      'Failed - Waiting for Retry',
-      'DL Preparation',
-      'DL Started',
-      'DL Session Completed',
-      'Installation Process',
-      'Campaign Not Feasible',
-      'Failed',
-    ])
-    .range([
-      '#008833',
-      '#ACA2F1',
-      '#7E24FF',
-      '#FAA000',
-      '#F80556',
-      '#FFC55B',
-      '#FF8E86',
-      '#2E218E',
-      '#442EE0',
-      '#00FA9A',
-      '#9E00FF',
-      '#FFF049',
-      '#EE4C40',
-    ]);
+    .domain(Object.keys(dashboardColors))
+    .range(Object.values(dashboardColors));
 
   // canvas of the world map
   const svg = d3
@@ -139,7 +111,7 @@ export default function PluginCountryMapPieChart(
     radius = 75;
   } else {
     scale = 1150;
-    center = [5, 60];
+    center = [10, 60];
     radius = 25;
   }
 
@@ -280,7 +252,7 @@ export default function PluginCountryMapPieChart(
   function drawPieChartForCountry(pieChartSlices, maxOperations: number, country: Selection<BaseType, unknown, HTMLElement, any>, countryIso, projection, div: Selection<BaseType, unknown, HTMLElement, any>) {
     let totalOperationCount = 0;
     pieChartSlices.forEach(function (x: UpdateData) {
-      totalOperationCount += x['SUM(count_vin)'];
+      totalOperationCount += x[metric.label];
     });
 
     let scaledRadius;
@@ -306,7 +278,7 @@ export default function PluginCountryMapPieChart(
           return b.pie_detail.localeCompare(a.pie_detail);
         })
         .value(function (d) {
-          return d['SUM(count_vin)'];
+          return d[metric.label];
         })(pieChartSlices);
 
       const pieChart = svg
@@ -338,10 +310,10 @@ export default function PluginCountryMapPieChart(
           const { y } = svg;
           d3.select(this).attr('opacity', '100');
           div
-            .html(`${ d.data.pie_detail }: ${ d.data['SUM(count_vin)'] }`)
+            .html(`${ d.data.pie_detail }: ${ d.data[metric.label] }`)
             .style('opacity', 1)
-            .style('left', `${ d3.event.pageX - x + 5}px`)
-            .style('top', `${ d3.event.pageY - y - 5}px`);
+            .style('left', `${ d3.event.pageX - x + 20}px`)
+            .style('top', `${ d3.event.pageY - y - 20}px`);
         })
         .on('mouseout', function () {
           div.html('').style('opacity', 0);
@@ -379,7 +351,7 @@ export default function PluginCountryMapPieChart(
       });
       let totalOperationCount = 0;
       entries.forEach(function (x: UpdateData) {
-        totalOperationCount += x['SUM(count_vin)'];
+        totalOperationCount += x[metric.label];
       });
 
       if (totalOperationCount > maxOperations) {
