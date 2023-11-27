@@ -507,7 +507,7 @@ def show_http_exception(ex: HTTPException) -> FlaskResponse:
 def show_command_errors(ex: CommandException) -> FlaskResponse:
     logger.warning("CommandException", exc_info=True)
     if "text/html" in request.accept_mimetypes and not config["DEBUG"]:
-        path = resource_filename("superset", "static/assets/500_custom.html")
+        path = resource_filename("superset", "static/assets/500.html")
         return send_file(path, cache_timeout=0), 500
 
     extra = ex.normalized_messages() if isinstance(ex, CommandInvalidError) else {}
@@ -529,7 +529,7 @@ def show_command_errors(ex: CommandException) -> FlaskResponse:
 def show_unexpected_exception(ex: Exception) -> FlaskResponse:
     logger.exception(ex)
     if "text/html" in request.accept_mimetypes and not config["DEBUG"]:
-        path = resource_filename("superset", "static/assets/500_custom.html")
+        path = resource_filename("superset", "static/assets/500.html")
         return send_file(path, cache_timeout=0), 500
 
     return json_errors_response(
