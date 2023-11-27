@@ -128,16 +128,16 @@ const plugins = [
 
   // static pages
   new HtmlWebpackPlugin({
-    template: './src/assets/staticPages/404_custom.html',
+    template: './src/assets/staticPages/404.html',
     inject: true,
     chunks: [],
-    filename: '404_custom.html',
+    filename: '404.html',
   }),
   new HtmlWebpackPlugin({
-    template: './src/assets/staticPages/500_custom.html',
+    template: './src/assets/staticPages/500.html',
     inject: true,
     chunks: [],
-    filename: '500_custom.html',
+    filename: '500.html',
   }),
 ];
 
